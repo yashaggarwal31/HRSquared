@@ -1,42 +1,43 @@
+'use client'
 import React from 'react'
 import { useFormState } from 'react-dom';
 import { FieldTypes } from "@/components/enums/survey-field-types";
-import {FormFields} from '@/components/surveys/FormFields'
-import {handleSubmit} from './page'
+import { FormFields } from '@/components/surveys/FormFields'
+import { handleSubmit } from './page'
 
-export default function FormFiller({surveyFields, title}) {
-    const initialState = { message: null };
-    const [state, formAction] = useFormState(handleSubmit, initialState as any);
-    let i=0;
-    let itemID = 1;
-    let matrixKey=0;
+export default function FormFiller({ surveyFields, title }) {
+  const initialState = { message: null };
+  const [state, formAction] = useFormState(handleSubmit, initialState as any);
+  let i = 0;
+  let itemID = 1;
+  let matrixKey = 0;
 
-    return (
-        <div id='dom-form' className='bg-slate-300 pt-4'>
+  return (
+    <div id='dom-form' className='bg-slate-300 pt-4'>
 
-            <form className={'flex flex-col justify-center items-center gap-4 mt-12'} action={formAction}>
-            {/* {surveyFields.map((item)=>{
+      <form className={'flex flex-col justify-center items-center gap-4 mt-12'}>
+        {/* {surveyFields.map((item)=>{
               console.log(item)
             })} */}
-           
-                <div className="w-[55%] rounded-lg border-t-4 border-blue-500 bg-white p-3 h-28">
-                  <div className="text-2xl text-center flex justify-center items-center">
-                    <label className="my-8 w-[100%] text-2xl outline-none text-center">{title}</label>
-                  </div>
-                  {/* <div>
+
+        <div className="w-[55%] rounded-lg border-t-4 border-blue-500 bg-white p-3 h-28">
+          <div className="text-2xl text-center flex justify-center items-center">
+            <label className="my-8 w-[100%] text-2xl outline-none text-center">{title}</label>
+          </div>
+          {/* <div>
                     <textarea
                       className="w-[100%] outline-none"
                       placeholder="Survey Description"
                       onChange={(e)=>setSurveyDescription(e.target.value)}
                     />
                   </div> */}
-                </div>
-              
-           
-    
-            {surveyFields && surveyFields.map((item: FormFields) => (
-              
-            <div className="w-[55%] rounded-lg border-l-4 border-blue-500 bg-white p-3" key={i}>
+        </div>
+
+
+
+        {surveyFields && surveyFields.map((item: FormFields) => (
+
+          <div className="w-[55%] rounded-lg border-l-4 border-blue-500 bg-white p-3" key={i}>
             {/* {i=i+1} */}
             {item.type === FieldTypes.TEXTINPUT && (
               <div className="flex flex-col ">
@@ -44,15 +45,15 @@ export default function FormFiller({surveyFields, title}) {
                 <input id={(itemID++).toString()} name='TextField' placeholder="input" />
               </div>
             )}
-    
+
             {item.type == FieldTypes.DROPDOWN && (
               <div className="flex flex-col ">
                 <label className="mb-3 text-lg">{item.label}</label>
                 <select id={(itemID++).toString()} name='DropDown' className="w-[40%] rounded-md bg-slate-100 px-4 py-4 outline-none">
                   <option className="p-10">Choose your pick </option>
                   {item.options!.map((itemVal) => (
-                    <option key={i+1}>
-                      <div className="p-10" >{itemVal}</div>
+                    <option key={i + 1} className="p-10">
+                      {itemVal}
                     </option>
                   ))}
                 </select>
@@ -63,7 +64,7 @@ export default function FormFiller({surveyFields, title}) {
                 <p id='checkbox-label' className="mb-3 text-lg">{item.label} </p>
                 <div className="flex flex-col ">
                   {item.options?.map((itemVal) => (
-                    <div className="align-center flex gap-4" key={i+1}>
+                    <div className="align-center flex gap-4" key={i + 1}>
                       <input id={(itemID++).toString()} value={itemVal} name='Checkbox' type="checkbox" />
                       <label>{itemVal} </label>
                     </div>
@@ -79,7 +80,7 @@ export default function FormFiller({surveyFields, title}) {
                 <div className="flex justify-center items-center">
                   <input id={(itemID++).toString()} name='myfile' type="file" className="w-72 max-w-full p-1.5 bg-white text-gray-800 rounded-lg border border-gray-500 file:mr-5 file:border-none file:bg-blue-800 file:px-5 file:py-2 file:rounded-lg file:text-white file:cursor-pointer file:hover:bg-blue-600" />
                 </div>
-                
+
               </div>
             )}
             {item.type == FieldTypes.DATE && (
@@ -88,7 +89,7 @@ export default function FormFiller({surveyFields, title}) {
                   {item.label}{" "}
                 </label>
                 {/* <input type="date" /> */}
-    
+
                 <div className="relative max-w-sm">
                   <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
                     <svg
@@ -111,39 +112,39 @@ export default function FormFiller({surveyFields, title}) {
               </div>
             )}
             {item.type == FieldTypes.MATRIX && (<>
-                    <label className="">{item.label} </label>
-                    <div className="flex items-center justify-center">
-                    <table className="w-[80%]">
-                      <tr className="text-center">
-                        <th> </th>
-                        {item.matrixColumn?.map((col) => {
-                          return <th key={matrixKey++}>{col}</th>;
-                        })}
-                      </tr>
-    
-                        <tbody>
-                      {item.matrixRow?.map((row) => {
-                        return (
-                          <tr key={matrixKey++}>
-                            <td>{row}</td>
-                            {item.matrixColumn?.map((cola) => {
-                                return <td key={matrixKey++} className="text-center" >
-                                  <input type="radio" name={row+'1'} id={(itemID++).toString()} value={cola}/>
-                                </td>
-                          })}
-                          </tr>
-                        );
+              <label className="">{item.label} </label>
+              <div className="flex items-center justify-center">
+                <table className="w-[80%]">
+                  <tbody>
+                    <tr className="text-center">
+                      <th> </th>
+                      {item.matrixColumn?.map((col) => {
+                        return <th key={matrixKey++}>{col}</th>;
                       })}
-                      </tbody>
-                    </table>
-                        </div></>
-                    )}
+                    </tr>
+
+                    {item.matrixRow?.map((row) => {
+                      return (
+                        <tr key={matrixKey++}>
+                          <td>{row}</td>
+                          {item.matrixColumn?.map((cola) => {
+                            return <td key={matrixKey++} className="text-center" >
+                              <input type="radio" name={row + '1'} id={(itemID++).toString()} value={cola} />
+                            </td>
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div></>
+            )}
           </div>
-           ))}
-    
-            <button id='submit-btn' className="mb-2 me-2 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800" type={'submit'}>Submit Response</button>
-            </form>
-        
-        </div>
-      )
+        ))}
+
+        <button id='submit-btn' className="mb-2 me-2 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800" type={'submit'}>Submit Response</button>
+      </form>
+
+    </div>
+  )
 }
