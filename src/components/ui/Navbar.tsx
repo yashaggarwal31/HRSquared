@@ -119,13 +119,13 @@ const Navbar: React.FC = () => {
                 {inuser ? (
                   <>
                     <Link
-                      href="/user/tickets"
+                      href="/user/ticket"
                       className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                     >
                       Tickets
                     </Link>
                     <Link
-                      href="/user/feedbacks"
+                      href="/user/feedback"
                       className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                     >
                       Feedbacks
@@ -141,20 +141,20 @@ const Navbar: React.FC = () => {
                 ) : (
                   <>
                     <Link
-                      href="/tickets"
+                      href="/admin/ticket"
                       className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                     >
                       Tickets
                     </Link>
                     <Link
-                      href="/feedbacks"
+                      href="/admin/feedback"
                       className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                     >
                       Feedbacks
                     </Link>
 
                     <Link
-                      href="/surveys/view-surveys"
+                      href="/admin/surveys/view-surveys"
                       className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                     >
                       Surveys

@@ -1,13 +1,13 @@
-const getAdminSurveys = () => {}
+const getAdminSurveys = () => {};
 
-import { notFound } from 'next/navigation'
-import { dbConnect } from './renderDB'
-import { Database } from '@/types/database.types'
+import { notFound } from "next/navigation";
+import { dbConnect } from "./renderDB";
+import { Database } from "@/types/database.types";
 
-type SurveyInsert = Database['public']['Tables']['Survey']['Insert']
+type SurveyInsert = Database["public"]["Tables"]["Survey"]["Insert"];
 
-export async function getRecentSurveys () {
-  const client = await dbConnect()
+export async function getRecentSurveys() {
+  const client = await dbConnect();
 
   const query = {
     text: `
@@ -21,49 +21,49 @@ export async function getRecentSurveys () {
         LEFT JOIN users u ON s.createdby = u.id
         GROUP BY s.id, s.title, s.createdat, u.username
         ORDER BY s.id DESC;
-        `
-  }
+        `,
+  };
 
-  const data = await client.query(query)
+  const data = await client.query(query);
   // client.end()
   // console.log(data)
 
   if (data.rowCount > 0) {
-    return data.rows
+    return data.rows;
   } else {
-    notFound()
+    notFound();
   }
 }
 
-export async function AddSurvey (survey: SurveyInsert) {
-  const client = await dbConnect()
+export async function AddSurvey(survey: SurveyInsert) {
+  const client = await dbConnect();
   try {
-    const surveyFieldsJSON = JSON.stringify(survey.survey_fields)
+    const surveyFieldsJSON = JSON.stringify(survey.survey_fields);
     const query = {
-      text: 'insert into surveys (title, surveyfields, createdby, closes_at) values ($1, $2, $3, $4)',
+      text: "insert into surveys (title, surveyfields, createdby, closes_at) values ($1, $2, $3, $4)",
       values: [
         survey.title,
         surveyFieldsJSON,
         survey.created_by,
-        survey.closes_at
-      ]
-    }
-    const result = await client.query(query)
+        survey.closes_at,
+      ],
+    };
+    const result = await client.query(query);
     // client.end()
     return {
       status: 200,
       statusText: `${result.command} completed successfully`,
-      result: result
-    }
+      result: result,
+    };
   } catch (error: any) {
     // client.end()
     return {
       error: error,
       status: 500,
-      statusText: 'Internal server error',
+      statusText: "Internal server error",
       message: error.message,
-      data: null
-    }
+      data: null,
+    };
   }
 }
 
@@ -84,54 +84,54 @@ export async function AddSurvey (survey: SurveyInsert) {
 //   }
 // }
 
-export async function GetSurveyResponses (id: number) {
-  const client = await dbConnect()
+export async function GetSurveyResponses(id: number) {
+  const client = await dbConnect();
   try {
     const query = {
       text: `select sr.id, u.username, sr.response_data, sr.createdat from surveyresponses sr join users u on u.id = sr.user_id where sr.survey_id = $1;`,
-      values: [id]
-    }
-    const result = await client.query(query)
+      values: [id],
+    };
+    const result = await client.query(query);
     // console.log(result);
     // client.end()
-    return result.rows
+    return result.rows;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     // client.end()
-    return 'error fetching'
+    return "error fetching";
   }
 }
 
-export async function GetResponseById (id: number) {
-  const client = await dbConnect()
+export async function GetResponseById(id: number) {
+  const client = await dbConnect();
   try {
     const query = {
-      text: 'select * from surveyresponses where id = $1',
-      values: [id]
-    }
-    const result = await client.query(query)
+      text: "select * from surveyresponses where id = $1",
+      values: [id],
+    };
+    const result = await client.query(query);
     // client.end()
-    return result.rows
+    return result.rows;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     // client.end()
-    return 'Error Fetching'
+    return "Error Fetching";
   }
 }
 
-export async function getSurveyById (id: number) {
-  const client = await dbConnect()
+export async function getSurveyById(id: number) {
+  const client = await dbConnect();
   try {
     const query = {
-      text: 'select * from surveys where id = $1',
-      values: [id]
-    }
-    const result = await client.query(query)
+      text: "select * from surveys where id = $1",
+      values: [id],
+    };
+    const result = await client.query(query);
     // client.end()
-    return result.rows
+    return result.rows;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     // client.end()
-    return 'Error Fetching'
+    return "Error Fetching";
   }
 }
