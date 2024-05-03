@@ -10,6 +10,14 @@ export default async function SignInPage() {
             await signIn(provider.id)
           }}
         >
+
+            <label htmlFor="email">Email: </label>
+            <input name='email' type="text" />
+
+            <label htmlFor="password">Password: </label>
+            <input name='password' type="text" />
+
+
           <button type="submit">
             <span>Sign in with {provider.name}</span>
           </button>

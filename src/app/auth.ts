@@ -15,10 +15,19 @@ const providers: Provider[] = [
       let user = null
 
       // logic to salt and hash password
-      const pwHash = saltAndHashPassword(credentials.password)
+      //   const pwHash = saltAndHashPassword(credentials.password)
 
       // logic to verify if user exists
-      //   user = await getUserFromDb(credentials.email, pwHash)
+      // user = await getUserFromDb(credentials.email, pwHash)
+
+      console.log('email', credentials.email)
+      console.log('password', credentials.password)
+
+      return {
+        id: 'test',
+        name: 'Test User',
+        email: 'test@example.com'
+      }
 
       if (!user) {
         // No user found, so this is their first attempt to login
