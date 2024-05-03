@@ -1,5 +1,5 @@
 import React from "react";
-import { formatDateString } from "@/../public/data/Components/function";
+import { formatDateString } from "@/../public/Components/function";
 
 const FeedbackSystemTable = ({ FeedbackData }) => {
   return (
@@ -64,7 +64,7 @@ const FeedbackSystemTable = ({ FeedbackData }) => {
                       </p>
                     </td>
                   </tr>
-                ),
+                )
               )}
             </tbody>
           </table>

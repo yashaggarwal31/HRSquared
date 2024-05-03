@@ -1,5 +1,5 @@
 import React from "react";
-import { formatDateString } from "@/../public/data/Components/function";
+import { formatDateString } from "@/../public/Components/function";
 
 interface DashboardFeedbackProps {
   data: {
