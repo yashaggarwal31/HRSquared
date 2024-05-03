@@ -79,3 +79,29 @@ export async function GetFeedbacks(notViewed?: boolean) {
     };
   }
 }
+
+export async function MarkViewed(id: number) {
+  const client = await dbConnect();
+  try {
+    const query = {
+      text: "update feedbacks set viewed = true where id = $1",
+      values: [id],
+    };
+    const result = await client.query(query);
+    client.end();
+    return {
+      status: 200,
+      statusText: `${result.command} completed successfully`,
+      result: result,
+    };
+  } catch (error) {
+    client.end();
+    return {
+      status: 500,
+      statusText: "Internal server error",
+      message: error.message,
+      error: error,
+      data: null,
+    };
+  }
+}

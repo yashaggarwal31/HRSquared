@@ -2,19 +2,21 @@
 import { formatDateString } from "@/lib/FormatDateString";
 import React, { useState } from "react";
 // import { url_mark_feedback_viewed } from "@/app/lib/apiEndPoints";
-import { markRead } from "./markAsRead";
+import { markReadFn } from "./markAsRead";
 
 function Feedback({ feedback }) {
   const [viewed, setViewed] = useState(feedback.viewed);
   const [marking, setMarking] = useState(false);
-  const { id, title, description, createdby, createdat } = feedback;
+  const { ticket_id, title, description, createdby, createdat } = feedback;
 
   async function markRead() {
     if (marking) return;
     try {
       setMarking(true);
-      markRead();
+      console.log("id", ticket_id);
+      markReadFn(ticket_id);
       setMarking(false);
+      setViewed(true);
       // console.log(err);
       // const url = url_mark_feedback_viewed + id;
       // await fetch(url, {
