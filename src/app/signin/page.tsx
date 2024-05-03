@@ -11,11 +11,16 @@ export default async function SignInPage() {
           }}
         >
 
-            <label htmlFor="email">Email: </label>
-            <input name='email' type="text" />
-
-            <label htmlFor="password">Password: </label>
-            <input name='password' type="text" />
+      {/* <input name="csrfToken" type="hidden" defaultValue={csrfToken} /> */}
+      <label>
+        Username
+        <input name="username" type="text" />
+      </label>
+      <label>
+        Password
+        <input name="password" type="password" />
+      </label>
+      {/* <button type="submit">Sign in</button> */}
 
 
           <button type="submit">
@@ -26,3 +31,6 @@ export default async function SignInPage() {
     </div>
   )
 }
+
+
+      
