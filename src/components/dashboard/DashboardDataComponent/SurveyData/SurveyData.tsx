@@ -1,6 +1,6 @@
-'use client'
+"use client";
 import React from "react";
-import { formatDateString } from "@/../public/data/Components/function";
+import { formatDateString } from "@/../public/Components/function";
 
 const SurveySystemTable = ({ surveyData }) => {
   return (
