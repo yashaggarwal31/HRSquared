@@ -1,13 +1,172 @@
 'use client'
-import React from 'react'
-import { useFormState } from 'react-dom';
+import React, { useEffect, useState } from 'react'
 import { FieldTypes } from "@/components/enums/survey-field-types";
 import { FormFields } from '@/components/surveys/FormFields'
-import { handleSubmit } from './page'
+import { url_fill_survey } from '@/lib/ApiEndPoints';
+// import { addUserResponse } from '@/lib/surveys';
 
-export default function FormFiller({ surveyFields, title }) {
+export default function FormFiller({ surveyFields, title, surveyID }) {
+
+  const submitResponse = async (responseData) => {
+    console.log("sending with response data: ",responseData);
+    try {
+      await fetch(url_fill_survey, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(responseData),
+      })
+      .then(response => response.json())
+      .then(result =>  console.log('this was reached',result))
+      .catch(err => console.log(err));
+    } catch(error) {
+      console.log("error while fetching:", error);
+    }
+  }
+
+  function handleSubmit(event) {
+    const submitBTN:any = document.getElementById('submit-btn');
+    submitBTN.innerHTML='Submitting';
+    submitBTN.disabled = true;
+    const domForm = document.getElementById('dom-form');
+    console.log(domForm)
+    // Prevent the default form submission behavior
+    event.preventDefault();
+
+    // Access the form that triggered the event
+    const form = event.target;
+
+    // Create an array to hold the form data in the desired format
+    const formDataArray = [];
+
+    // Iterate over each form element
+    for (const element of form.elements) {
+        // Skip elements without a name (e.g., submit buttons)
+        if (!element.name) {
+            continue;
+        }
+
+        // Determine the type of input
+        const type = element.type;
+
+        // Get the label text associated with the form element
+        let label = '';
+        const labelElement = form.querySelector(`label[htmlFor="${element.id}"]`);
+        console.log('For this element, ', element,'Type is',element.type ,'\n This si the label ', labelElement)
+        if (labelElement) {
+            label = labelElement.textContent.trim();
+        }
+
+        if (type === 'checkbox' && label=='') {
+          label = element.parentNode.parentNode.parentNode.firstChild.textContent;
+        }
+
+        // if(type==='file'){
+        //   label = element.parentNode.parentNode.parentNode.firstChild.textContent;
+        // }
+
+        if(type=='select-one'){
+          label = element.parentNode.firstChild.textContent;
+        }
+
+        // Determine the answer based on the element type
+        let answer = '';
+        let id = '';
+        switch (type) {
+            case 'text':
+                answer = element.value;
+                id = element.id;
+                break;
+            case 'checkbox':
+                answer = element.checked ? element.value : null;
+                if (answer === null) continue;
+                else id = element.id; // Skip unchecked checkboxes
+                break;
+            case 'select-one':
+                answer = element.options[element.selectedIndex].value;
+                id = element.id;
+                break;
+            case 'file':
+                // For document uploader, collect the file names
+                if(!element.files[0]) continue;
+                answer = element.files[0].name
+                id = element.id;
+                break;
+            case 'date':
+                answer = element.value;
+                id = element.id;
+                break;
+            case 'radio':
+                answer = element.checked ? element.value:null;
+                if(answer===null) continue;
+                else id = element.id;
+                break;
+            default:
+                break;
+        }
+
+        // Add the form data item to the array
+        const formDataItem = {
+            label: label,
+            type: type,
+            answer: answer,
+            id:id
+        };
+
+        formDataArray.push(formDataItem);
+    }
+
+    // Convert the formDataArray to a JSON string
+
+    if(domForm){
+      const htmlString:any = domForm.outerHTML;
+      formDataArray.push({
+        htmlString:htmlString
+      })
+    }
+    const formDataJSON = JSON.stringify(formDataArray);
+
+    const surveyResponse = {
+      survey_id: parseInt(surveyID),
+      response_data: formDataJSON
+    }
+
+
+
+    // Print the JSON string to the console
+    console.log('are you going to submit Response', surveyResponse)
+    submitResponse(surveyResponse);
+    submitBTN.innerHTML = 'Submitted';
+    console.log(formDataJSON);
+  }
+
+  // const [formdata, setFormdata] = useState<any>();
+
+  // function submitFnx(event){
+  //   const formData = new FormData(event.target as HTMLFormElement);
+  //   setFormdata(formData);
+  
+  //     // Access form field values using the FormData object
+  //     // Iterate through the form data entries (key-value pairs)
+  //     for (const [key, value] of formData.entries()) {
+  //         console.log(`${key}: ${value}`);
+  //     }
+  // }
+  
+  // useEffect(()=>{
+  //   const functionnn = async() =>{
+  //     handleSubmit(formdata);
+  //   }
+  
+  //   functionnn();
+  // },[formdata])
+
+
+
+
   const initialState = { message: null };
-  const [state, formAction] = useFormState(handleSubmit, initialState as any);
+  // const [message, formAction] = useActionState(handleSubmit, null);
   let i = 0;
   let itemID = 1;
   let matrixKey = 0;
@@ -15,7 +174,7 @@ export default function FormFiller({ surveyFields, title }) {
   return (
     <div id='dom-form' className='bg-slate-300 pt-4'>
 
-      <form className={'flex flex-col justify-center items-center gap-4 mt-12'}>
+      <form method="post" className={'flex flex-col justify-center items-center gap-4 mt-12'} onSubmit={handleSubmit}>
         {/* {surveyFields.map((item)=>{
               console.log(item)
             })} */}

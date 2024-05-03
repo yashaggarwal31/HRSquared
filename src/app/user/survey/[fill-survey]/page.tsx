@@ -12,128 +12,10 @@ async function SurveyForm({surveyID}){
     const title = surveyData[0].title;
 
     return <>
-    <FormFiller surveyFields={formFields} title={title}/>
+    <FormFiller surveyFields={formFields} title={title} surveyID={surveyID}/>
     </>
 
 }
-
-export function handleSubmit(event) {
-    const submitBTN:any = document.getElementById('submit-btn');
-    submitBTN.innerHTML='Submitting';
-    submitBTN.disabled = true;
-    const domForm = document.getElementById('dom-form');
-    console.log(domForm)
-    // Prevent the default form submission behavior
-    event.preventDefault();
-
-    // Access the form that triggered the event
-    const form = event.target;
-
-    // Create an array to hold the form data in the desired format
-    const formDataArray:any[] = [];
-
-    // Iterate over each form element
-    for (const element of form.elements) {
-        // Skip elements without a name (e.g., submit buttons)
-        if (!element.name) {
-            continue;
-        }
-
-        // Determine the type of input
-        const type = element.type;
-
-        // Get the label text associated with the form element
-        let label = '';
-        const labelElement = form.querySelector(`label[htmlFor="${element.id}"]`);
-        console.log('For this element, ', element,'Type is',element.type ,'\n This si the label ', labelElement)
-        if (labelElement) {
-            label = labelElement.textContent.trim();
-        }
-
-        if (type === 'checkbox' && label=='') {
-          label = element.parentNode.parentNode.parentNode.firstChild.textContent;
-        }
-
-        // if(type==='file'){
-        //   label = element.parentNode.parentNode.parentNode.firstChild.textContent;
-        // }
-
-        if(type=='select-one'){
-          label = element.parentNode.firstChild.textContent;
-        }
-
-        // Determine the answer based on the element type
-        let answer = '';
-        let id = '';
-        switch (type) {
-            case 'text':
-                answer = element.value;
-                id = element.id;
-                break;
-            case 'checkbox':
-                answer = element.checked ? element.value : null;
-                if (answer === null) continue;
-                else id = element.id; // Skip unchecked checkboxes
-                break;
-            case 'select-one':
-                answer = element.options[element.selectedIndex].value;
-                id = element.id;
-                break;
-            case 'file':
-                // For document uploader, collect the file names
-                if(!element.files[0]) continue;
-                answer = element.files[0].name
-                id = element.id;
-                break;
-            case 'date':
-                answer = element.value;
-                id = element.id;
-                break;
-            case 'radio':
-                answer = element.checked ? element.value:null;
-                if(answer===null) continue;
-                else id = element.id;
-                break;
-            default:
-                break;
-        }
-
-        // Add the form data item to the array
-        const formDataItem = {
-            label: label,
-            type: type,
-            answer: answer,
-            id:id
-        };
-
-        formDataArray.push(formDataItem);
-    }
-
-    // Convert the formDataArray to a JSON string
-
-    if(domForm){ const htmlString = domForm.outerHTML;
-    formDataArray.push({
-      htmlString:htmlString
-    })
-    }
-    const formDataJSON = JSON.stringify(formDataArray);
-
-    const surveyResponse = {
-      survey_id: parseInt(surveyID),
-      response_data: formDataJSON
-    }
-
-
-
-    // Print the JSON string to the console
-    console.log('are you going to submit Response', surveyResponse)
-    // submitResponse(surveyResponse);
-    submitBTN.innerHTML = 'Submitted';
-    console.log(formDataJSON);
-
-}
-
-
 
 
 export default function FillSurveyPage({params}) {
@@ -185,12 +67,6 @@ export default function FillSurveyPage({params}) {
     //     checkDataFetched();
         
     //   })
-
-      
-
-    
-      
-      
     
   return <>
     <Suspense fallback={<p className={'text-center animate-bounce'}>Fetching Survey...</p>}>

@@ -16,3 +16,7 @@ export const dbConnect = async () => {
   client = await db.connect()
   return client
 }
+
+// setTimeout(() => {
+//   if (client) client.end()
+// }, 10000)
