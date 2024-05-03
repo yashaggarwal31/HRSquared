@@ -5,6 +5,8 @@ import { dbConnect } from './renderDB'
 import { Database } from '@/types/database.types'
 
 type SurveyInsert = Database['public']['Tables']['Survey']['Insert']
+type SurveyResponseInsert =
+  Database['public']['Tables']['SurveyResponses']['Insert']
 
 export async function getRecentSurveys () {
   const client = await dbConnect()
@@ -88,7 +90,8 @@ export async function GetSurveyResponses (id: number) {
   const client = await dbConnect()
   try {
     const query = {
-      text: `select sr.id, u.username, sr.response_data, sr.createdat from surveyresponses sr join users u on u.id = sr.user_id where sr.survey_id = $1;`,
+      // text: `select sr.id, u.username, sr.response_data, sr.createdat from surveyresponses sr join users u on u.id = sr.user_id where sr.survey_id = $1;`,
+      text: `select sr.id, sr.response_data, sr.createdat from surveyresponses sr where sr.survey_id = $1;`,
       values: [id]
     }
     const result = await client.query(query)
@@ -133,5 +136,22 @@ export async function getSurveyById (id: number) {
     console.log(error)
     // client.end()
     return 'Error Fetching'
+  }
+}
+
+export async function addUserResponse (response: SurveyResponseInsert) {
+  const client = await dbConnect()
+  const responseFieldsJSON = JSON.stringify(response.response_data)
+  const query = {
+    text: 'insert into surveyresponses (user_id, survey_id, response_data) values ($1, $2, $3)',
+    values: [response.user_id, response.survey_id, responseFieldsJSON]
+  }
+
+  try {
+    const result = await client.query(query)
+
+    return result
+  } catch (error) {
+    return 'Error Fetching Data'
   }
 }

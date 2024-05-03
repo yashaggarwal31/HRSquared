@@ -96,7 +96,7 @@ export default function SurveyResponse({response}) {
     
     
   return (
-        <div id={'form'} className='w-[100%]' >
+        <div id={'form'} className='w-[100%] bg-slate-300 pb-8' >
       
         </div>
   )
