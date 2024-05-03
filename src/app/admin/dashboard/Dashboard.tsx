@@ -1,34 +1,28 @@
-'use client'
-import React from 'react'
+"use client";
+import React from "react";
 
 export default function Dashboard() {
-  return (
-    <div>
-      Dashboard Page
-    </div>
-  )
+  return <div>Dashboard Page</div>;
 }
 
-
-/* eslint-disable @next/next/no-img-element */
+// /* eslint-disable @next/next/no-img-element */
 // "use client";
 // import React, { useState, useEffect } from "react";
 
-
-// import Cards from "@/components/repo2/dashboard/Cards/Cards";
-// import DashboardTickets from "@/components/repo2/dashboard/DashboardTickets/DashboardTickets";
-// import LineChart from "@/components/repo2/dashboard/Graphs/Ticketgraph";
-// import DashboardSurvey from "@/components/repo2/dashboard/DashboardSurvey/DashboardSurvey";
-// import LineChart2 from "@/components/repo2/dashboard/Graphs/Surveygraph";
-// import DashboardFeedback from "@/components/repo2/dashboard/DashboardFeedbacks/DashboardFeedback";
-// import FeedbackBarGraph from "@/components/repo2/dashboard/Graphs/Feedbackgraph";
-// import TicketComponent from "@/components/repo2/dashboard/DataPage/page";
-// import SurveySystemTable from "@/components/repo2/dashboard/DashboardDataComponent/SurveyData/SurveyData";
-// import MonthlySurveyTable from "@/components/repo2/dashboard/DashboardDataComponent/SurveyData/SurveyData2";
-// import FeedbackSystemTable from "@/components/repo2/dashboard/DashboardDataComponent/FeedbackData/FeedbackData";
-// import MonthlyFeedbackTable from "@/components/repo2/dashboard/DashboardDataComponent/FeedbackData/FeedbackData2";
-// import LoaderComponent from "../../../../public/data/Loader/load";
-// import cards from "../../../../public/data/cards.json";
+// // import Cards from "@/components/repo2/dashboard/Cards/Cards";
+// // import DashboardTickets from "@/components/repo2/dashboard/DashboardTickets/DashboardTickets";
+// // import LineChart from "@/components/repo2/dashboard/Graphs/Ticketgraph";
+// // import DashboardSurvey from "@/components/repo2/dashboard/DashboardSurvey/DashboardSurvey";
+// // import LineChart2 from "@/components/repo2/dashboard/Graphs/Surveygraph";
+// // import DashboardFeedback from "@/components/repo2/dashboard/DashboardFeedbacks/DashboardFeedback";
+// // import FeedbackBarGraph from "@/components/repo2/dashboard/Graphs/Feedbackgraph";
+// // import TicketComponent from "@/components/repo2/dashboard/DataPage/page";
+// // import SurveySystemTable from "@/components/repo2/dashboard/DashboardDataComponent/SurveyData/SurveyData";
+// // import MonthlySurveyTable from "@/components/repo2/dashboard/DashboardDataComponent/SurveyData/SurveyData2";
+// // import FeedbackSystemTable from "@/components/repo2/dashboard/DashboardDataComponent/FeedbackData/FeedbackData";
+// // import MonthlyFeedbackTable from "@/components/repo2/dashboard/DashboardDataComponent/FeedbackData/FeedbackData2";
+// // import LoaderComponent from "../../../../public/data/Loader/load";
+// // import cards from "../../../../public/data/cards.json";
 // import "../../../../public/css/style.css";
 
 // function DashBoard(){
