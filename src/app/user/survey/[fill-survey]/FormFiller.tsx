@@ -1,13 +1,41 @@
 'use client'
-import React from 'react'
-import { useFormState } from 'react-dom';
+import React, { useEffect, useState } from 'react'
+// import { useActionState } from 'react';
 import { FieldTypes } from "@/components/enums/survey-field-types";
 import { FormFields } from '@/components/surveys/FormFields'
 import { handleSubmit } from './page'
+import { component } from './component';
+
+
 
 export default function FormFiller({ surveyFields, title }) {
+
+  // const [formdata, setFormdata] = useState<any>();
+
+  // function submitFnx(event){
+  //   const formData = new FormData(event.target as HTMLFormElement);
+  //   setFormdata(formData);
+  
+  //     // Access form field values using the FormData object
+  //     // Iterate through the form data entries (key-value pairs)
+  //     for (const [key, value] of formData.entries()) {
+  //         console.log(`${key}: ${value}`);
+  //     }
+  // }
+  
+  // useEffect(()=>{
+  //   const functionnn = async() =>{
+  //     handleSubmit(formdata);
+  //   }
+  
+  //   functionnn();
+  // },[formdata])
+
+
+
+
   const initialState = { message: null };
-  const [state, formAction] = useFormState(handleSubmit, initialState as any);
+  // const [message, formAction] = useActionState(handleSubmit, null);
   let i = 0;
   let itemID = 1;
   let matrixKey = 0;
@@ -15,7 +43,7 @@ export default function FormFiller({ surveyFields, title }) {
   return (
     <div id='dom-form' className='bg-slate-300 pt-4'>
 
-      <form className={'flex flex-col justify-center items-center gap-4 mt-12'}>
+      <form method="post" className={'flex flex-col justify-center items-center gap-4 mt-12'} action={component}>
         {/* {surveyFields.map((item)=>{
               console.log(item)
             })} */}
