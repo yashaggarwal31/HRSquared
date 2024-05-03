@@ -2,7 +2,7 @@
 import React, { use, useState } from "react";
 // import { url_add_feedback } from "@/app/lib/apiEndPoints";
 import { addFeedback } from "@/lib/feedbacks";
-import { handleSubmit } from "./page";
+// import { handleSubmit } from "./page";
 
 function Feedbacks() {
   const [title, setTitle] = useState("");
@@ -16,30 +16,32 @@ function Feedbacks() {
 
   const handleSubmitUtil = async () => {
     console.log("hello dheeraj");
-    // console.log("run");
-    // if (title.trim() === "") {
-    //   setAck("Title is empty");
-    //   setConformation(false);
-    //   return;
-    // }
-    // if (feedback.trim() === "") {
-    //   setAck("Feedback is empty");
-    //   setConformation(false);
-    //   return;
-    // }
-    // if (!conformation && !isAnonymous) {
-    //   setShowDialog(true);
-    //   return;
-    // }
+    console.log("run");
+    if (title.trim() === "") {
+      setAck("Title is empty");
+      setConformation(false);
+      return;
+    }
+    if (feedback.trim() === "") {
+      setAck("Feedback is empty");
+      setConformation(false);
+      return;
+    }
+    if (!conformation && !isAnonymous) {
+      setShowDialog(true);
+      return;
+    }
     const feedbackDTO = {
       title: title,
-      feedback: feedback,
+      description: feedback,
       anonymous: isAnonymous,
     };
     setSending(true);
     // const url = "/api/feedbacks/addfeedback";
     try {
-      const feedbackResponse = await handleSubmit(feedbackDTO);
+      const feedbackResponse = await addFeedback(
+        JSON.parse(JSON.stringify(feedbackDTO))
+      );
 
       setAck("Feedback submitted successfully");
       setAckClass("text-green-700 font-semibold pt-1");
@@ -51,7 +53,6 @@ function Feedbacks() {
     } catch (error) {
       setAck("Error while submitting feedback");
       setConformation(false);
-      setAck("");
       setSending(false);
     }
   };
@@ -141,10 +142,11 @@ function Feedbacks() {
           </div>
           <p className={ackClass}>{ack}</p>
           <button
+            type="button"
+            className="mt-2 bg-rose-600 px-4 py-2 text-white"
             onClick={async () => {
               await handleSubmitUtil();
             }}
-            className="mt-2 bg-rose-600 px-4 py-2 text-white"
           >
             {sending ? "Submitting" : "Submit"}
           </button>
