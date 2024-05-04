@@ -1,3 +1,4 @@
+'use server'
 const getAdminSurveys = () => {};
 
 import { notFound } from "next/navigation";
@@ -154,4 +155,9 @@ export async function addUserResponse(response: SurveyResponseInsert) {
   } catch (error) {
     return "Error Fetching Data";
   }
+}
+
+export async function responsesToJson(form,surveyResponseData){
+  console.log('this is form\n ******* ',form );
+  console.log('this is SurveyResponse\n ******* ',surveyResponseData );
 }

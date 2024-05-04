@@ -7,6 +7,10 @@ import { url_fill_survey } from '@/lib/ApiEndPoints';
 
 export default function FormFiller({ surveyFields, title, surveyID }) {
 
+  const arr = title.split('%!@')
+  title = arr[0];
+  const description = arr[1]
+
   const submitResponse = async (responseData) => {
     console.log("sending with response data: ",responseData);
     try {
@@ -179,18 +183,20 @@ export default function FormFiller({ surveyFields, title, surveyID }) {
               console.log(item)
             })} */}
 
-        <div className="w-[55%] rounded-lg border-t-4 border-blue-500 bg-white p-3 h-28">
+        <div className="w-[55%] rounded-lg border-t-4 border-blue-500 bg-white p-3 ">
           <div className="text-2xl text-center flex justify-center items-center">
-            <label className="my-8 w-[100%] text-2xl outline-none text-center">{title}</label>
+            <label className=" block my-8 w-[100%] text-2xl outline-none text-center">{title}</label>
           </div>
-          {/* <div>
-                    <textarea
-                      className="w-[100%] outline-none"
-                      placeholder="Survey Description"
-                      onChange={(e)=>setSurveyDescription(e.target.value)}
-                    />
-                  </div> */}
+          <div className=" text-xl text-center flex justify-center items-center">
+          <textarea
+              className="w-[100%] outline-none"
+              placeholder="Survey Description"
+              value={description}
+            />
+          </div>
         </div>
+
+        
 
 
 

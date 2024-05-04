@@ -32,6 +32,11 @@ export default function AdminSurveyList({surveyData}:{surveyData:any}) {
                     Survey Title
                   </p>
                 </th>
+                <th className="border-blue-gray-50 border-b px-5 py-3 text-left">
+                  <p className="text-blue-gray-400 block font-sans  font-bold uppercase antialiased">
+                    Survey Description
+                  </p>
+                </th>
                 <th className="border-blue-gray-50 border-b px-5 py-3 text-center">
                   <p className="text-blue-gray-400 block font-sans  font-bold uppercase antialiased">
                     Created By
@@ -55,7 +60,12 @@ export default function AdminSurveyList({surveyData}:{surveyData:any}) {
                 <tr key={index}>
                   <td className="border-blue-gray-50 border-b px-5 py-3 text-left">
                     <p className="text-blue-gray-900 block font-sans text-sm font-semibold leading-normal antialiased">
-                      {survey.survey_title}
+                      {survey.survey_title.split('%!@')[0]}
+                    </p>
+                  </td>
+                  <td className="border-blue-gray-50 border-b px-5 py-3 text-left">
+                    <p className="text-blue-gray-900 block font-sans text-sm font-semibold leading-normal antialiased">
+                      {survey.survey_title.split('%!@')[1]}
                     </p>
                   </td>
                   <td className="border-blue-gray-50 border-b px-5 py-3 text-center">

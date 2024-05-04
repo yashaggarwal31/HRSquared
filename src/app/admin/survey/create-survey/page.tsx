@@ -22,8 +22,8 @@ function SurveysCreation() {
   // const router = useRouter();
 
   const [formFields, setFormFields] = useState<FormFields[]>([]);
-  const [surveyTitle, setSurveyTitle] = useState<String>('Test-Survey');
-  const [surveyDescription, setSurveyDescription] = useState<String>('Test-Description');
+  const [surveyTitle, setSurveyTitle] = useState<string>('Test-Survey');
+  const [surveyDescription, setSurveyDescription] = useState<string>('Test-Description');
   const [closesAt, setClosesAt ] = useState<String>();
 
 
@@ -35,7 +35,7 @@ function SurveysCreation() {
     // Create an ISO string for the future date
     let futureISOString = futureDate.toISOString();
     const body = {
-      'title': surveyTitle,
+      'title': surveyTitle.concat('%!@').concat(surveyDescription),
       'survey_fields': formFields,
       'closes_at': futureISOString,
       'created_by': 1,
