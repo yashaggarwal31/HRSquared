@@ -1,4 +1,4 @@
-import { GetSurveyResponses, getSurveyById, responsesToJson, createJsonFromLabels } from '@/lib/surveys';
+import { GetSurveyResponses, getSurveyById, responsesToJson, createJsonFromLabels, jsonToCsv } from '@/lib/surveys';
 import React, { Suspense } from 'react'
 import ResponseToCSV from './ResponseToCSV';
 
@@ -14,6 +14,8 @@ export async function ResponseDownloader(){
     const surveyData = await getSurveyById(surveyID);
     console.log('SurveyDATATATATA ', surveyData[0].surveyfields)
     const JsonWithLabelSeqArr = await createJsonFromLabels(surveyData[0].surveyfields);
+
+
     const formFields = surveyData[0].surveyfields;
     const titles = surveyData[0].title;
     title = titles.split('%!@')[0];
@@ -25,7 +27,10 @@ export async function ResponseDownloader(){
 
     const responseJson = await responsesToJson(formFields,surveyResponseData,JsonWithLabelSeqArr);
 
-    return <ResponseToCSV responseJson={responseJson}/>
+    const csv = await jsonToCsv(responseJson);
+
+    
+    return <ResponseToCSV csv={csv}/>
 
     //get surveyResponses by id
     //take one response and make the base fields (title fields)

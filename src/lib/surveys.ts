@@ -165,6 +165,7 @@ export async function createJsonFromLabels(surveyLabels: any[]) {
   let labelArray = [];
 
   surveyLabels.forEach(item => {
+    item.label = item.label.trim();
     labelArray.push(item.label);
     switch (item.type) {
       case 0:
@@ -185,13 +186,13 @@ export async function createJsonFromLabels(surveyLabels: any[]) {
         // Date input
         jsonData[item.label] = [];
         break;
-      case 4:
-        // Matrix
-        jsonData[item.label] = {};
-        item.matrixRow.forEach(rowItem => {
-          jsonData[item.label][rowItem] = [];
-        });
-        break;
+      // case 4:
+      //   // Matrix
+      //   jsonData[item.label] = {};
+      //   item.matrixRow.forEach(rowItem => {
+      //     jsonData[item.label][rowItem] = [];
+      //   });
+      //   break;
       default:
         break;
     }
@@ -213,7 +214,10 @@ export async function responsesToJson(form,surveyResponseData,JsonWithLabelSeqAr
   // console.log('this is SurveyResponse\n ******* ',surveyResponseData );
 
   let jsonData= JsonWithLabelSeqArr[1];
+  let formlabels = JsonWithLabelSeqArr[0];
   // let labelArray = JsonWithLabelSeqArr[0];
+
+  let responseIterator = 0;
   
 
   for(let response of surveyResponseData){
@@ -228,23 +232,16 @@ export async function responsesToJson(form,surveyResponseData,JsonWithLabelSeqAr
     //parseString and create htmlString
 
 
-    let responseIterator = 0;
-
-
     for(let data of htmlString){
       // console.log('This is data: ',data.id);
       if(data.id){
           const ele = container.querySelector(`#${data.id}`) as HTMLInputElement;
           
           if(ele){
-            
-
               let label;
               let value;
               let radioLabel1;
               let radioLabel2;
-              let caseChecker;
-
               let flag = 0;
 
               switch(ele.type){
@@ -315,29 +312,65 @@ export async function responsesToJson(form,surveyResponseData,JsonWithLabelSeqAr
               }
 
               console.log('radio: ', radioLabel1,'radio2',radioLabel2, 'JsonData ',jsonData[radioLabel1]);
-
               console.log('Label: ',label);
               console.log('Value: ', value)
 
           }
 
-          
+          // making sure all inputs are there
+          // for(let labels in formlabels){
+          //   jsonData[labels][responseIterator]
+          // }
       }
     }
-
-    
 
     responseIterator++;
 
     
   }
 
-  console.log('Final JSONNNNN**********\n')
+    console.log('Final JSONNNNN**********\n')
     console.log(jsonData)
 
-  
-
-
-
+    return jsonData;
   
 }
+
+
+export async function jsonToCsv(jsonData) {
+  // Extract the headers from the JSON data
+  const headers = Object.keys(jsonData);
+  let csv = headers.join(',') + '\n'; // CSV header
+
+  // Find the maximum number of rows in the data
+  const maxRows = Math.max(...Object.values(jsonData).map((arr:any) => arr.length));
+
+  // Build the CSV content
+  for (let i = 0; i < maxRows; i++) {
+    const row = headers.map((header) => {
+      const values = jsonData[header];
+      if (i < values.length) {
+        const fieldValue = values[i];
+        if (Array.isArray(fieldValue)) {
+          // If it's a nested array, join with '&'
+          return `"${fieldValue.join('&')}"`;
+        } else {
+          // Enclose the field in double quotes for CSV safety
+          return `"${fieldValue}"`;
+        }
+      } else {
+        // Handle cases where a key has fewer entries
+        return '';
+      }
+    });
+    csv += row.join(',') + '\n'; // Add the row to CSV
+  }
+
+  return csv;
+}
+
+
+
+ 
+
+

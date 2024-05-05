@@ -58,6 +58,10 @@ const Navbar: React.FC = () => {
 
   // console.log("out admin", isAdmin, "in user", inuser);
 
+  function printHello(){
+    console.log('hello')
+  }
+
   return (
     <nav className="bg-gray-800">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -70,7 +74,7 @@ const Navbar: React.FC = () => {
               aria-expanded={isMenuOpen}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              <span className="absolute -inset-0.5"></span>
+              <span className="absolute -inset-0.5" onClick={printHello}></span>
               <span className="sr-only">Open main menu</span>
               <svg
                 className={`${isMenuOpen ? "hidden" : "block"} h-6 w-6`}
