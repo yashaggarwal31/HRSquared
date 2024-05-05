@@ -185,13 +185,13 @@ export async function createJsonFromLabels(surveyLabels: any[]) {
         // Date input
         jsonData[item.label] = [];
         break;
-      // case 4:
-      //   // Matrix
-      //   jsonData[item.label] = {};
-      //   item.matrixRow.forEach(rowItem => {
-      //     jsonData[item.label][rowItem] = [];
-      //   });
-      //   break;
+      case 4:
+        // Matrix
+        jsonData[item.label] = {};
+        item.matrixRow.forEach(rowItem => {
+          jsonData[item.label][rowItem] = [];
+        });
+        break;
       default:
         break;
     }
@@ -214,7 +214,7 @@ export async function responsesToJson(form,surveyResponseData,JsonWithLabelSeqAr
 
   let jsonData= JsonWithLabelSeqArr[1];
   // let labelArray = JsonWithLabelSeqArr[0];
-  let i = 0;
+  
 
   for(let response of surveyResponseData){
     response = response.response_data;
@@ -226,38 +226,61 @@ export async function responsesToJson(form,surveyResponseData,JsonWithLabelSeqAr
     const dom = new JSDOM(form);
     const container = dom.window.document;
     //parseString and create htmlString
+
+
+    let responseIterator = 0;
+
+
     for(let data of htmlString){
       // console.log('This is data: ',data.id);
       if(data.id){
           const ele = container.querySelector(`#${data.id}`) as HTMLInputElement;
-          // if(ele){
-          //     ele.value = data.answer;
-          // }
+          
           if(ele){
-              // console.log('****************************', ele)
-              // ele.disabled = true;
+            
 
               let label;
               let value;
               let radioLabel1;
               let radioLabel2;
+              let caseChecker;
 
               let flag = 0;
 
               switch(ele.type){
                   case 'text':
                     label = ele.parentElement.firstChild.textContent;
+                    label = label.trim();
                     value = data.answer;
+
+                    if(label && jsonData[label]){
+                      jsonData[label][responseIterator]=value;
+                    }
                     break;
                   case 'checkbox':
                     label = ele.parentElement.parentElement.parentElement.firstChild.textContent;
+                    label = label.trim();
                     value = ele.value;
+                    if(label && jsonData[label]){
+                      if(jsonData[label][responseIterator]){
+                        jsonData[label][responseIterator].push(value)
+                      }
+                      else{
+                        jsonData[label][responseIterator] = [];
+                        jsonData[label][responseIterator].push(value);
+                      }
+                    }
                       break;
                   case 'radio':
                     flag = 1;
                     radioLabel1 = ele.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.firstChild.textContent;
+                    radioLabel1 = radioLabel1.trim()
                     radioLabel2 = ele.parentElement.parentElement.firstChild.textContent;
+                    radioLabel2 = radioLabel2.trim();
                     value = ele.value;
+                    if(label && jsonData[radioLabel1][radioLabel2]){
+                      jsonData[radioLabel1][radioLabel2][responseIterator]=value;
+                    }
                       break;
                   case 'file':
                     if(!data.answer){
@@ -265,75 +288,54 @@ export async function responsesToJson(form,surveyResponseData,JsonWithLabelSeqAr
                       continue;
                     }
                     label = ele.parentElement.parentElement.firstChild.textContent;
+                    label = label.trim();
                     value = data.answer;
+
+                    if(label && jsonData[label]){
+                      jsonData[label][responseIterator]=value;
+                    }
                     break;
                     
                   case 'date':
                     label = ele.parentElement.parentElement.firstChild.textContent
+                    label = label.trim();
                     value = data.answer
+                    if(label && jsonData[label]){
+                      jsonData[label][responseIterator]=value;
+                    }
                     break;
                   case 'select-one':
                     label = ele.parentNode.firstChild.textContent;
+                    label = label.trim();
                     value = data.answer
+                    if(label && jsonData[label]){
+                      jsonData[label][responseIterator]=value;
+                    }
                     break
               }
 
-              // if(flag==1){
-              //   //radio button
-              //   if(labelArray[i]!=radioLabel1){
-              //     jsonData[labelArray[i]].push('n/a');
-              //     i++;
-              //     continue;
-              //   }
-
-              //   jsonData[radioLabel1][radioLabel2].push(value);
-              //   i++;
-              // }
-
-              // if(i=(labelArray.size-1)) continue;
-
-              // if(!labelArray[i]) continue;
-
-              // if(labelArray[i]!=label){
-              //   console.log('labels dont match, ', labelArray[i],' and ',label)
-              //   jsonData[label].push('n/a');
-              //   i++;
-              //   continue;
-              // }
-              // else{
-              //   console.log('labels match, ', labelArray[i],' and ',label)
-              //   jsonData[label].push(value);
-              //   i++;
-              // }
-
-              if(label && jsonData[label]){
-                jsonData[label].push(value)
-              }
-
-              
-
-              
+              console.log('radio: ', radioLabel1,'radio2',radioLabel2, 'JsonData ',jsonData[radioLabel1]);
 
               console.log('Label: ',label);
               console.log('Value: ', value)
 
-
-              
-
           }
 
           
-          // if(ele.type!='select'){
-              
-          // }
-           
       }
     }
 
+    
 
-    console.log('Final JSONNNNN**********\n')
-    console.log(jsonData)
+    responseIterator++;
+
+    
   }
+
+  console.log('Final JSONNNNN**********\n')
+    console.log(jsonData)
+
+  
 
 
 
