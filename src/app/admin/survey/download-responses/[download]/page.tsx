@@ -30,7 +30,7 @@ export async function ResponseDownloader(){
     const csv = await jsonToCsv(responseJson);
 
     
-    return <ResponseToCSV csv={csv}/>
+    return <ResponseToCSV csv={csv} title={title} description={description}/>
 
     //get surveyResponses by id
     //take one response and make the base fields (title fields)
