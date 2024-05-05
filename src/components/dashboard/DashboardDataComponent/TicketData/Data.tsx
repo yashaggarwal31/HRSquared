@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { formatDateString } from "@/../public/data/Components/function";
+import { formatDateString } from "@/../public/Components/function";
 
 const TicketSystem = ({ Ticketsdata }) => {
   return (
