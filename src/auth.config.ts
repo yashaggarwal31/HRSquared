@@ -6,7 +6,7 @@ export const authConfig = {
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-    // return true; //remove this customize for admin
+    return true; //remove this customize for admin
     console.log('middleware')
       const isLoggedIn = !!auth?.user;
       const isOnDashboard = nextUrl.pathname.startsWith('/admin');
