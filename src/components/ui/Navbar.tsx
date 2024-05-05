@@ -104,7 +104,7 @@ const Navbar: React.FC = () => {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                {isAdmin ? (
+                {isAdmin && (
                   <Link
                     href="/dashboard"
                     className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
@@ -112,8 +112,6 @@ const Navbar: React.FC = () => {
                   >
                     Dashboard
                   </Link>
-                ) : (
-                  <></>
                 )}
 
                 {inuser ? (
@@ -159,6 +157,13 @@ const Navbar: React.FC = () => {
                     >
                       Surveys
                     </Link>
+                    {isAdmin && 
+                    <Link
+                      href="/admin/manage-users"
+                      className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                    >
+                      Manange Users
+                    </Link>}
                   </>
                 )}
               </div>
