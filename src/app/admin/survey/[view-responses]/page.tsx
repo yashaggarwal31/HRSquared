@@ -10,7 +10,7 @@ async function AdminSurveyResponses({surveyID}:{surveyID:number}){
     const title = surveyData[0].title;
 
     const surveyResponseData = await GetSurveyResponses(surveyID);
-    console.log('Survey Response Data: ', surveyResponseData)
+    // console.log('Survey Response Data: ', surveyResponseData)
 
     return <AdminSurveyResponseList surveyResponseData={surveyResponseData} surveyID={surveyID} title={title} formFields={formFields}/>
 }

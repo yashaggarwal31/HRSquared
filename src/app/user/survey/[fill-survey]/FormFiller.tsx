@@ -230,7 +230,7 @@ export default function FormFiller({ surveyFields, title, surveyID }) {
                 <div className="flex flex-col ">
                   {item.options?.map((itemVal) => (
                     <div className="align-center flex gap-4" key={i + 1}>
-                      <input id={(itemID++).toString()} value={itemVal} name='Checkbox' type="checkbox" />
+                      <input id={(itemID++).toString()} value={itemVal} name={item.label} type="checkbox" />
                       <label>{itemVal} </label>
                     </div>
                   ))}
@@ -276,7 +276,7 @@ export default function FormFiller({ surveyFields, title, surveyID }) {
                 </div>
               </div>
             )}
-            {item.type == FieldTypes.MATRIX && (<>
+            {item.type == FieldTypes.MATRIX && (<div>
               <label className="">{item.label} </label>
               <div className="flex items-center justify-center">
                 <table className="w-[80%]">
@@ -302,7 +302,7 @@ export default function FormFiller({ surveyFields, title, surveyID }) {
                     })}
                   </tbody>
                 </table>
-              </div></>
+              </div></div>
             )}
           </div>
         ))}

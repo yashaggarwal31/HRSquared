@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 
 export default function UserSurveyList({surveyData}) {
-  console.log('main page', surveyData);
+  // console.log('main page', surveyData);
   return (
     <div className="mb-8 mt-12 flex flex-col gap-12 ">
       <div className="relative flex flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">

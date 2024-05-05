@@ -1,14 +1,19 @@
-import { GetSurveyResponses, getSurveyById, responsesToJson } from '@/lib/surveys';
+import { GetSurveyResponses, getSurveyById, responsesToJson, createJsonFromLabels } from '@/lib/surveys';
 import React, { Suspense } from 'react'
 import ResponseToCSV from './ResponseToCSV';
+
 let surveyID;
 let title;
 let description;
+
+
 
 export async function ResponseDownloader(){
 
     console.log(surveyID)
     const surveyData = await getSurveyById(surveyID);
+    console.log('SurveyDATATATATA ', surveyData[0].surveyfields)
+    const JsonWithLabelSeqArr = await createJsonFromLabels(surveyData[0].surveyfields);
     const formFields = surveyData[0].surveyfields;
     const titles = surveyData[0].title;
     title = titles.split('%!@')[0];
@@ -16,9 +21,9 @@ export async function ResponseDownloader(){
 
 
     const surveyResponseData = await GetSurveyResponses(surveyID);
-    console.log('Survey Response Data: ', surveyResponseData)
+    // console.log('Survey Response Data: ', surveyResponseData)
 
-    const responseJson = await responsesToJson(formFields,surveyResponseData);
+    const responseJson = await responsesToJson(formFields,surveyResponseData,JsonWithLabelSeqArr);
 
     return <ResponseToCSV responseJson={responseJson}/>
 
