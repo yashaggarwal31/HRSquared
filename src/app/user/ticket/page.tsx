@@ -3,7 +3,7 @@ import UserTicketList from "./UserTicketList";
 import { getUserTickets } from "@/lib/tickets";
 
 async function UserTickets() {
-  const ticketData = await getUserTickets();
+  const ticketData = await getUserTickets(1);
 
   console.log("users page, ticket data: ", ticketData);
 

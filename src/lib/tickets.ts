@@ -1,59 +1,102 @@
+"use server";
 import { notFound } from "next/navigation";
 import { dbConnect } from "./renderDB";
 import { Database } from "@/types/database.types";
 
 type ticketInsert = Database["public"]["Tables"]["Ticket"]["Insert"];
 
-export async function addTicket(ticket: ticketInsert) {
+export async function getRowByCategory(id: number) {
+  const client = await dbConnect();
+  const query = {
+    text: `
+    select * from userrole_mapping ur
+    where ur.category_id = $1`,
+    values: [id],
+  };
+
+  const data = await client.query(query);
+  return data;
+}
+
+export async function addTicket(body: string) {
+  console.log("body!!!!!!!!", body);
   const client = await dbConnect();
   try {
+    const ticket: {
+      sub_category_id: number;
+      priority: number;
+      title: string;
+      description: string;
+      created_by: number;
+    } = JSON.parse(body);
+    const UserRoleRow = await getRowByCategory(ticket.sub_category_id);
+    const Ticket = {
+      sub_category_id: ticket.sub_category_id,
+      priority: ticket.priority,
+      title: ticket.title,
+      description: ticket.description,
+      status_id: 1,
+      created_by: ticket.created_by,
+      assigned_to: UserRoleRow.data
+        ? UserRoleRow.data.length != 0
+          ? UserRoleRow.data[0].user_id
+          : null
+        : null,
+    };
     const query = {
-      text: "insert into tickets (created_at, created_by, description, priority, status_id, sub_category_id, title) values ($1, $2, $3, $4, $5, $6, $7)",
+      text: "insert into tickets (title, description, subcategory_id, priority, status, createdby, assignedto) values ($1, $2, $3, $4, $5, $6, $7)",
       values: [
-        ticket.created_at,
-        ticket.created_by,
-        ticket.description,
-        ticket.priority,
-        ticket.status_id,
-        ticket.sub_category_id,
-        ticket.title,
+        Ticket.title,
+        Ticket.description,
+        Ticket.sub_category_id,
+        Ticket.priority,
+        Ticket.status_id,
+        Ticket.created_by,
+        Ticket.assigned_to,
       ],
     };
+
     const result = await client.query(query);
     // client.end()
-    return {
-      status: 200,
-      statusText: `${result.command} completed successfully`,
-      result: result,
-    };
+    return true;
   } catch (error: any) {
-    return {
-      error: error,
-      status: 500,
-      statusText: "Internal server error",
-      message: error.message,
-      data: null,
-    };
+    return false;
   }
 }
 
-export async function getUserTickets() {
+export async function getUserTickets(id: number) {
   const client = await dbConnect();
 
   const query = {
     text: `
-          SELECT t.id AS ticket_id, 
-          t.title AS title,
-          t.description AS description,
-          t.assignedto AS assignedto,
-          t.createdat AS createdat,
-          t.status AS status,
-          u.username AS creator_name
-          FROM tickets t
-          LEFT JOIN users u ON t.createdby = u.id
-          GROUP BY t.id, t.title, t.description, t.assignedto , u.username
-          ORDER BY t.id DESC;
-          `,
+    SELECT
+    tickets.id as ticket_id,
+    tickets.title as title,
+    tickets.description as description,
+    category.categoryname AS category,
+    ticketpriority.name AS priority,
+    ticketstatus.name AS status,
+    users_createdby.username AS createdby,
+    tickets.createdat,
+    users_assignedto.username AS assignedto,
+    users_closedby.username AS closedby,
+    tickets.closedat
+    FROM
+        tickets
+    LEFT JOIN
+        category ON tickets.subcategory_id = category.id
+    LEFT JOIN
+        ticketpriority ON tickets.priority = ticketpriority.id
+    LEFT JOIN
+        ticketstatus ON tickets.status = ticketstatus.id
+    LEFT JOIN
+        users AS users_createdby ON tickets.createdby = users_createdby.id
+    LEFT JOIN
+        users AS users_assignedto ON tickets.assignedto = users_assignedto.id
+    LEFT JOIN
+        users AS users_closedby ON tickets.closedby = users_closedby.id
+    where users_createdby.id=$1`,
+    values: [id],
   };
 
   const data = await client.query(query);
@@ -72,14 +115,32 @@ export async function getAllTickets() {
 
   const query = {
     text: `
-            SELECT t.id AS ticket_id, 
-            t.title AS title,
-            t.description AS description,
-            t.assignedto AS assignedto,
-            t.createdat AS createdat,
-            t.status AS status
-            FROM tickets t
-            `,
+    SELECT
+    tickets.id as ticket_id,
+    tickets.title as title,
+    tickets.description as description,
+    category.categoryname AS category,
+    ticketpriority.name AS priority,
+    ticketstatus.name AS status,
+    users_createdby.username AS createdby,
+    tickets.createdat,
+    users_assignedto.username AS assignedto,
+    users_closedby.username AS closedby,
+    tickets.closedat
+    FROM
+        tickets
+    LEFT JOIN
+        category ON tickets.subcategory_id = category.id
+    LEFT JOIN
+        ticketpriority ON tickets.priority = ticketpriority.id
+    LEFT JOIN
+        ticketstatus ON tickets.status = ticketstatus.id
+    LEFT JOIN
+        users AS users_createdby ON tickets.createdby = users_createdby.id
+    LEFT JOIN
+        users AS users_assignedto ON tickets.assignedto = users_assignedto.id
+    LEFT JOIN
+        users AS users_closedby ON tickets.closedby = users_closedby.id`,
   };
 
   const data = await client.query(query);
@@ -93,19 +154,38 @@ export async function getAllTickets() {
   }
 }
 
-export async function getAssignedTickets() {
+export async function getAssignedTickets(id: number) {
   const client = await dbConnect();
 
   const query = {
-    text: `
-            SELECT t.id AS ticket_id, 
-            t.title AS title,
-            t.description AS description,
-            t.assignedto AS assignedto,
-            t.createdat AS createdat,
-            t.status AS status
-            FROM tickets t
-            `,
+    text: `SELECT
+    tickets.id as ticket_id,
+    tickets.title as title,
+    tickets.description as description,
+    category.categoryname AS category,
+    ticketpriority.name AS priority,
+    ticketstatus.name AS status,
+    users_createdby.username AS createdby,
+    tickets.createdat,
+    users_assignedto.username AS assignedto,
+    users_closedby.username AS closedby,
+    tickets.closedat
+    FROM
+        tickets
+    LEFT JOIN
+        category ON tickets.subcategory_id = category.id
+    LEFT JOIN
+        ticketpriority ON tickets.priority = ticketpriority.id
+    LEFT JOIN
+        ticketstatus ON tickets.status = ticketstatus.id
+    LEFT JOIN
+        users AS users_createdby ON tickets.createdby = users_createdby.id
+    LEFT JOIN
+        users AS users_assignedto ON tickets.assignedto = users_assignedto.id
+    LEFT JOIN
+        users AS users_closedby ON tickets.closedby = users_closedby.id
+    where users_assignedto.id=$1;`,
+    values: [id],
   };
 
   const data = await client.query(query);
@@ -117,4 +197,20 @@ export async function getAssignedTickets() {
   } else {
     notFound();
   }
+}
+
+export async function getTicketFormData() {
+  const client = await dbConnect();
+  const groups_data = await client.query("select * from groups");
+  const category_data = await client.query("select * from category");
+  const ticketpriority_data = await client.query(
+    "select * from ticketpriority"
+  );
+
+  return {
+    groups: groups_data.rowCount > 0 ? groups_data.rows : [],
+    categories: category_data.rowCount > 0 ? category_data.rows : [],
+    ticketpriority:
+      ticketpriority_data.rowCount > 0 ? ticketpriority_data.rows : [],
+  };
 }

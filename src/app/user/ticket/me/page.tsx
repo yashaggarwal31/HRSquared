@@ -3,7 +3,7 @@ import UserAssignedTickets from "./UserAssignedTickets";
 import { getAssignedTickets } from "@/lib/tickets";
 
 async function UserTickets() {
-  const ticketData = await getAssignedTickets();
+  const ticketData = await getAssignedTickets(1);
 
   console.log("users page, ticket data: ", ticketData);
 
