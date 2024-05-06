@@ -88,7 +88,7 @@ export async function MarkViewed(id: number) {
       values: [id],
     };
     const result = await client.query(query);
-    client.end();
+    // client.end();
     return {
       status: 200,
       statusText: `${result.command} completed successfully`,
