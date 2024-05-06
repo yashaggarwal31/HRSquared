@@ -81,7 +81,7 @@ export default function AdminSurveyList({surveyData}:{surveyData:any}) {
                   <td className="border-blue-gray-50 border-b px-5 py-3 text-center">
                     <p className="text-blue-gray-900 block font-sans text-sm font-semibold leading-normal antialiased">
                      <Link href={`survey/${survey.survey_id}`}>
-                      <button className="mb-2 me-2 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800">
+                      <button className="mb-2 me-2 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 px-4 w-[100%] py-2.5 text-center text-sm font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800">
                         View Responses
                       </button>
                      </Link>

@@ -13,7 +13,7 @@ export default function UserSurveyList({surveyData}) {
           </h6>
         </div>
         <div className=" p-6 px-0 pb-2 pt-0 overflow-x-hidden">
-          <table className="w-full min-w-[580px] table-auto ml-2">
+          <table className="w-full min-w-[580px] table-auto ml-2 ">
             <thead className=" text-base text-sky-900">
               <tr>
                 <th className="border-blue-gray-50 border-b px-5 py-3 text-left">
