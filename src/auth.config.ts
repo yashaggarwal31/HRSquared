@@ -5,9 +5,13 @@ export const authConfig = {
     signIn: '/login',
   },
   callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      
+      return '/admin/dashboard';
+    },
     authorized({ auth, request: { nextUrl } }) {
      
-        // return Response.redirect(new URL('/admin/dashboard', nextUrl));
+        return Response.redirect(new URL('/admin/dashboard'));
       
       
       return true; //remove this customize for admin

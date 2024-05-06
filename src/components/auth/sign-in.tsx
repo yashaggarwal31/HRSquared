@@ -1,5 +1,6 @@
 import { signIn } from '@/app/auth'
 import Image from 'next/image'
+import { redirect } from "next/navigation";
 
 export function SignIn () {
   return (
@@ -27,10 +28,11 @@ export function SignIn () {
                   
                   'use server'
                   // formData.append('callbackUrl','/user/ticket')
-                  await signIn('credentials',formData,{ 
-                    // redirect: true, // Set to false to handle redirect manually
-                    callbackUrl: '/user/ticket', // Specify your desired callback URL
-                  } )
+                  await signIn('credentials',formData)
+
+                  // redirect('/admin/dashboard');
+
+
                   // await signIn('credentials', , formData);
 
                   

@@ -1,0 +1,9 @@
+'use client'
+import { useRouter } from 'next/router'
+import React from 'react'
+
+
+export default function redirect() {
+    const router = useRouter();
+    router.push('/admin/dashboard')
+}
