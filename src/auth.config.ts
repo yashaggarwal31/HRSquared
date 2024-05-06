@@ -3,6 +3,7 @@ import type { NextAuthConfig } from 'next-auth';
 export const authConfig = {
   pages: {
     signIn: '/login',
+    signOut:'/signout'
   },
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
@@ -10,13 +11,17 @@ export const authConfig = {
       return '/admin/dashboard';
     },
     authorized({ auth, request: { nextUrl } }) {
-     
-        return Response.redirect(new URL('/admin/dashboard'));
-      
-      
-      return true; //remove this customize for admin
-    console.log('middleware')
+       
+
       const isLoggedIn = !!auth?.user;
+      return true;
+     
+        if(isLoggedIn) return Response.redirect(new URL('/admin/dashboard'));
+      
+      
+      //remove this customize for admin
+    console.log('middleware')
+      // const isLoggedIn = !!auth?.user;
       const isOnDashboard = nextUrl.pathname.startsWith('/admin');
       if (isOnDashboard) {
         if (isLoggedIn) return true;

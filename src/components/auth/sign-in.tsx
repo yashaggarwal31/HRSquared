@@ -1,4 +1,5 @@
 import { signIn } from '@/app/auth'
+import { AuthError } from 'next-auth'
 import Image from 'next/image'
 
 export function SignIn () {
@@ -27,7 +28,24 @@ export function SignIn () {
                   
                   'use server'
                   // formData.append('callbackUrl','/user/ticket')
-                  await signIn('credentials',formData)
+                  try{
+                    await signIn('credentials',formData)
+                  }
+                  catch(error){
+
+                    if(error instanceof AuthError){
+                      switch(error.type){
+                        case "CredentialsSignin":
+                          return {error: 'Invalid Credentials'}
+                          break;
+                        default:
+                          return {error:"Something went wrong"}
+                      }
+                    }
+
+                    throw error;
+                     
+                  }
 
                   // redirect('/admin/dashboard');
 

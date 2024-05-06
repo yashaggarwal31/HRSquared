@@ -2,6 +2,7 @@ import React, { Suspense } from 'react'
 import SurveyResponse from './ResponsePage'
 import { GetResponseById } from '@/lib/surveys';
 
+
 async function Response({responseID}){
     const response = await GetResponseById(responseID);
 

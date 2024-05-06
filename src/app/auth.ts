@@ -1,7 +1,7 @@
 'use server'
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-import { authConfig } from '@/auth.config'
+// import { authConfig } from '@/auth.config'
 import { z } from 'zod'
 // import prisma from '@/prisma/db'
 // import { getUserFromDb } from '@/lib/users'
@@ -36,29 +36,76 @@ async function getUser (email: any, password: any): Promise<any | undefined> {
 }
 
 export const { auth, signIn, signOut } = NextAuth({
-  ...authConfig,
+  session:{strategy:'jwt'},
+  pages: {
+    signIn: '/login',
+    signOut:'/signout'
+  },
+  callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      
+      return '/admin/dashboard';
+    },
+    async session({ session, token }) {
+      // session?.user?.id = token.id;
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    }
+    
+    ,
+    authorized({ auth, request: { nextUrl } }) {
+       
+
+      const isLoggedIn = !!auth?.user;
+      return true;
+     
+        if(isLoggedIn) return Response.redirect(new URL('/admin/dashboard'));
+      
+      
+      //remove this customize for admin
+    console.log('middleware')
+      // const isLoggedIn = !!auth?.user;
+      const isOnDashboard = nextUrl.pathname.startsWith('/admin');
+      if (isOnDashboard) {
+        if (isLoggedIn) return true;
+        return false; // Redirect unauthenticated users to login page
+      } else if (isLoggedIn) {
+        return Response.redirect(new URL('/dashboard', nextUrl));
+      }
+      return true;
+    },
+  },
   providers: [
     Credentials({
       async authorize (credentials) {
         return {
           name: 'Yash',
           email: 'yashaggarwal@gmail.com'
-        }
-        // const parsedCredentials = z
-        //   .object({ email: z.string().email(), password: z.string().min(6) })
-        //   .safeParse(credentials)
+        };
+        'use server'
+        
+        const parsedCredentials = z
+          .object({ email: z.string().email(), password: z.string().min(6) })
+          .safeParse(credentials)
 
-        // if (parsedCredentials.success) {
-        // console.log(parsedCredentials)
+        if (parsedCredentials.success) {
+        console.log(parsedCredentials)
+
         const { email, password } = credentials
         console.log(email)
         const user = await getUser(email, password)
-        return user
+        if(!user) return null;
+        
 
         console.log('Invalid Credentials')
 
         return null
       }
-    })
+    }})
   ]
 })

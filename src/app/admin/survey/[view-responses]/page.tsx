@@ -3,6 +3,7 @@ import AdminSurveyResponseList from './AdminSurveyResponseList'
 import { GetSurveyResponses, getSurveyById } from '@/lib/surveys';
 import Link from 'next/link';
 import DownloadResponses from '../download-responses/[download]/page';
+import { signOut } from '@/app/auth';
 
 
 
@@ -31,11 +32,14 @@ export default function AdminSurveyPage({params}:{params:any}) {
           <h6 className="block font-sans text-base font-semibold leading-relaxed tracking-normal text-white antialiased">
             Survey Responses
           </h6>
+          
           <Link href={`download-responses/${surveyID}`} target="_blank" className="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2">
             Export Responses to Excel
           </Link>
           
         </div>
+
+        
 
         <Suspense fallback={<p className={'text-center animate-bounce'}>Fetching Surveys Responses...</p>}>
             <AdminSurveyResponses surveyID={params['view-responses']}/>

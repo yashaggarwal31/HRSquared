@@ -6,7 +6,7 @@ import Link from "next/link";
 // import TicketGeneratorButton from "./TicketGeneratorButton";
 import { Button } from "./button";
 import { useRouter } from "next/navigation";
-import { signOut } from "@/app/auth";
+import  {signOut} from "@/app/auth"
 
 const Navbar: React.FC = () => {
 
@@ -272,7 +272,7 @@ const Navbar: React.FC = () => {
 
         <form action={async () => {
           
-          await signOut();
+          await signOut({redirectTo:'/login'});
         }}>
           <button className="ml-4 rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-red-700 hover:text-white">
           Sign Out
