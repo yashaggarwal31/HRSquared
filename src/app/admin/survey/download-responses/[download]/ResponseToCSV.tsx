@@ -10,7 +10,7 @@ export default function ResponseToCSV({csv,title,description}) {
       hiddenElement.target = '_blank';  
         
       //provide the name for the CSV file to be downloaded  
-      hiddenElement.download = 'SurveyData.csv';  
+      hiddenElement.download = `${title}.csv`;  
       hiddenElement.click();  
     }
 
