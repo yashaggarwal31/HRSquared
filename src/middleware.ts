@@ -8,12 +8,15 @@ export default NextAuth(authConfig).auth
 export async function middleware (request) {
   const path = request.nextUrl.pathname
 
-  const session = await auth()
+  const session = auth()
   if (!session) {
+    console.log('No Session')
     // if (request.url === '/') request.url = '/user/ticket'
     return NextResponse.redirect(new URL('/login', request.url))
   } else if (session && (path === '/login' || path === '/login')) {
     return NextResponse.redirect(new URL('/user/ticket'))
+  } else {
+    console.log('Session is defined')
   }
   return NextResponse.next()
 }
