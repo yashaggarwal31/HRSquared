@@ -2,12 +2,12 @@ import type { NextAuthConfig } from 'next-auth';
  
 export const authConfig = {
   pages: {
-    signIn: '/',
+    signIn: '/login',
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
      
-        return Response.redirect(new URL('/admin/dashboard', nextUrl));
+        // return Response.redirect(new URL('/admin/dashboard', nextUrl));
       
       
       return true; //remove this customize for admin

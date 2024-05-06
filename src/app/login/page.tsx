@@ -1,41 +1,31 @@
+import { SignIn } from "@/components/auth/sign-in";
 
-import LoginForm from '@/components/auth/loginform';
-import { signIn } from '@/app/auth'
-import { AuthError } from 'next-auth'
-
-// ...
-
-export async function authenticate (
-  prevState: string | undefined,
-  formData: FormData
-) {
-  try {
-    await signIn('credentials', formData)
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return 'Invalid credentials.'
-        default:
-          return 'Something went wrong.'
-      }
-    }
-    throw error
-  }
-}
- 
-export default function LoginPage() {
+export default function Home() {
   return (
-    <main className="flex items-center justify-center md:h-screen">
-      <div className="relative mx-auto flex w-full max-w-[400px] flex-col space-y-2.5 p-4 md:-mt-32">
-        <div className="flex h-20 w-full items-end rounded-lg bg-blue-500 p-3 md:h-36">
-          <div className="w-32 text-white md:w-36">
-            {/* <AcmeLogo /> */}
-            hello
+    <div className="bg-white dark:bg-gray-900">
+      <div className="flex justify-center h-screen">
+        <div
+          className="hidden bg-cover lg:block lg:w-2/3 bg-[url('https://images.unsplash.com/photo-1616763355603-9755a640a287?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80')] bg-cover bg-center"
+          
+        >
+          <div className="flex items-center h-full px-20 bg-gray-900 bg-opacity-40">
+            <div>
+              <h2 className="text-2xl font-bold text-white sm:text-3xl">
+                Meraki UI
+              </h2>
+
+              <p className="max-w-xl mt-3 text-gray-300">
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. In
+                autem ipsa, nulla laboriosam dolores, repellendus perferendis
+                libero suscipit nam temporibus molestiae
+              </p>
+            </div>
           </div>
         </div>
-        <LoginForm />
+
+        <SignIn/>
+        
       </div>
-    </main>
+    </div>
   );
 }

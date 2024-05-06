@@ -28,7 +28,7 @@ export function SignIn () {
                   'use server'
                   // formData.append('callbackUrl','/user/ticket')
                   await signIn('credentials',formData,{ 
-                    // redirect: false, // Set to false to handle redirect manually
+                    // redirect: true, // Set to false to handle redirect manually
                     callbackUrl: '/user/ticket', // Specify your desired callback URL
                   } )
                   // await signIn('credentials', , formData);

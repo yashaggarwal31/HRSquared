@@ -11,9 +11,9 @@ export async function middleware (request) {
   const session = await auth()
   if (!session) {
     // if (request.url === '/') request.url = '/user/ticket'
-    return NextResponse.redirect(new URL('/', request.url))
-  } else if (session && (path === '/' || path === '/')) {
-    return NextResponse.redirect(new URL('/user/ticket', request.url))
+    return NextResponse.redirect(new URL('/login', request.url))
+  } else if (session && (path === '/login' || path === '/login')) {
+    return NextResponse.redirect(new URL('/user/ticket'))
   }
   return NextResponse.next()
 }
