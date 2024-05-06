@@ -5,8 +5,16 @@ export const authConfig = {
     signIn: '/login',
   },
   callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      
+      return '/admin/dashboard';
+    },
     authorized({ auth, request: { nextUrl } }) {
-    return true; //remove this customize for admin
+     
+        return Response.redirect(new URL('/admin/dashboard'));
+      
+      
+      return true; //remove this customize for admin
     console.log('middleware')
       const isLoggedIn = !!auth?.user;
       const isOnDashboard = nextUrl.pathname.startsWith('/admin');
