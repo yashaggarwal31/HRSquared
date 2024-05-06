@@ -1,7 +1,12 @@
 "use client";
 import { updateUserRoleMapping } from "@/lib/users";
+import Link from "next/link";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+
 export default function UserEdit({ user, userFields }) {
+  const router = useRouter();
+
   const [role, setRole] = useState(() => {
     const matchingRole = userFields.roles.find(
       (role) => role.rolename === user.rolename
@@ -44,6 +49,7 @@ export default function UserEdit({ user, userFields }) {
     try {
       setSavingStatus(true);
       await updateUserRoleMapping(userRoles);
+      router.push("/admin/manage-users");
       setSavingStatus(false);
     } catch (ex) {}
   };
@@ -178,12 +184,14 @@ export default function UserEdit({ user, userFields }) {
           >
             {savingStatus ? "Saving Changes..." : "Save Changes"}
           </button>
-          <button
-            className="flex-1 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            // onClick={() => onCloseView(false)}
-          >
-            Cancle
-          </button>
+          <Link href={"/admin/manage-users"}>
+            <button
+              className="flex-1 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              // onClick={() => onCloseView(false)}
+            >
+              Cancle
+            </button>
+          </Link>
         </div>
       </div>
     </div>
