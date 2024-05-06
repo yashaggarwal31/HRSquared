@@ -44,6 +44,17 @@ export async function getAllUsers() {
   }
 }
 
+export async function getAllUsersToAssign() {
+  const query = `select u.id, u.username, u.email from users u;`;
+  const client = await dbConnect();
+  const data = await client.query(query);
+  if (data.rowCount > 0) {
+    return data.rows;
+  } else {
+    notFound();
+  }
+}
+
 export async function getUserById(id: number) {
   const query = {
     text: `
@@ -109,5 +120,3 @@ export async function getUsersFormData() {
     categories: categories.rows,
   };
 }
-
-
