@@ -2,11 +2,15 @@ import type { NextAuthConfig } from 'next-auth';
  
 export const authConfig = {
   pages: {
-    signIn: '/login',
+    signIn: '/',
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-    return true; //remove this customize for admin
+     
+        return Response.redirect(new URL('/admin/dashboard', nextUrl));
+      
+      
+      return true; //remove this customize for admin
     console.log('middleware')
       const isLoggedIn = !!auth?.user;
       const isOnDashboard = nextUrl.pathname.startsWith('/admin');
