@@ -9,6 +9,8 @@ import Link from "next/link";
 import TicketGeneratorButton from "@/components/tickets/TicketGeneratorButton";
 import Pagination from "@/components/tickets/Pagination";
 import { formatDateString } from "@/lib/FormatDateString";
+import { getAllUsersToAssign } from "@/lib/users";
+import { AssignUser, updateStatus } from "@/lib/tickets";
 
 const paginate = (items: any, pageNumber: any, pageSize: any) => {
   const startIndex = (pageNumber - 1) * pageSize;
@@ -28,27 +30,21 @@ export default function AdminTicketList({ surveyData }) {
   const [assignTicket, setAssignTicket] = useState<any>(null);
   const [allUsersArr, setAllUsersArr] = useState<any>([]);
 
-  //   useEffect(() => {
-  //     const fetchData = async () => {
-  //       try {
-  //         const response = await fetch("/api/users/admin/getallusers", {
-  //           method: "GET",
-  //           headers: {
-  //             Accept: "application/json",
-  //           },
-  //           // body: JSON.stringify(body_params),
-  //         });
-  //         const res = await response.json();
-  //         const allUsers = res.Response.result;
-  //         console.log("all", allUsers);
-  //         setAllUsersArr(allUsers);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const allUsers = await getAllUsersToAssign();
+        console.log("sss", allUsers);
+        // const allUsers = res.Response.result;
+        console.log("all", allUsers);
+        setAllUsersArr(allUsers);
 
-  //         setLoading(false);
-  //       } catch (error) {}
-  //     };
+        setLoading(false);
+      } catch (error) {}
+    };
 
-  //     fetchData();
-  //   }, []);
+    fetchData();
+  }, []);
 
   async function assignTicketToUser(ticket_id, user_id) {
     console.log("A", ticket_id, user_id);
@@ -62,15 +58,9 @@ export default function AdminTicketList({ surveyData }) {
     if (user) user.innerHTML = "Assigning...";
 
     try {
-      const res = await fetch("/api/tickets/admin/assignticket", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-        },
-        body: JSON.stringify(body_params),
-      });
-
-      const response = await res.json();
+      // console.log("*************************************************");
+      // console.log("updating ", ticket_id, user_id);
+      const response = await AssignUser(ticket_id, user_id);
       console.log("ress", response);
       setAssignTicket(null);
       location.reload();
@@ -102,7 +92,6 @@ export default function AdminTicketList({ surveyData }) {
   }
 
   function AssignButton({ ticket }) {
-    console.log("TICKET", ticket);
     return (
       <span
         className="cursor-pointer rounded-lg bg-slate-500 px-2 py-1 text-white"
@@ -198,28 +187,17 @@ export default function AdminTicketList({ surveyData }) {
     if (markAsClosed) markAsClosed.innerHTML = "Marking...";
 
     console.log(id);
-    const body_params = {
-      ticket_id: id,
-      status: 4,
-    };
     try {
-      const response = await fetch("/api/tickets/updatestatus", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-        },
-        body: JSON.stringify(body_params),
-      });
-
-      const res = await response.json();
+      const res = await updateStatus(id, 4);
       console.log("update", res);
       setDetailsModal(null);
+      location.reload();
     } catch (error) {
       console.log(error);
     }
   }
 
-  console.log("allUsersArr", allUsersArr);
+  // console.log("allUsersArr", allUsersArr);
   return (
     <div className="">
       {loading ? (
@@ -236,7 +214,7 @@ export default function AdminTicketList({ surveyData }) {
                 <div className="flex w-fit max-w-sm flex-col items-center justify-center ">
                   <div className="flex flex-col gap-4 ">
                     <div className="flex items-center gap-4  rounded-t-md bg-indigo-500 px-7 py-5 text-white">
-                      <div>#{detailsModal.id}</div>
+                      <div>#{detailsModal.ticket_id}</div>
                       <div className="text-2xl">{detailsModal.title}</div>
                       <div
                         className={`${
@@ -263,7 +241,9 @@ export default function AdminTicketList({ surveyData }) {
                           <button
                             id="markAsClosed"
                             className="mt-2 rounded-md bg-black px-4 py-2 text-center text-white"
-                            onClick={() => updateStatusById(detailsModal.id)}
+                            onClick={() =>
+                              updateStatusById(detailsModal.ticket_id)
+                            }
                           >
                             Mark as closed
                           </button>
@@ -280,7 +260,7 @@ export default function AdminTicketList({ surveyData }) {
               </div>
             </div>
           ) : assignTicket ? (
-            <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center bg-slate-500 bg-opacity-70 ">
+            <div className="absolute bottom-0 left-0 right-0 top-0 min-w-96 flex flex-col items-center justify-center bg-slate-500 bg-opacity-70 ">
               <div className="relative m-10 rounded-md bg-white">
                 <div className=" absolute -right-3 -top-3  rounded-full bg-slate-600 px-3 py-1  text-white">
                   <button onClick={clickHandler()}>X</button>
@@ -289,17 +269,18 @@ export default function AdminTicketList({ surveyData }) {
                 <div className="flex w-fit max-w-sm flex-col items-center justify-center ">
                   <div className="flex flex-col gap-4 ">
                     <div className="flex items-center gap-4 rounded-t-md  bg-indigo-500 px-7 py-5 text-white">
-                      <div>#{assignTicket.id}</div>
+                      <div>#{assignTicket.ticket_id}</div>
                       <div className="text-2xl">{assignTicket.title}</div>
                     </div>
                     <div className="text-lg"></div>
 
-                    <div className="scroll h-96 overflow-auto px-5 pb-2 ">
+                    <div className="scroll h-96 min-w-full overflow-auto px-5 pb-2 ">
                       {allUsersArr.map((user) => (
                         <div
-                          className=" mb-2 grid cursor-pointer items-center overflow-hidden rounded-[10px] bg-white py-2.5 pl-2.5 pr-[30px] shadow-[0_5px_7px_-1px_rgba(51,51,51,0.23)] hover:scale-[1.1] hover:shadow-[0_9px_47px_11px_rgba(51,51,51,0.18)]"
+                          key={user.id}
+                          className=" mb-2 grid cursor-pointer items-center overflow-hidden rounded-[10px] bg-white py-2.5 pl-2.5 pr-[30px] shadow-[0_5px_7px_-1px_rgba(51,51,51,0.23)] hover:scale-[1.05] hover:shadow-[0_9px_47px_11px_rgba(51,51,51,0.18)]"
                           onClick={() =>
-                            assignTicketToUser(assignTicket.id, user.id)
+                            assignTicketToUser(assignTicket.ticket_id, user.id)
                           }
                         >
                           <div id={user.id}>{user.username}</div>
@@ -409,7 +390,7 @@ export default function AdminTicketList({ surveyData }) {
                 />
               </div>
 
-              <div className=" hidden w-[22%] bg-slate-200 p-5" id="modal">
+              <div className="hidden w-[22%] bg-slate-200 p-5" id="modal">
                 <div className="flex justify-end">
                   <button onClick={clickHandler()}>X</button>
                 </div>

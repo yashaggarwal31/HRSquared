@@ -167,7 +167,7 @@ const MovieTicketForm = () => {
       console.log(formData);
       window.location.href = "/user/ticket";
     } catch (error) {
-      console.log("error___________", error);
+      console.log(error);
     }
   };
 
