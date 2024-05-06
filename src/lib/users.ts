@@ -24,8 +24,6 @@ export async function getUserFromDb(email, password) {
   }
 }
 
-
-
 export async function getAllUsers() {
   const query = `
     select users.id, users.username, users.email, roles.rolename, groups.groupname, category.categoryname, um.can_create_survey
@@ -111,3 +109,5 @@ export async function getUsersFormData() {
     categories: categories.rows,
   };
 }
+
+
