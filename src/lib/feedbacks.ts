@@ -18,21 +18,11 @@ export async function addFeedback(Feedback: FeedbackInsert) {
     };
     const result = await client.query(query);
     // client.end();
-    return {
-      status: 200,
-      statusText: `${result.command} completed successfully`,
-      result: result,
-    };
+    return true;
   } catch (error) {
     console.log(error);
     client.end();
-    return {
-      status: 500,
-      statusText: "Internal server error",
-      // message: error. message,
-      error: error,
-      data: null,
-    };
+    return false;
   }
 }
 
@@ -62,21 +52,14 @@ export async function GetFeedbacks(notViewed?: boolean) {
     // console.log(query_text+" LLLLLLLLLLLL")
     query_text = `${query_text} ORDER BY createdat DESC`;
     const result = await client.query(query_text);
-    client.end();
-    return {
-      status: 200,
-      statusText: `${result.command} completed successfully`,
-      result: result.rows,
-    };
+    if (result.rowCount > 0) {
+      return result.rows;
+    } else {
+      notFound();
+    }
   } catch (error) {
     client.end();
-    return {
-      status: 500,
-      statusText: "Internal server error",
-      // message: error.message,
-      error: error,
-      data: null,
-    };
+    return false;
   }
 }
 
@@ -89,19 +72,9 @@ export async function MarkViewed(id: number) {
     };
     const result = await client.query(query);
     // client.end();
-    return {
-      status: 200,
-      statusText: `${result.command} completed successfully`,
-      result: result,
-    };
+    return true;
   } catch (error) {
     client.end();
-    return {
-      status: 500,
-      statusText: "Internal server error",
-      message: error.message,
-      error: error,
-      data: null,
-    };
+    return false;
   }
 }
