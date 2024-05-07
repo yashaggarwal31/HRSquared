@@ -176,7 +176,7 @@ export default function FormFiller({ surveyFields, title, surveyID }) {
   let matrixKey = 0;
 
   return (
-    <div id='dom-form' className='bg-slate-300 pt-4'>
+    <div id='dom-form' className='bg-slate-300 pt-4 font-Roboto'>
 
       <form method="post" className={'flex flex-col justify-center items-center gap-4 mt-12'} onSubmit={handleSubmit}>
         {/* {surveyFields.map((item)=>{
@@ -184,12 +184,12 @@ export default function FormFiller({ surveyFields, title, surveyID }) {
             })} */}
 
         <div className="w-[55%] rounded-lg border-t-4 border-blue-500 bg-white p-3 ">
-          <div className="text-2xl text-center flex justify-center items-center">
-            <label className=" block my-8 w-[100%] text-2xl outline-none text-center">{title}</label>
+          <div className="text-2xl flex  items-center ">
+            <label className="my-8 text-left text-2xl outline-none border-b">{title}</label>
           </div>
           <div className=" text-xl text-center flex justify-center items-center">
           <textarea
-              className="w-[100%] outline-none"
+              className="w-[100%] outline-none text-sm"
               placeholder="Survey Description"
               value={description}
             />
@@ -207,7 +207,7 @@ export default function FormFiller({ surveyFields, title, surveyID }) {
             {item.type === FieldTypes.TEXTINPUT && (
               <div className="flex flex-col ">
                 <label htmlFor={(itemID).toString()} className="mb-3 text-lg" >{item.label} </label>
-                <input id={(itemID++).toString()} name='TextField' placeholder="input" />
+                <input id={(itemID++).toString()} name='TextField' placeholder="Short answer" />
               </div>
             )}
 
