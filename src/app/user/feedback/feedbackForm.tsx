@@ -2,6 +2,7 @@
 import React, { use, useState } from "react";
 // import { url_add_feedback } from "@/app/lib/apiEndPoints";
 import { addFeedback } from "@/lib/feedbacks";
+import Link from "next/link";
 // import { handleSubmit } from "./page";
 
 function Feedbacks() {
@@ -90,8 +91,11 @@ function Feedbacks() {
           </div>
         </div>
       )}
-      <div className="container">
-        <div className="flex w-full flex-col items-center py-12">
+      <div className="container flex flex-row">
+        <div>
+          <Link href="">My Feedbacks</Link>
+        </div>
+        <div className="flex flex-col items-center py-12">
           <h2 className="mb-3 text-3xl font-bold text-black">Feedback Form</h2>
           <p className="text-sm">We value your feedback!</p>
           <form className="mt-5 text-start">

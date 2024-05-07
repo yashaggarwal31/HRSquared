@@ -7,14 +7,14 @@ import { markReadFn } from "./markAsRead";
 function Feedback({ feedback }) {
   const [viewed, setViewed] = useState(feedback.viewed);
   const [marking, setMarking] = useState(false);
-  const { ticket_id, title, description, createdby, createdat } = feedback;
+  const { id, title, description, createdby, createdat } = feedback;
 
   async function markRead() {
     if (marking) return;
     try {
       setMarking(true);
-      console.log("id", ticket_id);
-      markReadFn(ticket_id);
+      // console.log("id", ticket_id);
+      await markReadFn(id);
       setMarking(false);
       setViewed(true);
       // console.log(err);
