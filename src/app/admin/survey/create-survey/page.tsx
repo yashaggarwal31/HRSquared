@@ -60,7 +60,7 @@ function SurveysCreation() {
   
 
   return (
-      <div className="bg-slate-300 min-h-screen">
+      <div className="bg-slate-300 min-h-screen font-Roboto">
 
         <div className="flex items-center justify-center gap-2 pt-5">
         <SurveyInput
