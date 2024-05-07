@@ -36,76 +36,74 @@ async function getUser (email: any, password: any): Promise<any | undefined> {
 }
 
 export const { auth, signIn, signOut } = NextAuth({
-  session:{strategy:'jwt'},
+  session: { strategy: 'jwt' },
   pages: {
     signIn: '/login',
-    signOut:'/signout'
+    signOut: '/signout'
   },
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      
-      return '/admin/dashboard';
+    async signIn ({ user, account, profile, email, credentials }) {
+      return '/admin/dashboard'
     },
-    async session({ session, token }) {
+    async session ({ session, token }) {
       // session?.user?.id = token.id;
-      return session;
+      return session
     },
-    async jwt({ token, user }) {
+    async jwt ({ token, user }) {
       if (user) {
-        token.id = user.id;
+        token.id = user.id
       }
-      return token;
-    }
-    
-    ,
-    authorized({ auth, request: { nextUrl } }) {
-       
-
-      const isLoggedIn = !!auth?.user;
-      return true;
-     
-        if(isLoggedIn) return Response.redirect(new URL('/admin/dashboard'));
-      
-      
-      //remove this customize for admin
-    console.log('middleware')
-      // const isLoggedIn = !!auth?.user;
-      const isOnDashboard = nextUrl.pathname.startsWith('/admin');
-      if (isOnDashboard) {
-        if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL('/dashboard', nextUrl));
-      }
-      return true;
+      return token
     },
+
+    authorized ({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user
+      return true
+
+      if (isLoggedIn) return Response.redirect(new URL('/admin/dashboard'))
+
+      //remove this customize for admin
+      console.log('middleware')
+      // const isLoggedIn = !!auth?.user;
+      const isOnDashboard = nextUrl.pathname.startsWith('/admin')
+      if (isOnDashboard) {
+        if (isLoggedIn) return true
+        return false // Redirect unauthenticated users to login page
+      } else if (isLoggedIn) {
+        return Response.redirect(new URL('/dashboard', nextUrl))
+      }
+      return true
+    }
   },
   providers: [
     Credentials({
       async authorize (credentials) {
+        console.log('Credentials', credentials)
+
         return {
           name: 'Yash',
-          email: 'yashaggarwal@gmail.com'
-        };
-        'use server'
-        
+          email: 'yashaggarwal@gmail.com',
+          id: '1111'
+        }
+        ;('use server')
+
         const parsedCredentials = z
           .object({ email: z.string().email(), password: z.string().min(6) })
           .safeParse(credentials)
 
         if (parsedCredentials.success) {
-        console.log(parsedCredentials)
+          console.log(parsedCredentials)
 
-        const { email, password } = credentials
-        console.log(email)
-        const user = await getUser(email, password)
-        if(!user) return null;
-        
+          const { email, password } = credentials
+          console.log(email)
+          const user = await getUser(email, password)
+          if (!user) return null
 
-        console.log('Invalid Credentials')
+          console.log('Invalid Credentials')
 
-        return null
+          return null
+        }
       }
-    }})
+    })
   ]
 })

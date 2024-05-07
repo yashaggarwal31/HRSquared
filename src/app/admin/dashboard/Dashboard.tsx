@@ -16,8 +16,11 @@ import MonthlyFeedbackTable from "@/components/dashboard/DashboardDataComponent/
 import LoaderComponent from "../../../../public/Loader/load";
 import cards from "../../../../public/cards.json";
 import "../../../../public/css/style.css";
+import { useSession } from "next-auth/react";
 
 export default function DashBoard({ data }: any) {
+  const session = useSession();
+
   const cardsdata = [
     data["cardTicketsData"][0],
     data["cardSurveysData"][0],

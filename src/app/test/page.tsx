@@ -1,16 +1,13 @@
 
-import { SessionProvider } from "next-auth/react"
-import SessionTest from "./sessiontest"
 
- 
+ import {auth} from '@/app/auth'
 export default async function UserAvatar() {
-  
- 
+
+  const session = await auth();
+  console.log('Here is the session: ',session);
   return (
     <div>
-      <SessionProvider>
-      <SessionTest/>
-      </SessionProvider>
+      
       
     </div>
   )

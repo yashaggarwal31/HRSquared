@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import DashBoard from "./Dashboard";
+
 import {
   cardFeedbackData,
   cardSurveysData,
@@ -10,6 +11,7 @@ import {
   getRecentSurveys,
   getRecentTickets,
 } from "@/lib/dashboard";
+import { SessionProvider } from "next-auth/react";
 
 async function DashboardPage() {
   const data = {
@@ -23,7 +25,7 @@ async function DashboardPage() {
     getRecentTickets: await getRecentTickets(),
   };
 
-  return <DashBoard data={data} />;
+  return <SessionProvider><DashBoard data={data} /></SessionProvider>;
 }
 
 export default function Dashboard() {
