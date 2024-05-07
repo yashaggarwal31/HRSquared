@@ -49,10 +49,8 @@ import Feedbacks from "./feedbackForm";
 
 export default function page() {
   return (
-    <div>
-      <Suspense>
-        <Feedbacks />
-      </Suspense>
-    </div>
+    <Suspense>
+      <Feedbacks />
+    </Suspense>
   );
 }

@@ -3,6 +3,7 @@ import React, { use, useState } from "react";
 // import { url_add_feedback } from "@/app/lib/apiEndPoints";
 import { addFeedback } from "@/lib/feedbacks";
 import Link from "next/link";
+import SideNavbar from "./sideNavbar";
 // import { handleSubmit } from "./page";
 
 function Feedbacks() {
@@ -59,7 +60,7 @@ function Feedbacks() {
   };
 
   return (
-    <section>
+    <section className="w-full pb-6 bg-slate-100">
       {showDialog && !isAnonymous && !conformation && (
         <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center bg-slate-500 bg-opacity-70">
           <div className="flex w-fit max-w-sm flex-col items-center justify-center bg-white p-2 px-6 py-4">
@@ -91,70 +92,66 @@ function Feedbacks() {
           </div>
         </div>
       )}
-      <div className="container flex flex-row">
-        <div>
-          <Link href="">My Feedbacks</Link>
-        </div>
-        <div className="flex flex-col items-center py-12">
-          <h2 className="mb-3 text-3xl font-bold text-black">Feedback Form</h2>
-          <p className="text-sm">We value your feedback!</p>
-          <form className="mt-5 text-start">
-            <input
-              type="text"
-              name="title"
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-                setConformation(false);
-                setAck("");
-              }}
-              placeholder="Enter the title"
-              className="w-full rounded-md border-2 p-2"
-              required
-            />
-            <textarea
-              name="feedback"
-              id="feedback"
-              value={feedback}
-              onChange={(e) => {
-                setFeedback(e.target.value);
-                setConformation(false);
-                setAck("");
-              }}
-              cols={30}
-              rows={10}
-              className="mt-4 w-full rounded-md border-2 p-2"
-              placeholder="Feedback"
-              required
-            ></textarea>
-          </form>
-          <div className="mt-4 flex items-center">
-            <input
-              type="checkbox"
-              id="anonymous"
-              checked={isAnonymous}
-              onChange={() => {
-                setIsAnonymous(!isAnonymous);
-                setConformation(false);
-                setAck("");
-              }}
-              className="mr-2 size-4"
-            />
-            <label htmlFor="anonymous" className="text-lg">
-              Anonymous
-            </label>
-          </div>
-          <p className={ackClass}>{ack}</p>
-          <button
-            type="button"
-            className="mt-2 bg-rose-600 px-4 py-2 text-white"
-            onClick={async () => {
-              await handleSubmitUtil();
+      <div className="flex flex-col items-center flex-1">
+        <SideNavbar page={1} />
+        <h2 className="my-2 text-3xl font-bold text-black">Feedback Form</h2>
+        <p className="text-sm">We value your feedback!</p>
+        <form className="mt-2 text-start">
+          <input
+            type="text"
+            name="title"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              setConformation(false);
+              setAck("");
             }}
-          >
-            {sending ? "Submitting" : "Submit"}
-          </button>
+            placeholder="Enter the title"
+            className="w-full rounded-md border-2 p-2"
+            required
+          />
+          <textarea
+            name="feedback"
+            id="feedback"
+            value={feedback}
+            onChange={(e) => {
+              setFeedback(e.target.value);
+              setConformation(false);
+              setAck("");
+            }}
+            cols={30}
+            rows={10}
+            className="mt-4 w-full rounded-md border-2 p-2"
+            placeholder="Feedback"
+            required
+          ></textarea>
+        </form>
+        <div className="mt-4 flex items-center">
+          <input
+            type="checkbox"
+            id="anonymous"
+            checked={isAnonymous}
+            onChange={() => {
+              setIsAnonymous(!isAnonymous);
+              setConformation(false);
+              setAck("");
+            }}
+            className="mr-2 size-4 cursor-pointer"
+          />
+          <label htmlFor="anonymous" className="text-lg">
+            Anonymous
+          </label>
         </div>
+        <p className={ackClass}>{ack}</p>
+        <button
+          type="button"
+          className="mt-2 bg-green-500 px-6 py-2 font-bold text-white hover:bg-green-600"
+          onClick={async () => {
+            await handleSubmitUtil();
+          }}
+        >
+          {sending ? "Submitting" : "Submit"}
+        </button>
       </div>
     </section>
   );
