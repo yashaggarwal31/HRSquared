@@ -78,3 +78,44 @@ export async function MarkViewed(id: number) {
     return false;
   }
 }
+
+export async function GetUserFeedbacks(id: number, notViewed?: boolean) {
+  const client = await dbConnect();
+  try {
+    let query_text;
+    if (notViewed) {
+      query_text = `select feedbacks.*,
+            case
+                when feedbacks.createdby is not null then users.username
+                else NULL
+            END AS createdby
+            from feedbacks
+            left join users
+            on feedbacks.createdby = users.id where viewed=false and users.id=$1`;
+    } else {
+      query_text = `select feedbacks.*,
+            case
+                when feedbacks.createdby is not null then users.username
+                else NULL
+            END AS createdby
+            from feedbacks
+            left join users
+            on feedbacks.createdby = users.id where users.id=$1`;
+    }
+    const query = {
+      text: `${query_text} ORDER BY createdat DESC`,
+      values: [id],
+    };
+    query_text = `${query_text} ORDER BY createdat DESC`;
+    const result = await client.query(query);
+    if (result.rowCount > 0) {
+      return result.rows;
+    } else {
+      notFound();
+    }
+  } catch (error) {
+    console.log("**************************");
+    console.log(error);
+    notFound();
+  }
+}
