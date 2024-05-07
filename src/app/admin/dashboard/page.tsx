@@ -31,7 +31,8 @@ async function DashboardPage() {
 export default function Dashboard() {
   return (
     <div>
-      <Suspense fallback={<p>Fetching data...</p>}>
+      <Suspense fallback={<div className="fixed top-0 left-0 w-screen h-screen z-[99999999999999] flex flex-col items-center justify-center bg-black/40">
+    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div> <h3>Fetching dashboard ...</h3> </div>}>
         <DashboardPage />
       </Suspense>
     </div>

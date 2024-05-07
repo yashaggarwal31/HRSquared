@@ -47,8 +47,8 @@ export default function UserTicketList({ ticketData }) {
   //       if (response) {
   //         const ticketDataRes = await response.json();
 
-  //         console.log("ticket ->", ticketDataRes);
-  //         console.log(ticketDataRes.Response.result);
+  //         //console.log("ticket ->", ticketDataRes);
+  //         //console.log(ticketDataRes.Response.result);
 
   //         const ticketData = ticketDataRes.Response.result;
   //         setMyTickets(ticketData);
@@ -56,7 +56,7 @@ export default function UserTicketList({ ticketData }) {
   //         setCurrentData(data);
   //       }
   //     } catch (error) {
-  //       console.log(error);
+  //       //console.log(error);
   //     } finally {
   //       setLoading(false);
   //     }
@@ -98,7 +98,7 @@ export default function UserTicketList({ ticketData }) {
 
   const clickHandler = () => {
     return (event: React.MouseEvent) => {
-      console.log("CLCLC");
+      //console.log("CLCLC");
       setDetailsModal(null);
 
       event.preventDefault();
@@ -111,7 +111,7 @@ export default function UserTicketList({ ticketData }) {
         <div>Loading...</div>
       ) : (
         <div>
-          {detailsModal ? (
+          {detailsModal && (
             <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center bg-slate-500 bg-opacity-70 ">
               <div className="relative rounded-md bg-white ">
                 <div className="absolute -right-3 -top-3  rounded-full bg-slate-600 px-3 py-1  text-white">
@@ -164,7 +164,9 @@ export default function UserTicketList({ ticketData }) {
                 </div>
               </div>
             </div>
-          ) : (
+          )}
+          
+          (
             <div className="flex items-stretch">
               <div className="h-screen w-[18%] items-stretch bg-slate-100">
                 <div className="mx-2 my-1 mt-2 text-xl">Filters</div>
@@ -267,7 +269,7 @@ export default function UserTicketList({ ticketData }) {
                 />
               </div>
             </div>
-          )}
+          )
         </div>
       )}
     </div>

@@ -34,9 +34,9 @@ export default function AdminTicketList({ surveyData }) {
     const fetchData = async () => {
       try {
         const allUsers = await getAllUsersToAssign();
-        console.log("sss", allUsers);
+        //console.log("sss", allUsers);
         // const allUsers = res.Response.result;
-        console.log("all", allUsers);
+        //console.log("all", allUsers);
         setAllUsersArr(allUsers);
 
         setLoading(false);
@@ -47,30 +47,30 @@ export default function AdminTicketList({ surveyData }) {
   }, []);
 
   async function assignTicketToUser(ticket_id, user_id) {
-    console.log("A", ticket_id, user_id);
+    //console.log("A", ticket_id, user_id);
     const body_params = {
       user_id,
       ticket_id,
     };
 
     const user = document.getElementById(user_id);
-    console.log("USER", user);
+    //console.log("USER", user);
     if (user) user.innerHTML = "Assigning...";
 
     try {
-      // console.log("*************************************************");
-      // console.log("updating ", ticket_id, user_id);
+      // //console.log("*************************************************");
+      // //console.log("updating ", ticket_id, user_id);
       const response = await AssignUser(ticket_id, user_id);
-      console.log("ress", response);
+      //console.log("ress", response);
       setAssignTicket(null);
       location.reload();
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   }
 
   function AssignTicket(id, title) {
-    console.log("tic", title);
+    //console.log("tic", title);
     const modal = document.getElementById("modal");
     if (modal) modal.classList.remove("hidden");
 
@@ -132,7 +132,7 @@ export default function AdminTicketList({ surveyData }) {
           setCurrentData(data);
         }
       } catch (error) {
-        console.log(error);
+        //console.log(error);
       } finally {
         setLoading(false);
       }
@@ -163,7 +163,7 @@ export default function AdminTicketList({ surveyData }) {
 
     setFilterApplied(str);
     const filteredData = myTickets.filter((single: any) => {
-      console.log(str + " -- " + single.status);
+      //console.log(str + " -- " + single.status);
       return single.status == str;
     });
 
@@ -175,7 +175,7 @@ export default function AdminTicketList({ surveyData }) {
 
   const clickHandler = () => {
     return (event: React.MouseEvent) => {
-      console.log("CLCLC");
+      //console.log("CLCLC");
       setDetailsModal(null);
       setAssignTicket(null);
       event.preventDefault();
@@ -186,25 +186,25 @@ export default function AdminTicketList({ surveyData }) {
     const markAsClosed = document.getElementById("markAsClosed");
     if (markAsClosed) markAsClosed.innerHTML = "Marking...";
 
-    console.log(id);
+    // console.log(id);
     try {
       const res = await updateStatus(id, 4);
-      console.log("update", res);
+      // console.log("update", res);
       setDetailsModal(null);
       location.reload();
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   }
 
-  // console.log("allUsersArr", allUsersArr);
+  // //console.log("allUsersArr", allUsersArr);
   return (
     <div className="">
       {loading ? (
         <div>Loading...</div>
       ) : (
         <div>
-          {detailsModal ? (
+          {detailsModal && (
             <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center bg-slate-500 bg-opacity-70 ">
               <div className="relative rounded-md bg-white ">
                 <div className="absolute -right-3 -top-3  rounded-full bg-slate-600 px-3 py-1  text-white">
@@ -259,7 +259,9 @@ export default function AdminTicketList({ surveyData }) {
                 </div>
               </div>
             </div>
-          ) : assignTicket ? (
+          )}
+          
+           {assignTicket ? (
             <div className="absolute bottom-0 left-0 right-0 top-0 min-w-96 flex flex-col items-center justify-center bg-slate-500 bg-opacity-70 ">
               <div className="relative m-10 rounded-md bg-white">
                 <div className=" absolute -right-3 -top-3  rounded-full bg-slate-600 px-3 py-1  text-white">
