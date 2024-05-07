@@ -8,7 +8,7 @@ import { auth } from "@/app/auth"
 export default auth((req) => {
   const {nextUrl} = req;
   const isLoggedIn = !!req.auth;
-  if (!isLoggedIn && nextUrl.pathname!==('/login')) {
+  if (!isLoggedIn) {
     console.log('No Sessiond')
     // const url = req.url.replace(req.nextUrl.pathname, "/login")
     // return Response.redirect(url)
