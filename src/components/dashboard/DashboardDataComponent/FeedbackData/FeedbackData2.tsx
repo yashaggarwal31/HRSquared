@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
+import DownloadComponent from "../../ToExcel/Excel";
 
 interface MonthlyFeedbackSummary {
   month: string;
@@ -17,7 +18,7 @@ const MonthlyFeedbackTable = ({
   feedbackData?: FeedbackData[];
 }) => {
   const createMonthlyFeedbackData = (
-    feedbackData: FeedbackData[] | undefined,
+    feedbackData: FeedbackData[] | undefined
   ): MonthlyFeedbackSummary[] => {
     if (!feedbackData || feedbackData.length === 0) {
       return [];
@@ -51,10 +52,16 @@ const MonthlyFeedbackTable = ({
   return (
     <div className="mb-8 mt-12 flex flex-col gap-12">
       <div className="relative flex flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
-        <div className="relative mx-4 -mt-6 mb-8 overflow-hidden rounded-xl bg-gradient-to-tr from-sky-900 to-sky-800 bg-clip-border p-6 text-white shadow-lg shadow-gray-900/20">
+        <div className="relative mx-4 -mt-6 mb-8 overflow-hidden rounded-xl bg-gradient-to-tr from-sky-900 to-sky-800 bg-clip-border p-6 text-white shadow-lg shadow-gray-900/20 flex flex-row justify-between">
           <h6 className="block font-sans text-base font-semibold leading-relaxed tracking-normal text-white antialiased">
             Monthly Feedback Data
           </h6>
+          <div>
+            <DownloadComponent
+              jsonData={monthlyFeedbackData}
+              typeValue="MonthlyFeedbackData"
+            />
+          </div>
         </div>
         <div className="max-h-96 overflow-auto p-6 px-0 pb-2 pt-0">
           <table className="w-full min-w-[640px] table-auto">
