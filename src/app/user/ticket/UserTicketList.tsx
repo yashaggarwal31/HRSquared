@@ -15,7 +15,7 @@ const paginate = (items: any, pageNumber: any, pageSize: any) => {
 
 export default function UserTicketList({ ticketData }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 8;
+  const pageSize = 11;
   const [allFilteredData, setAllFilteredData] = useState([{}]);
   const [filterApplied, setFilterApplied] = useState("");
   const [myTickets, setMyTickets] = useState(ticketData);
@@ -174,7 +174,7 @@ export default function UserTicketList({ ticketData }) {
           )}
 
           <div className="flex items-stretch">
-            <div className="h-screen w-[18%] items-stretch bg-slate-100">
+            <div className="w-[18%] items-stretch bg-slate-100">
               <div className="mx-2 my-1 mt-2 text-xl">Filters</div>
               <div
                 className={`${
@@ -218,7 +218,7 @@ export default function UserTicketList({ ticketData }) {
                     <th className="px-10 py-3 text-left">Assigned To</th>
                     <th className="px-10 py-3 text-left">Title</th>
                     <th className="px-10 py-3 text-left">Status</th>
-                    <th className="px-10 py-3 text-left">Created at</th>
+                    <th className="px-10 py-3 text-left">Created on</th>
                     <th className="px-10 py-3 text-left">Details</th>
                   </tr>
                 </thead>
