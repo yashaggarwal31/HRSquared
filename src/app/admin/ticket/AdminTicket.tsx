@@ -20,10 +20,10 @@ const paginate = (items: any, pageNumber: any, pageSize: any) => {
 
 export default function AdminTicketList({ surveyData }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
+  const pageSize = 11;
   const [allFilteredData, setAllFilteredData] = useState([{}]);
   const [filterApplied, setFilterApplied] = useState("");
-  const [myTickets, setMyTickets] = useState([]);
+  const [myTickets, setMyTickets] = useState(surveyData);
   const [currentData, setCurrentData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [detailsModal, setDetailsModal] = useState<any>(null);
@@ -105,41 +105,46 @@ export default function AdminTicketList({ surveyData }) {
 
   let data = paginate(myTickets, currentPage, pageSize);
   useEffect(() => {
-    const fetchData = async () => {
-      const body_params = {
-        options: {
-          status: 0,
-          sub_category: 0,
-          group: 0,
-          priority: 0,
-          closed_by: 0,
-        },
-      };
-      try {
-        setLoading(true);
-        const response = await fetch("/api/tickets/admin/getalltickets", {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-          },
-          // body: JSON.stringify(body_params),
-        });
-        if (response) {
-          const ticketDataRes = await response.json();
-          const ticketData = ticketDataRes.Response.result;
-          setMyTickets(ticketData);
-          data = paginate(ticketData, currentPage, pageSize);
-          setCurrentData(data);
-        }
-      } catch (error) {
-        //console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+    data = paginate(myTickets, currentPage, pageSize);
+    setCurrentData(data);
   }, []);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const body_params = {
+  //       options: {
+  //         status: 0,
+  //         sub_category: 0,
+  //         group: 0,
+  //         priority: 0,
+  //         closed_by: 0,
+  //       },
+  //     };
+  //     try {
+  //       setLoading(true);
+  //       const response = await fetch("/api/tickets/admin/getalltickets", {
+  //         method: "GET",
+  //         headers: {
+  //           Accept: "application/json",
+  //         },
+  //         // body: JSON.stringify(body_params),
+  //       });
+  //       if (response) {
+  //         const ticketDataRes = await response.json();
+  //         const ticketData = ticketDataRes.Response.result;
+  //         setMyTickets(ticketData);
+  //         data = paginate(ticketData, currentPage, pageSize);
+  //         setCurrentData(data);
+  //       }
+  //     } catch (error) {
+  //       //console.log(error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
     if (filterApplied == "") {
@@ -201,7 +206,10 @@ export default function AdminTicketList({ surveyData }) {
   return (
     <div className="">
       {loading ? (
-        <div>Loading...</div>
+        <div className="fixed top-0 left-0 w-screen h-screen z-[99999999999999] flex flex-col items-center justify-center bg-black/40">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>{" "}
+          <h3>Fetching Tickets ...</h3>{" "}
+        </div>
       ) : (
         <div>
           {detailsModal && (
@@ -299,7 +307,7 @@ export default function AdminTicketList({ surveyData }) {
           )}
 
           <div className="flex items-stretch">
-            <div className="h-screen w-[18%] items-stretch bg-slate-100">
+            <div className=" w-[18%] items-stretch bg-slate-100">
               <div className="mx-2 my-1 mt-2 text-xl">Filters</div>
               <div
                 className={`${
@@ -309,7 +317,7 @@ export default function AdminTicketList({ surveyData }) {
                 } m-2  inline-block cursor-pointer rounded-lg border-2 px-4 py-2`}
                 onClick={() => statusFilter("Closed")}
               >
-                Solved
+                Closed
               </div>
               <div
                 className={`${
@@ -319,7 +327,7 @@ export default function AdminTicketList({ surveyData }) {
                 } inline-block  cursor-pointer rounded-lg border-2 px-4 py-2 `}
                 onClick={() => statusFilter("Open")}
               >
-                In Progress
+                Open
               </div>
             </div>
 
@@ -340,7 +348,7 @@ export default function AdminTicketList({ surveyData }) {
                 </thead>
 
                 <tbody>
-                  {surveyData.map((ticket: any) => (
+                  {currentData.map((ticket: any) => (
                     <tr
                       key={ticket.ticket_id}
 

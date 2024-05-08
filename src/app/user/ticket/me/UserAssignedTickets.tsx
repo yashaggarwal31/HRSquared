@@ -174,23 +174,23 @@ function Tickets({ ticketData }) {
                 <div className="mx-2 my-1 mt-2 text-xl">Filters</div>
                 <div
                   className={`${
-                    filterApplied == "Solved"
+                    filterApplied == "Closed"
                       ? "border-sky-500 text-sky-500"
                       : "border-gray-300 text-gray-400"
                   } m-2  inline-block cursor-pointer rounded-lg border-2 px-4 py-2`}
                   onClick={() => statusFilter("Closed")}
                 >
-                  Solved
+                  Closed
                 </div>
                 <div
                   className={`${
-                    filterApplied == "In Progress"
+                    filterApplied == "Open"
                       ? "border-sky-500 text-sky-500"
                       : "border-gray-300 text-gray-400"
                   } inline-block  cursor-pointer rounded-lg border-2 px-4 py-2 `}
                   onClick={() => statusFilter("Open")}
                 >
-                  In Progress
+                  Open
                 </div>
               </div>
 

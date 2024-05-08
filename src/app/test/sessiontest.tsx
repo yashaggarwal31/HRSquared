@@ -1,19 +1,19 @@
-'use client'
-import { useSession } from "next-auth/react"
+// 'use client'
+// import { useSession } from "next-auth/react"
 
  
-export default function SessionTest() {
-    const session = useSession()
+// export default function SessionTest() {
+//     const session = useSession()
  
-    // if (!session.user) return null
+//     // if (!session.user) return null
   
-    console.log('User session is on!!', session)
+//     console.log('User session is on!!', session)
 
-  console.log('User session is on!!', session)
+//   console.log('User session is on!!', session)
  
-  return (
-    <div>
+//   return (
+//     <div>
       
-    </div>
-  )
-}
+//     </div>
+//   )
+// }

@@ -1,9 +1,12 @@
-import { SignIn } from "@/components/auth/sign-in";
+import { SignedIn, SignedOut, SignIn } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default function Page() {
   return (
+    
+    
     <div className="bg-white dark:bg-gray-900">
-      <div className="flex justify-center h-screen">
+      <div className="flex gap-[0.8rem] h-screen">
         <div
           className="hidden bg-cover lg:block lg:w-2/3 bg-[url('https://images.unsplash.com/photo-1616763355603-9755a640a287?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80')] bg-cover bg-center"
           
@@ -21,9 +24,14 @@ export default function Home() {
           </div>
         </div>
 
-        <SignIn/>
+        <div className="flex items-center justify-center">
+        <SignIn fallbackRedirectUrl='/user/ticket' signUpFallbackRedirectUrl='/user/ticket' path="/login" />
+        </div>
         
       </div>
     </div>
+
+
+
   );
 }

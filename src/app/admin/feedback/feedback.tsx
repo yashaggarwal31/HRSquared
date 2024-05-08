@@ -33,7 +33,7 @@ function Feedback({ feedback }) {
     }
   }
   return (
-    <div className="mb-4 w-4/6 rounded-md bg-white p-4 shadow-md">
+    <div className="mb-4 w-4/6 rounded-md  p-4 shadow-lg">
       <div className="mb-2 flex items-center justify-between">
         <h3 className="text-lg font-semibold">{title}</h3>
         <p className="text-m rounded-lg bg-slate-200 px-2 py-1 text-black shadow-md">
