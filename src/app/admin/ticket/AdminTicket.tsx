@@ -20,7 +20,7 @@ const paginate = (items: any, pageNumber: any, pageSize: any) => {
 
 export default function AdminTicketList({ surveyData }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
+  const pageSize = 11;
   const [allFilteredData, setAllFilteredData] = useState([{}]);
   const [filterApplied, setFilterApplied] = useState("");
   const [myTickets, setMyTickets] = useState(surveyData);
@@ -307,7 +307,7 @@ export default function AdminTicketList({ surveyData }) {
           )}
 
           <div className="flex items-stretch">
-            <div className="h-screen w-[18%] items-stretch bg-slate-100">
+            <div className=" w-[18%] items-stretch bg-slate-100">
               <div className="mx-2 my-1 mt-2 text-xl">Filters</div>
               <div
                 className={`${

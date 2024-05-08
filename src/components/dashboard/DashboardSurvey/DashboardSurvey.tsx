@@ -17,7 +17,13 @@ const DashboardSurvey: React.FC<DashboardSurveyProps> = ({ item }) => {
 
   return (
     <tr className={Styles}>
-      <td className="border px-2 py-2">{survey_title}</td>
+      <td className="border px-2 py-2">
+        {survey_title.split("%!@").slice(0, 1)}
+      </td>
+      <td className="border px-2 py-2 truncate max-w-8">
+        {survey_title.split("%!@").slice(1)}
+      </td>
+
       <td className="border px-2 py-2">{creator_name}</td>
       <td className="border px-2 py-2">{formatDateString(created_at)}</td>
       <td className="border px-2 py-2">{total_responses}</td>

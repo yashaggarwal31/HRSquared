@@ -13,6 +13,7 @@ import SurveySystemTable from "@/components/dashboard/DashboardDataComponent/Sur
 import MonthlySurveyTable from "@/components/dashboard/DashboardDataComponent/SurveyData/SurveyData2";
 import FeedbackSystemTable from "@/components/dashboard/DashboardDataComponent/FeedbackData/FeedbackData";
 import MonthlyFeedbackTable from "@/components/dashboard/DashboardDataComponent/FeedbackData/FeedbackData2";
+// import DonutChartComponent from "@/components/dashboard/GraphComponents/TicketGraphs/TicketsGraphComponet";
 import LoaderComponent from "../../../../public/Loader/load";
 import cards from "../../../../public/cards.json";
 import "../../../../public/css/style.css";
@@ -130,7 +131,7 @@ export default function DashBoard({ data }: any) {
                 </svg>
                 Data
               </h2>
-              <h2
+              {/* <h2
                 className={`mb-2 flex gap-2 p-0.5 font-bold text-white ${
                   isGraph && "bg-sky-600/40"
                 }`}
@@ -154,7 +155,7 @@ export default function DashBoard({ data }: any) {
                   />
                 </svg>
                 Graphs
-              </h2>
+              </h2> */}
             </div>
           </div>
           <div className="row-start-4 row-end-5 self-center justify-self-center">
@@ -197,7 +198,7 @@ export default function DashBoard({ data }: any) {
                         <th className="px-4 py-2">Category</th>
                         <th className="px-4 py-2">Priority</th>
                         <th className="px-4 py-2">Status</th>
-                        <th className="px-4 py-2">Created at</th>
+                        <th className="px-4 py-2">Created On</th>
                       </tr>
                     </thead>
                     <tbody className="center bg-white">
@@ -246,8 +247,9 @@ export default function DashBoard({ data }: any) {
                     <thead>
                       <tr className=" bg-gray-200/50">
                         <th className="px-4 py-2">Title</th>
+                        <th className="px-4 py-2">Description</th>
                         <th className="px-4 py-2">Created By</th>
-                        <th className="px-4 py-2">Created At</th>
+                        <th className="px-4 py-2">Created On</th>
                         <th className="px-4 py-2">Responses</th>
                       </tr>
                     </thead>
@@ -300,7 +302,7 @@ export default function DashBoard({ data }: any) {
                         <th className="px-4 py-2">User</th>
                         <th className="px-4 py-2">Title</th>
                         <th className="px-4 py-2">Description</th>
-                        <th className="px-4 py-2">Created At</th>
+                        <th className="px-4 py-2">Created On</th>
                       </tr>
                     </thead>
                     <tbody>
