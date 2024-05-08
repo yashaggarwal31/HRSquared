@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/ui/Navbar";
-import { auth } from "@/app/auth"
+// import { auth } from "@/app/auth"
+import { ClerkProvider } from '@clerk/nextjs'
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -18,13 +19,15 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-    const session = await auth();
+    // const session = await auth();
   return (
+    <ClerkProvider>
     <html lang="en">
       <body className={inter.className}>
        
         {children}
       </body>
     </html>
+    </ClerkProvider>
   );
 }
