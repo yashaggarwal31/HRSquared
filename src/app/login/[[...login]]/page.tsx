@@ -24,7 +24,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center grow">
         <SignIn fallbackRedirectUrl='/user/ticket' signUpFallbackRedirectUrl='/user/ticket' path="/login" />
         </div>
         
