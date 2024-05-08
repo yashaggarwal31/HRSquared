@@ -34,9 +34,9 @@ export default function AdminTicketList({ surveyData }) {
     const fetchData = async () => {
       try {
         const allUsers = await getAllUsersToAssign();
-        console.log("sss", allUsers);
+        //console.log("sss", allUsers);
         // const allUsers = res.Response.result;
-        console.log("all", allUsers);
+        //console.log("all", allUsers);
         setAllUsersArr(allUsers);
 
         setLoading(false);
@@ -47,30 +47,30 @@ export default function AdminTicketList({ surveyData }) {
   }, []);
 
   async function assignTicketToUser(ticket_id, user_id) {
-    console.log("A", ticket_id, user_id);
+    //console.log("A", ticket_id, user_id);
     const body_params = {
       user_id,
       ticket_id,
     };
 
     const user = document.getElementById(user_id);
-    console.log("USER", user);
+    //console.log("USER", user);
     if (user) user.innerHTML = "Assigning...";
 
     try {
-      // console.log("*************************************************");
-      // console.log("updating ", ticket_id, user_id);
+      // //console.log("*************************************************");
+      // //console.log("updating ", ticket_id, user_id);
       const response = await AssignUser(ticket_id, user_id);
-      console.log("ress", response);
+      //console.log("ress", response);
       setAssignTicket(null);
       location.reload();
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   }
 
   function AssignTicket(id, title) {
-    console.log("tic", title);
+    //console.log("tic", title);
     const modal = document.getElementById("modal");
     if (modal) modal.classList.remove("hidden");
 
@@ -132,7 +132,7 @@ export default function AdminTicketList({ surveyData }) {
           setCurrentData(data);
         }
       } catch (error) {
-        console.log(error);
+        //console.log(error);
       } finally {
         setLoading(false);
       }
@@ -163,7 +163,7 @@ export default function AdminTicketList({ surveyData }) {
 
     setFilterApplied(str);
     const filteredData = myTickets.filter((single: any) => {
-      console.log(str + " -- " + single.status);
+      //console.log(str + " -- " + single.status);
       return single.status == str;
     });
 
@@ -175,7 +175,7 @@ export default function AdminTicketList({ surveyData }) {
 
   const clickHandler = () => {
     return (event: React.MouseEvent) => {
-      console.log("CLCLC");
+      //console.log("CLCLC");
       setDetailsModal(null);
       setAssignTicket(null);
       event.preventDefault();
@@ -186,25 +186,25 @@ export default function AdminTicketList({ surveyData }) {
     const markAsClosed = document.getElementById("markAsClosed");
     if (markAsClosed) markAsClosed.innerHTML = "Marking...";
 
-    console.log(id);
+    // console.log(id);
     try {
       const res = await updateStatus(id, 4);
-      console.log("update", res);
+      // console.log("update", res);
       setDetailsModal(null);
       location.reload();
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   }
 
-  // console.log("allUsersArr", allUsersArr);
+  // //console.log("allUsersArr", allUsersArr);
   return (
     <div className="">
       {loading ? (
         <div>Loading...</div>
       ) : (
         <div>
-          {detailsModal ? (
+          {detailsModal && (
             <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center bg-slate-500 bg-opacity-70 ">
               <div className="relative rounded-md bg-white ">
                 <div className="absolute -right-3 -top-3  rounded-full bg-slate-600 px-3 py-1  text-white">
@@ -259,7 +259,9 @@ export default function AdminTicketList({ surveyData }) {
                 </div>
               </div>
             </div>
-          ) : assignTicket ? (
+          )}
+
+          {assignTicket && (
             <div className="absolute bottom-0 left-0 right-0 top-0 min-w-96 flex flex-col items-center justify-center bg-slate-500 bg-opacity-70 ">
               <div className="relative m-10 rounded-md bg-white">
                 <div className=" absolute -right-3 -top-3  rounded-full bg-slate-600 px-3 py-1  text-white">
@@ -294,114 +296,112 @@ export default function AdminTicketList({ surveyData }) {
                 </div>
               </div>
             </div>
-          ) : (
-            <div className="flex items-stretch">
-              <div className="h-screen w-[18%] items-stretch bg-slate-100">
-                <div className="mx-2 my-1 mt-2 text-xl">Filters</div>
-                <div
-                  className={`${
-                    filterApplied == "Closed"
-                      ? "border-sky-500 text-sky-500"
-                      : "border-gray-300 text-gray-400"
-                  } m-2  inline-block cursor-pointer rounded-lg border-2 px-4 py-2`}
-                  onClick={() => statusFilter("Closed")}
-                >
-                  Solved
-                </div>
-                <div
-                  className={`${
-                    filterApplied == "Open"
-                      ? "border-sky-500 text-sky-500"
-                      : "border-gray-300 text-gray-400"
-                  } inline-block  cursor-pointer rounded-lg border-2 px-4 py-2 `}
-                  onClick={() => statusFilter("Open")}
-                >
-                  In Progress
-                </div>
-              </div>
+          )}
 
-              <div className="w-[82%]">
-                {/* <div className="px-2 py-6">
+          <div className="flex items-stretch">
+            <div className="h-screen w-[18%] items-stretch bg-slate-100">
+              <div className="mx-2 my-1 mt-2 text-xl">Filters</div>
+              <div
+                className={`${
+                  filterApplied == "Closed"
+                    ? "border-sky-500 text-sky-500"
+                    : "border-gray-300 text-gray-400"
+                } m-2  inline-block cursor-pointer rounded-lg border-2 px-4 py-2`}
+                onClick={() => statusFilter("Closed")}
+              >
+                Solved
+              </div>
+              <div
+                className={`${
+                  filterApplied == "Open"
+                    ? "border-sky-500 text-sky-500"
+                    : "border-gray-300 text-gray-400"
+                } inline-block  cursor-pointer rounded-lg border-2 px-4 py-2 `}
+                onClick={() => statusFilter("Open")}
+              >
+                In Progress
+              </div>
+            </div>
+
+            <div className="w-[82%]">
+              {/* <div className="px-2 py-6">
             <TicketGeneratorButton />
           </div> */}
 
-                <table className="w-[100%]">
-                  <thead>
-                    <tr className=" m-10 bg-gray-200/50">
-                      <th className="px-10 py-3 text-left">Assigned To</th>
-                      <th className="px-10 py-3 text-left">Title</th>
-                      <th className="px-10 py-3 text-left">Status</th>
-                      <th className="px-10 py-3 text-left">Created at</th>
-                      <th className="px-10 py-3 text-left">Details</th>
-                    </tr>
-                  </thead>
+              <table className="w-[100%]">
+                <thead>
+                  <tr className=" m-10 bg-gray-200/50">
+                    <th className="px-10 py-3 text-left">Assigned To</th>
+                    <th className="px-10 py-3 text-left">Title</th>
+                    <th className="px-10 py-3 text-left">Status</th>
+                    <th className="px-10 py-3 text-left">Created at</th>
+                    <th className="px-10 py-3 text-left">Details</th>
+                  </tr>
+                </thead>
 
-                  <tbody>
-                    {surveyData.map((ticket: any) => (
-                      <tr
-                        key={ticket.ticket_id}
+                <tbody>
+                  {surveyData.map((ticket: any) => (
+                    <tr
+                      key={ticket.ticket_id}
 
-                        // className="items-left flex  border-b border-sky-500  bg-slate-50 py-4"
-                      >
-                        <td className="border-b border-sky-500 px-10 py-3">
-                          {ticket.assignedto || (
-                            <AssignButton ticket={ticket} />
-                          )}
-                        </td>
-                        <td className="border-b border-sky-500 px-10 py-3">
-                          {ticket.title}
-                        </td>
-                        <td className="border-b border-sky-500 px-10 py-3">
-                          <span
-                            className={`${
-                              ticket.status == "Open"
-                                ? "bg-red-500"
-                                : "bg-green-500 "
-                            }  rounded-full px-2 py-1 text-sm text-white`}
-                          >
-                            {ticket.status}
-                          </span>
-                        </td>
-                        <td className="border-b border-sky-500 px-10 py-3">
-                          {new Date(ticket.createdat).toLocaleString()}
-                        </td>
-                        <td
-                          className="border-b border-sky-500"
-                          onClick={() => setDetailsModal(ticket)}
+                      // className="items-left flex  border-b border-sky-500  bg-slate-50 py-4"
+                    >
+                      <td className="border-b border-sky-500 px-10 py-3">
+                        {ticket.assignedto || <AssignButton ticket={ticket} />}
+                      </td>
+                      <td className="border-b border-sky-500 px-10 py-3">
+                        {ticket.title}
+                      </td>
+                      <td className="border-b border-sky-500 px-10 py-3">
+                        <span
+                          className={`${
+                            ticket.status == "Open"
+                              ? "bg-red-500"
+                              : "bg-green-500 "
+                          }  rounded-full px-2 py-1 text-sm text-white`}
                         >
-                          <span className=" cursor-pointer rounded-full bg-blue-200   px-3 py-1 text-sm text-blue-500 hover:bg-blue-100">
-                            View Details
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                          {ticket.status}
+                        </span>
+                      </td>
+                      <td className="border-b border-sky-500 px-10 py-3">
+                        {new Date(ticket.createdat).toLocaleString()}
+                      </td>
+                      <td
+                        className="border-b border-sky-500"
+                        onClick={() => setDetailsModal(ticket)}
+                      >
+                        <span className=" cursor-pointer rounded-full bg-blue-200   px-3 py-1 text-sm text-blue-500 hover:bg-blue-100">
+                          View Details
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
-                <Pagination
-                  items={
-                    filterApplied == ""
-                      ? myTickets.length
-                      : allFilteredData.length
-                  }
-                  currentPage={currentPage}
-                  pageSize={pageSize}
-                  onPageChange={onPageChange}
-                />
-              </div>
-
-              <div className="hidden w-[22%] bg-slate-200 p-5" id="modal">
-                <div className="flex justify-end">
-                  <button onClick={clickHandler()}>X</button>
-                </div>
-                <div className="header"></div>
-                <div>
-                  <input type="search" />
-                </div>
-                <div className="all-users"></div>
-              </div>
+              <Pagination
+                items={
+                  filterApplied == ""
+                    ? myTickets.length
+                    : allFilteredData.length
+                }
+                currentPage={currentPage}
+                pageSize={pageSize}
+                onPageChange={onPageChange}
+              />
             </div>
-          )}
+
+            <div className="hidden w-[22%] bg-slate-200 p-5" id="modal">
+              <div className="flex justify-end">
+                <button onClick={clickHandler()}>X</button>
+              </div>
+              <div className="header"></div>
+              <div>
+                <input type="search" />
+              </div>
+              <div className="all-users"></div>
+            </div>
+          </div>
         </div>
       )}
     </div>

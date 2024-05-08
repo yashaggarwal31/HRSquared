@@ -11,13 +11,11 @@ export default function Home() {
           <div className="flex items-center h-full px-20 bg-gray-900 bg-opacity-40">
             <div>
               <h2 className="text-2xl font-bold text-white sm:text-3xl">
-                Meraki UI
+                HR Ticketing System
               </h2>
 
               <p className="max-w-xl mt-3 text-gray-300">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. In
-                autem ipsa, nulla laboriosam dolores, repellendus perferendis
-                libero suscipit nam temporibus molestiae
+                All in one HR solution!, manage tickets, resolve issues, conduct surveys and get feedbacks all in one place!
               </p>
             </div>
           </div>

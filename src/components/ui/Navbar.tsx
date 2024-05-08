@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Button } from "./button";
 import { useRouter } from "next/navigation";
 import  {signOut} from "@/app/auth"
+import Image from "next/image";
 
 const Navbar: React.FC = () => {
 
@@ -120,11 +121,13 @@ const Navbar: React.FC = () => {
         </div>
         <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
           <div className="flex flex-shrink-0 items-center">
-            <img
-              className="h-8 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-              alt="Your Company"
-            />
+          <Image
+                  width={100}
+                  height={100}
+                  className="w-auto h-7 sm:h-8"
+                  src="https://merakiui.com/images/logo.svg"
+                  alt=""
+                />
           </div>
           <div className="hidden sm:ml-6 sm:block">
             <div className="flex space-x-4">

@@ -129,7 +129,7 @@ export async function getUserTickets(id: number) {
 
   const data = await client.query(query);
   // client.end()
-  console.log(data);
+  // console.log(data);
 
   if (data.rowCount > 0) {
     return data.rows;
@@ -147,7 +147,7 @@ export async function getAllTickets() {
 
   const data = await client.query(query);
   // client.end()
-  console.log(data);
+  // console.log(data);
 
   if (data.rowCount > 0) {
     return data.rows;
@@ -166,7 +166,7 @@ export async function getAssignedTickets(id: number) {
 
   const data = await client.query(query);
   // client.end()
-  console.log(data);
+  // console.log(data);
 
   if (data.rowCount > 0) {
     return data.rows;

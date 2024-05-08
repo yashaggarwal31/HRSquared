@@ -6,7 +6,7 @@ async function UserSurveys(){
 
     const surveyData = await getRecentSurveys();
 
-    console.log('users page, survey data: ',surveyData)
+    // console.log('users page, survey data: ',surveyData)
 
     return <UserSurveyList surveyData={surveyData}/>
 }
