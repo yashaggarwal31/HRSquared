@@ -18,12 +18,16 @@ export default function UserTicketList({ ticketData }) {
   const pageSize = 8;
   const [allFilteredData, setAllFilteredData] = useState([{}]);
   const [filterApplied, setFilterApplied] = useState("");
-  const [myTickets, setMyTickets] = useState([]);
+  const [myTickets, setMyTickets] = useState(ticketData);
   const [currentData, setCurrentData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [detailsModal, setDetailsModal] = useState<any>(null);
 
   let data = paginate(myTickets, currentPage, pageSize);
+  useEffect(() => {
+    data = paginate(myTickets, currentPage, pageSize);
+    setCurrentData(data);
+  }, []);
   // useEffect(() => {
   //   const fetchData = async () => {
   //     const body_params = {
@@ -108,7 +112,10 @@ export default function UserTicketList({ ticketData }) {
   return (
     <div className="">
       {loading ? (
-        <div>Loading...</div>
+        <div className="fixed top-0 left-0 w-screen h-screen z-[99999999999999] flex flex-col items-center justify-center bg-black/40">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>{" "}
+          <h3>Fetching Tickets ...</h3>{" "}
+        </div>
       ) : (
         <div>
           {detailsModal && (
@@ -165,28 +172,29 @@ export default function UserTicketList({ ticketData }) {
               </div>
             </div>
           )}
+
           <div className="flex items-stretch">
             <div className="h-screen w-[18%] items-stretch bg-slate-100">
               <div className="mx-2 my-1 mt-2 text-xl">Filters</div>
               <div
                 className={`${
-                  filterApplied == "Solved"
+                  filterApplied == "Closed"
                     ? "border-sky-500 text-sky-500"
                     : "border-gray-300 text-gray-400"
                 } m-2  inline-block cursor-pointer rounded-lg border-2 px-4 py-2`}
                 onClick={() => statusFilter("Closed")}
               >
-                Solved
+                Closed
               </div>
               <div
                 className={`${
-                  filterApplied == "In Progress"
+                  filterApplied == "Open"
                     ? "border-sky-500 text-sky-500"
                     : "border-gray-300 text-gray-400"
                 } inline-block  cursor-pointer rounded-lg border-2 px-4 py-2 `}
                 onClick={() => statusFilter("Open")}
               >
-                In Progress
+                Open
               </div>
             </div>
 
@@ -217,7 +225,7 @@ export default function UserTicketList({ ticketData }) {
 
                 {/* <tbody className="center bg-white"> */}
                 <tbody>
-                  {ticketData.map((ticket: any) => (
+                  {currentData.map((ticket: any) => (
                     <tr key={ticket.ticket_id}>
                       <td className="border-b border-sky-500 px-10 py-3">
                         {ticket.assignedto || (
@@ -267,7 +275,6 @@ export default function UserTicketList({ ticketData }) {
               />
             </div>
           </div>
-          )
         </div>
       )}
     </div>

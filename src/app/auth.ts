@@ -84,6 +84,7 @@ export const { auth, signIn, signOut } = NextAuth({
           name: 'Yash',
           email: 'yashaggarwal@gmail.com',
           id: '1111'
+          
         }
         ;('use server')
 
