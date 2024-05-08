@@ -23,7 +23,7 @@ export default function AdminTicketList({ surveyData }) {
   const pageSize = 10;
   const [allFilteredData, setAllFilteredData] = useState([{}]);
   const [filterApplied, setFilterApplied] = useState("");
-  const [myTickets, setMyTickets] = useState([]);
+  const [myTickets, setMyTickets] = useState(surveyData);
   const [currentData, setCurrentData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [detailsModal, setDetailsModal] = useState<any>(null);
@@ -105,41 +105,46 @@ export default function AdminTicketList({ surveyData }) {
 
   let data = paginate(myTickets, currentPage, pageSize);
   useEffect(() => {
-    const fetchData = async () => {
-      const body_params = {
-        options: {
-          status: 0,
-          sub_category: 0,
-          group: 0,
-          priority: 0,
-          closed_by: 0,
-        },
-      };
-      try {
-        setLoading(true);
-        const response = await fetch("/api/tickets/admin/getalltickets", {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-          },
-          // body: JSON.stringify(body_params),
-        });
-        if (response) {
-          const ticketDataRes = await response.json();
-          const ticketData = ticketDataRes.Response.result;
-          setMyTickets(ticketData);
-          data = paginate(ticketData, currentPage, pageSize);
-          setCurrentData(data);
-        }
-      } catch (error) {
-        //console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+    data = paginate(myTickets, currentPage, pageSize);
+    setCurrentData(data);
   }, []);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const body_params = {
+  //       options: {
+  //         status: 0,
+  //         sub_category: 0,
+  //         group: 0,
+  //         priority: 0,
+  //         closed_by: 0,
+  //       },
+  //     };
+  //     try {
+  //       setLoading(true);
+  //       const response = await fetch("/api/tickets/admin/getalltickets", {
+  //         method: "GET",
+  //         headers: {
+  //           Accept: "application/json",
+  //         },
+  //         // body: JSON.stringify(body_params),
+  //       });
+  //       if (response) {
+  //         const ticketDataRes = await response.json();
+  //         const ticketData = ticketDataRes.Response.result;
+  //         setMyTickets(ticketData);
+  //         data = paginate(ticketData, currentPage, pageSize);
+  //         setCurrentData(data);
+  //       }
+  //     } catch (error) {
+  //       //console.log(error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
     if (filterApplied == "") {
@@ -309,7 +314,7 @@ export default function AdminTicketList({ surveyData }) {
                 } m-2  inline-block cursor-pointer rounded-lg border-2 px-4 py-2`}
                 onClick={() => statusFilter("Closed")}
               >
-                Solved
+                Closed
               </div>
               <div
                 className={`${
@@ -319,7 +324,7 @@ export default function AdminTicketList({ surveyData }) {
                 } inline-block  cursor-pointer rounded-lg border-2 px-4 py-2 `}
                 onClick={() => statusFilter("Open")}
               >
-                In Progress
+                Open
               </div>
             </div>
 
@@ -340,7 +345,7 @@ export default function AdminTicketList({ surveyData }) {
                 </thead>
 
                 <tbody>
-                  {surveyData.map((ticket: any) => (
+                  {currentData.map((ticket: any) => (
                     <tr
                       key={ticket.ticket_id}
 

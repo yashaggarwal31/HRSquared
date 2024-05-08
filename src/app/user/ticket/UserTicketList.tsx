@@ -18,12 +18,16 @@ export default function UserTicketList({ ticketData }) {
   const pageSize = 8;
   const [allFilteredData, setAllFilteredData] = useState([{}]);
   const [filterApplied, setFilterApplied] = useState("");
-  const [myTickets, setMyTickets] = useState([]);
+  const [myTickets, setMyTickets] = useState(ticketData);
   const [currentData, setCurrentData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [detailsModal, setDetailsModal] = useState<any>(null);
 
   let data = paginate(myTickets, currentPage, pageSize);
+  useEffect(() => {
+    data = paginate(myTickets, currentPage, pageSize);
+    setCurrentData(data);
+  }, []);
   // useEffect(() => {
   //   const fetchData = async () => {
   //     const body_params = {
@@ -108,7 +112,10 @@ export default function UserTicketList({ ticketData }) {
   return (
     <div className="">
       {loading ? (
-        <div>Loading...</div>
+        <div className="fixed top-0 left-0 w-screen h-screen z-[99999999999999] flex flex-col items-center justify-center bg-black/40">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>{" "}
+          <h3>Fetching Tickets ...</h3>{" "}
+        </div>
       ) : (
         <div>
           {detailsModal && (
@@ -165,111 +172,109 @@ export default function UserTicketList({ ticketData }) {
               </div>
             </div>
           )}
-          
-          (
-            <div className="flex items-stretch">
-              <div className="h-screen w-[18%] items-stretch bg-slate-100">
-                <div className="mx-2 my-1 mt-2 text-xl">Filters</div>
-                <div
-                  className={`${
-                    filterApplied == "Solved"
-                      ? "border-sky-500 text-sky-500"
-                      : "border-gray-300 text-gray-400"
-                  } m-2  inline-block cursor-pointer rounded-lg border-2 px-4 py-2`}
-                  onClick={() => statusFilter("Closed")}
-                >
-                  Solved
-                </div>
-                <div
-                  className={`${
-                    filterApplied == "In Progress"
-                      ? "border-sky-500 text-sky-500"
-                      : "border-gray-300 text-gray-400"
-                  } inline-block  cursor-pointer rounded-lg border-2 px-4 py-2 `}
-                  onClick={() => statusFilter("Open")}
-                >
-                  In Progress
-                </div>
+
+          <div className="flex items-stretch">
+            <div className="h-screen w-[18%] items-stretch bg-slate-100">
+              <div className="mx-2 my-1 mt-2 text-xl">Filters</div>
+              <div
+                className={`${
+                  filterApplied == "Closed"
+                    ? "border-sky-500 text-sky-500"
+                    : "border-gray-300 text-gray-400"
+                } m-2  inline-block cursor-pointer rounded-lg border-2 px-4 py-2`}
+                onClick={() => statusFilter("Closed")}
+              >
+                Closed
               </div>
-
-              <div className="w-[82%]">
-                <div className="flex items-center justify-between px-7 py-6">
-                  <TicketGeneratorButton />
-
-                  <div>
-                    <Link
-                      href={{ pathname: "./ticket/me" }}
-                      className="inline-block cursor-pointer rounded-md bg-black p-2 text-white"
-                    >
-                      Assigned To Me
-                    </Link>
-                  </div>
-                </div>
-
-                <table className="w-[100%]">
-                  <thead>
-                    <tr className=" m-10 bg-gray-200/50">
-                      <th className="px-10 py-3 text-left">Assigned To</th>
-                      <th className="px-10 py-3 text-left">Title</th>
-                      <th className="px-10 py-3 text-left">Status</th>
-                      <th className="px-10 py-3 text-left">Created at</th>
-                      <th className="px-10 py-3 text-left">Details</th>
-                    </tr>
-                  </thead>
-
-                  {/* <tbody className="center bg-white"> */}
-                  <tbody>
-                    {ticketData.map((ticket: any) => (
-                      <tr key={ticket.ticket_id}>
-                        <td className="border-b border-sky-500 px-10 py-3">
-                          {ticket.assignedto || (
-                            <div className="text-zinc-400">Yet to assigned</div>
-                          )}
-                        </td>
-                        <td className="border-b border-sky-500 px-10 py-3">
-                          {ticket.title}
-                        </td>
-                        <td className="border-b border-sky-500 px-10 py-3">
-                          <span
-                            className={`${
-                              ticket.status == "Open"
-                                ? "bg-red-500"
-                                : "bg-green-500 "
-                            }  rounded-full px-2 py-1 text-sm text-white`}
-                          >
-                            {ticket.status}
-                          </span>
-                        </td>
-                        <td className="border-b border-sky-500 px-10 py-3">
-                          {formatDateString(ticket.createdat)}
-                        </td>
-                        <td
-                          className="border-b border-sky-500"
-                          onClick={() => setDetailsModal(ticket)}
-                        >
-                          <span className=" cursor-pointer rounded-full bg-blue-200   px-3 py-1 text-sm text-blue-500 hover:bg-blue-100">
-                            View Details
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                  {/* </tbody> */}
-                </table>
-
-                <Pagination
-                  items={
-                    filterApplied == ""
-                      ? myTickets.length
-                      : allFilteredData.length
-                  }
-                  currentPage={currentPage}
-                  pageSize={pageSize}
-                  onPageChange={onPageChange}
-                />
+              <div
+                className={`${
+                  filterApplied == "Open"
+                    ? "border-sky-500 text-sky-500"
+                    : "border-gray-300 text-gray-400"
+                } inline-block  cursor-pointer rounded-lg border-2 px-4 py-2 `}
+                onClick={() => statusFilter("Open")}
+              >
+                Open
               </div>
             </div>
-          )
+
+            <div className="w-[82%]">
+              <div className="flex items-center justify-between px-7 py-6">
+                <TicketGeneratorButton />
+
+                <div>
+                  <Link
+                    href={{ pathname: "./ticket/me" }}
+                    className="inline-block cursor-pointer rounded-md bg-black p-2 text-white"
+                  >
+                    Assigned To Me
+                  </Link>
+                </div>
+              </div>
+
+              <table className="w-[100%]">
+                <thead>
+                  <tr className=" m-10 bg-gray-200/50">
+                    <th className="px-10 py-3 text-left">Assigned To</th>
+                    <th className="px-10 py-3 text-left">Title</th>
+                    <th className="px-10 py-3 text-left">Status</th>
+                    <th className="px-10 py-3 text-left">Created at</th>
+                    <th className="px-10 py-3 text-left">Details</th>
+                  </tr>
+                </thead>
+
+                {/* <tbody className="center bg-white"> */}
+                <tbody>
+                  {currentData.map((ticket: any) => (
+                    <tr key={ticket.ticket_id}>
+                      <td className="border-b border-sky-500 px-10 py-3">
+                        {ticket.assignedto || (
+                          <div className="text-zinc-400">Yet to assigned</div>
+                        )}
+                      </td>
+                      <td className="border-b border-sky-500 px-10 py-3">
+                        {ticket.title}
+                      </td>
+                      <td className="border-b border-sky-500 px-10 py-3">
+                        <span
+                          className={`${
+                            ticket.status == "Open"
+                              ? "bg-red-500"
+                              : "bg-green-500 "
+                          }  rounded-full px-2 py-1 text-sm text-white`}
+                        >
+                          {ticket.status}
+                        </span>
+                      </td>
+                      <td className="border-b border-sky-500 px-10 py-3">
+                        {formatDateString(ticket.createdat)}
+                      </td>
+                      <td
+                        className="border-b border-sky-500"
+                        onClick={() => setDetailsModal(ticket)}
+                      >
+                        <span className=" cursor-pointer rounded-full bg-blue-200   px-3 py-1 text-sm text-blue-500 hover:bg-blue-100">
+                          View Details
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                {/* </tbody> */}
+              </table>
+
+              <Pagination
+                items={
+                  filterApplied == ""
+                    ? myTickets.length
+                    : allFilteredData.length
+                }
+                currentPage={currentPage}
+                pageSize={pageSize}
+                onPageChange={onPageChange}
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>
