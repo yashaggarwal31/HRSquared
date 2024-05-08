@@ -60,7 +60,7 @@ function Feedbacks() {
   };
 
   return (
-    <section className="w-full pb-6 bg-slate-100">
+    <section className="w-full pb-6">
       {showDialog && !isAnonymous && !conformation && (
         <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center bg-slate-500 bg-opacity-70">
           <div className="flex w-fit max-w-sm flex-col items-center justify-center bg-white p-2 px-6 py-4">

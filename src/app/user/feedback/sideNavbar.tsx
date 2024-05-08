@@ -10,7 +10,7 @@ export default function SideNavbar({ page }) {
     "inline-block my-4 text-center px-4 py-2 bg-slate-600 text-white";
 
   return (
-    <div className="py-2 flex flex-row w-full items-center justify-center bg-zinc-200 sticky top-0">
+    <div className="py-2 flex flex-row w-full items-center justify-center bg-zinc-200 sticky top-0 mb-2">
       <Link
         href={`/user/feedback`}
         className={page === 1 ? activeClass : normalClass}
