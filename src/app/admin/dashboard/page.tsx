@@ -11,7 +11,7 @@ import {
   getRecentSurveys,
   getRecentTickets,
 } from "@/lib/dashboard";
-import { SessionProvider } from "next-auth/react";
+
 
 async function DashboardPage() {
   const data = {
@@ -25,7 +25,7 @@ async function DashboardPage() {
     getRecentTickets: await getRecentTickets(),
   };
 
-  return <SessionProvider><DashBoard data={data} /></SessionProvider>;
+  return <DashBoard data={data} />;
 }
 
 export default function Dashboard() {
