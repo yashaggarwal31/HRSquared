@@ -51,9 +51,9 @@ function AdminSurveySearchFunctionality({surveyData}:{surveyData:any}) {
     let filterDate;
     // Add one month to the current date
     console.log('dropwdownValue is ',dropwdownValue,DateSelect.All, typeof dropwdownValue,typeof DateSelect.All)
-    const x = parseInt(dropwdownValue)
+    const selectedDate = parseInt(dropwdownValue)
     console.log(dropwdownValue===DateSelect.All)
-    switch(x){
+    switch(selectedDate){
         case DateSelect.All:
             filterDate = new Date(currentDate.getFullYear()-100, currentDate.getMonth(), currentDate.getDate()).toISOString();
             setFilterISOString(filterDate);
@@ -82,7 +82,7 @@ function AdminSurveySearchFunctionality({surveyData}:{surveyData:any}) {
   }
 
   useEffect(()=>{
-    filterItems(searchQuery);
+    filterByDate();
   },[filterISOString])
 
 
@@ -104,28 +104,28 @@ function AdminSurveySearchFunctionality({surveyData}:{surveyData:any}) {
 
     setSearchQuery(searchTerm);
 
-
-    let surveyDate = new Date(surveyData[0].created_at).toISOString();
-
-    console.log('pastISOString: ', filterISOString)
-    console.log('surveydate: ', surveyDate)
     
-    const filteredItems = dateFilteredRecords.filter((response) =>
-    {
-        const surveyDate = new Date(response.created_at).toISOString()
+    const filteredItems = dateFilteredRecords.filter((response) =>{
+        
+   
 
-    return ((response.survey_title.split('%!@')[0].toLowerCase().includes(searchTerm.toLowerCase()) || 
+    const searchBool = response.survey_title.split('%!@')[0].toLowerCase().includes(searchTerm.toLowerCase()) || 
     response.survey_title.split('%!@')[1].toLowerCase().includes(searchTerm.toLowerCase())||
-    response.creator_name.trim().toLowerCase().includes(searchTerm.toLowerCase()))
-     &&  filterISOString?(filterISOString<surveyDate):true)}
-    );
+    response.creator_name.trim().toLowerCase().includes(searchTerm.toLowerCase());
+    
+
+    return  searchBool;
+    
+  });
 
     setFilteredResponses(filteredItems);
+
+    
   }
 
-//   useEffect(()=>{
-//     filterItems();
-//   },[dropwdownValue])
+  useEffect(()=>{
+    filterItems(searchQuery);
+  },[dateFilteredRecords])
 
   return (
     <>
@@ -165,14 +165,6 @@ function AdminSurveySearchFunctionality({surveyData}:{surveyData:any}) {
                 Create a new Survey
             </Link>
         </div>
-
-      
- 
-
-
-     
-        
-           
         
 
           
