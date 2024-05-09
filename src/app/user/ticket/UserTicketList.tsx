@@ -199,13 +199,13 @@ export default function UserTicketList({ ticketData }) {
             </div>
 
             <div className="w-[82%]">
-              <div className="flex items-center justify-between px-7 py-6">
+              <div className="flex items-center  justify-between px-7 py-6">
                 <TicketGeneratorButton />
 
                 <div>
                   <Link
                     href={{ pathname: "./ticket/me" }}
-                    className="inline-block cursor-pointer rounded-md bg-black p-2 text-white"
+                    className="inline-block cursor-pointer rounded-md bg-[#4b62f8]  p-2 text-white"
                   >
                     Assigned To Me
                   </Link>

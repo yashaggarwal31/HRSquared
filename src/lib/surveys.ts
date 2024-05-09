@@ -1,18 +1,18 @@
 'use server'
-const getAdminSurveys = () => {};
+const getAdminSurveys = () => {}
 
-import { notFound } from "next/navigation";
-import { dbConnect } from "./renderDB";
-import { Database } from "@/types/database.types";
-import { JSDOM } from 'jsdom';
-import { object } from "zod";
+import { notFound } from 'next/navigation'
+import { dbConnect } from './renderDB'
+import { Database } from '@/types/database.types'
+import { JSDOM } from 'jsdom'
+import { object } from 'zod'
 
-type SurveyInsert = Database["public"]["Tables"]["Survey"]["Insert"];
+type SurveyInsert = Database['public']['Tables']['Survey']['Insert']
 type SurveyResponseInsert =
-  Database["public"]["Tables"]["SurveyResponses"]["Insert"];
+  Database['public']['Tables']['SurveyResponses']['Insert']
 
-export async function getRecentSurveys() {
-  const client = await dbConnect();
+export async function getRecentSurveys () {
+  const client = await dbConnect()
 
   const query = {
     text: `
@@ -26,49 +26,49 @@ export async function getRecentSurveys() {
         LEFT JOIN users u ON s.createdby = u.id
         GROUP BY s.id, s.title, s.createdat, u.username
         ORDER BY s.id DESC;
-        `,
-  };
+        `
+  }
 
-  const data = await client.query(query);
+  const data = await client.query(query)
   // client.end()
   // console.log(data)
 
   if (data.rowCount > 0) {
-    return data.rows;
+    return data.rows
   } else {
-    notFound();
+    notFound()
   }
 }
 
-export async function AddSurvey(survey: SurveyInsert) {
-  const client = await dbConnect();
+export async function AddSurvey (survey: SurveyInsert) {
+  const client = await dbConnect()
   try {
-    const surveyFieldsJSON = JSON.stringify(survey.survey_fields);
+    const surveyFieldsJSON = JSON.stringify(survey.survey_fields)
     const query = {
-      text: "insert into surveys (title, surveyfields, createdby, closes_at) values ($1, $2, $3, $4)",
+      text: 'insert into surveys (title, surveyfields, createdby, closes_at) values ($1, $2, $3, $4)',
       values: [
         survey.title,
         surveyFieldsJSON,
         survey.created_by,
-        survey.closes_at,
-      ],
-    };
-    const result = await client.query(query);
+        survey.closes_at
+      ]
+    }
+    const result = await client.query(query)
     // client.end()
     return {
       status: 200,
       statusText: `${result.command} completed successfully`,
-      result: result,
-    };
+      result: result
+    }
   } catch (error: any) {
     // client.end()
     return {
       error: error,
       status: 500,
-      statusText: "Internal server error",
+      statusText: 'Internal server error',
       message: error.message,
-      data: null,
-    };
+      data: null
+    }
   }
 }
 
@@ -89,103 +89,108 @@ export async function AddSurvey(survey: SurveyInsert) {
 //   }
 // }
 
-export async function GetSurveyResponses(id: number) {
-  const client = await dbConnect();
+export async function GetSurveyResponses (id: number) {
+  const client = await dbConnect()
   try {
     const query = {
       // text: `select sr.id, u.username, sr.response_data, sr.createdat from surveyresponses sr join users u on u.id = sr.user_id where sr.survey_id = $1;`,
-      text: `select sr.id, sr.response_data, sr.createdat from surveyresponses sr where sr.survey_id = $1;`,
-      values: [id],
-    };
-    const result = await client.query(query);
+      text: `select sr.id, u.username, sr.response_data, sr.createdat
+      from surveyresponses sr 
+      join users u
+      on sr.user_id = u.id
+      where sr.survey_id = $1; 
+      `,
+      values: [id]
+    }
+    const result = await client.query(query)
     // console.log(result);
     // client.end()
-    return result.rows;
+    return result.rows
   } catch (error) {
-    console.log(error);
+    console.log(error)
     // client.end()
-    return "error fetching";
+    return 'error fetching'
   }
 }
 
-export async function GetResponseById(id: number) {
-  const client = await dbConnect();
+export async function GetResponseById (id: number) {
+  const client = await dbConnect()
   try {
     const query = {
-      text: "select * from surveyresponses where id = $1",
-      values: [id],
-    };
-    const result = await client.query(query);
+      text: 'select * from surveyresponses where id = $1',
+      values: [id]
+    }
+    const result = await client.query(query)
     // client.end()
-    return result.rows;
+    return result.rows
   } catch (error) {
-    console.log(error);
+    console.log(error)
     // client.end()
-    return "Error Fetching";
+    return 'Error Fetching'
   }
 }
 
-export async function getSurveyById(id: number) {
-  const client = await dbConnect();
+export async function getSurveyById (id: number) {
+  const client = await dbConnect()
   try {
     const query = {
-      text: "select * from surveys where id = $1",
-      values: [id],
-    };
-    const result = await client.query(query);
+      text: 'select * from surveys where id = $1',
+      values: [id]
+    }
+    const result = await client.query(query)
     // client.end()
-    return result.rows;
+    return result.rows
   } catch (error) {
-    console.log(error);
+    console.log(error)
     // client.end()
-    return "Error Fetching";
+    return 'Error Fetching'
   }
 }
 
-export async function addUserResponse(response: SurveyResponseInsert) {
-  const client = await dbConnect();
-  const responseFieldsJSON = JSON.stringify(response.response_data);
+export async function addUserResponse (response: SurveyResponseInsert) {
+  const client = await dbConnect()
+  const responseFieldsJSON = JSON.stringify(response.response_data)
   const query = {
-    text: "insert into surveyresponses (user_id, survey_id, response_data) values ($1, $2, $3)",
-    values: [response.user_id, response.survey_id, responseFieldsJSON],
-  };
+    text: 'insert into surveyresponses (user_id, survey_id, response_data) values ($1, $2, $3)',
+    values: [response.user_id, response.survey_id, responseFieldsJSON]
+  }
 
   try {
-    const result = await client.query(query);
+    const result = await client.query(query)
 
-    return result;
+    return result
   } catch (error) {
-    return "Error Fetching Data";
+    return 'Error Fetching Data'
   }
 }
 
-export async function createJsonFromLabels(surveyLabels: any[]) {
-  let JsonWithLabelSeqArr = [];
-  let jsonData: any = {};
-  let labelArray = [];
+export async function createJsonFromLabels (surveyLabels: any[]) {
+  let JsonWithLabelSeqArr = []
+  let jsonData: any = {}
+  let labelArray = []
 
   surveyLabels.forEach(item => {
-    item.label = item.label.trim();
-    labelArray.push(item.label);
+    item.label = item.label.trim()
+    labelArray.push(item.label)
     switch (item.type) {
       case 0:
         // Text input
-        jsonData[item.label] = []; 
-        break;
+        jsonData[item.label] = []
+        break
       case 1:
         // Dropdown/select
-        jsonData[item.label] = [];
-        break;
+        jsonData[item.label] = []
+        break
       case 2:
-        jsonData[item.label] = [];
+        jsonData[item.label] = []
       case 5:
         // File upload
-        jsonData[item.label] = [];
-        break;
+        jsonData[item.label] = []
+        break
       case 3:
         // Date input
-        jsonData[item.label] = [];
-        break;
+        jsonData[item.label] = []
+        break
       // case 4:
       //   // Matrix
       //   jsonData[item.label] = {};
@@ -194,183 +199,184 @@ export async function createJsonFromLabels(surveyLabels: any[]) {
       //   });
       //   break;
       default:
-        break;
+        break
     }
+  })
 
-    
+  JsonWithLabelSeqArr.push(labelArray)
+  JsonWithLabelSeqArr.push(jsonData)
 
-  });
+  console.log('our json !!!!', JsonWithLabelSeqArr)
 
-  JsonWithLabelSeqArr.push(labelArray);
-    JsonWithLabelSeqArr.push(jsonData);
-
-  console.log('our json !!!!',JsonWithLabelSeqArr)
-
-  return JsonWithLabelSeqArr;
+  return JsonWithLabelSeqArr
 }
 
-export async function responsesToJson(form,surveyResponseData,JsonWithLabelSeqArr){
+export async function responsesToJson (
+  form,
+  surveyResponseData,
+  JsonWithLabelSeqArr
+) {
   // console.log('this is form\n ******* ',form );
   // console.log('this is SurveyResponse\n ******* ',surveyResponseData );
 
-  let jsonData= JsonWithLabelSeqArr[1];
-  let formlabels = JsonWithLabelSeqArr[0];
+  let jsonData = JsonWithLabelSeqArr[1]
+  let formlabels = JsonWithLabelSeqArr[0]
   // let labelArray = JsonWithLabelSeqArr[0];
 
-  let responseIterator = 0;
-  
+  let responseIterator = 0
 
-  for(let response of surveyResponseData){
-    response = response.response_data;
+  for (let response of surveyResponseData) {
+    response = response.response_data
     // console.log('individual response: ',response)
-    const htmlString = JSON.parse(response);
+    const htmlString = JSON.parse(response)
     // console.log(htmlString)
-    let htmlDATA = htmlString[htmlString.length - 1];
-    form = htmlDATA.htmlString;
-    const dom = new JSDOM(form);
-    const container = dom.window.document;
+    let htmlDATA = htmlString[htmlString.length - 1]
+    form = htmlDATA.htmlString
+    const dom = new JSDOM(form)
+    const container = dom.window.document
     //parseString and create htmlString
 
-
-    for(let data of htmlString){
+    for (let data of htmlString) {
       // console.log('This is data: ',data.id);
-      if(data.id){
-          const ele = container.querySelector(`#${data.id}`) as HTMLInputElement;
-          
-          if(ele){
-              let label;
-              let value;
-              let radioLabel1;
-              let radioLabel2;
-              let flag = 0;
+      if (data.id) {
+        const ele = container.querySelector(`#${data.id}`) as HTMLInputElement
 
-              switch(ele.type){
-                  case 'text':
-                    label = ele.parentElement.firstChild.textContent;
-                    label = label.trim();
-                    value = data.answer;
+        if (ele) {
+          let label
+          let value
+          let radioLabel1
+          let radioLabel2
+          let flag = 0
 
-                    if(label && jsonData[label]){
-                      jsonData[label][responseIterator]=value;
-                    }
-                    break;
-                  case 'checkbox':
-                    label = ele.parentElement.parentElement.parentElement.firstChild.textContent;
-                    label = label.trim();
-                    value = ele.value;
-                    if(label && jsonData[label]){
-                      if(jsonData[label][responseIterator]){
-                        jsonData[label][responseIterator].push(value)
-                      }
-                      else{
-                        jsonData[label][responseIterator] = [];
-                        jsonData[label][responseIterator].push(value);
-                      }
-                    }
-                      break;
-                  case 'radio':
-                    flag = 1;
-                    radioLabel1 = ele.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.firstChild.textContent;
-                    radioLabel1 = radioLabel1.trim()
-                    radioLabel2 = ele.parentElement.parentElement.firstChild.textContent;
-                    radioLabel2 = radioLabel2.trim();
-                    value = ele.value;
-                    if(label && jsonData[radioLabel1][radioLabel2]){
-                      jsonData[radioLabel1][radioLabel2][responseIterator]=value;
-                    }
-                      break;
-                  case 'file':
-                    if(!data.answer){
-                      ele.value = 'No file uploaded';
-                      continue;
-                    }
-                    label = ele.parentElement.parentElement.firstChild.textContent;
-                    label = label.trim();
-                    value = data.answer;
+          switch (ele.type) {
+            case 'text':
+              label = ele.parentElement.firstChild.textContent
+              label = label.trim()
+              value = data.answer
 
-                    if(label && jsonData[label]){
-                      jsonData[label][responseIterator]=value;
-                    }
-                    break;
-                    
-                  case 'date':
-                    label = ele.parentElement.parentElement.firstChild.textContent
-                    label = label.trim();
-                    value = data.answer
-                    if(label && jsonData[label]){
-                      jsonData[label][responseIterator]=value;
-                    }
-                    break;
-                  case 'select-one':
-                    label = ele.parentNode.firstChild.textContent;
-                    label = label.trim();
-                    value = data.answer
-                    if(label && jsonData[label]){
-                      jsonData[label][responseIterator]=value;
-                    }
-                    break
+              if (label && jsonData[label]) {
+                jsonData[label][responseIterator] = value
               }
+              break
+            case 'checkbox':
+              label =
+                ele.parentElement.parentElement.parentElement.firstChild
+                  .textContent
+              label = label.trim()
+              value = ele.value
+              if (label && jsonData[label]) {
+                if (jsonData[label][responseIterator]) {
+                  jsonData[label][responseIterator].push(value)
+                } else {
+                  jsonData[label][responseIterator] = []
+                  jsonData[label][responseIterator].push(value)
+                }
+              }
+              break
+            case 'radio':
+              flag = 1
+              radioLabel1 =
+                ele.parentElement?.parentElement?.parentElement?.parentElement
+                  ?.parentElement?.parentElement?.firstChild.textContent
+              radioLabel1 = radioLabel1.trim()
+              radioLabel2 =
+                ele.parentElement.parentElement.firstChild.textContent
+              radioLabel2 = radioLabel2.trim()
+              value = ele.value
+              if (label && jsonData[radioLabel1][radioLabel2]) {
+                jsonData[radioLabel1][radioLabel2][responseIterator] = value
+              }
+              break
+            case 'file':
+              if (!data.answer) {
+                ele.value = 'No file uploaded'
+                continue
+              }
+              label = ele.parentElement.parentElement.firstChild.textContent
+              label = label.trim()
+              value = data.answer
 
-              console.log('radio: ', radioLabel1,'radio2',radioLabel2, 'JsonData ',jsonData[radioLabel1]);
-              console.log('Label: ',label);
-              console.log('Value: ', value)
+              if (label && jsonData[label]) {
+                jsonData[label][responseIterator] = value
+              }
+              break
 
+            case 'date':
+              label = ele.parentElement.parentElement.firstChild.textContent
+              label = label.trim()
+              value = data.answer
+              if (label && jsonData[label]) {
+                jsonData[label][responseIterator] = value
+              }
+              break
+            case 'select-one':
+              label = ele.parentNode.firstChild.textContent
+              label = label.trim()
+              value = data.answer
+              if (label && jsonData[label]) {
+                jsonData[label][responseIterator] = value
+              }
+              break
           }
 
-          // making sure all inputs are there
-          // for(let labels in formlabels){
-          //   jsonData[labels][responseIterator]
-          // }
+          console.log(
+            'radio: ',
+            radioLabel1,
+            'radio2',
+            radioLabel2,
+            'JsonData ',
+            jsonData[radioLabel1]
+          )
+          console.log('Label: ', label)
+          console.log('Value: ', value)
+        }
+
+        // making sure all inputs are there
+        // for(let labels in formlabels){
+        //   jsonData[labels][responseIterator]
+        // }
       }
     }
 
-    responseIterator++;
-
-    
+    responseIterator++
   }
 
-    console.log('Final JSONNNNN**********\n')
-    console.log(jsonData)
+  console.log('Final JSONNNNN**********\n')
+  console.log(jsonData)
 
-    return jsonData;
-  
+  return jsonData
 }
 
-
-export async function jsonToCsv(jsonData) {
+export async function jsonToCsv (jsonData) {
   // Extract the headers from the JSON data
-  const headers = Object.keys(jsonData);
-  let csv = headers.join(',') + '\n'; // CSV header
+  const headers = Object.keys(jsonData)
+  let csv = headers.join(',') + '\n' // CSV header
 
   // Find the maximum number of rows in the data
-  const maxRows = Math.max(...Object.values(jsonData).map((arr:any) => arr.length));
+  const maxRows = Math.max(
+    ...Object.values(jsonData).map((arr: any) => arr.length)
+  )
 
   // Build the CSV content
   for (let i = 0; i < maxRows; i++) {
-    const row = headers.map((header) => {
-      const values = jsonData[header];
+    const row = headers.map(header => {
+      const values = jsonData[header]
       if (i < values.length) {
-        const fieldValue = values[i];
+        const fieldValue = values[i]
         if (Array.isArray(fieldValue)) {
           // If it's a nested array, join with '&'
-          return `"${fieldValue.join('&')}"`;
+          return `"${fieldValue.join('&')}"`
         } else {
           // Enclose the field in double quotes for CSV safety
-          return `"${fieldValue}"`;
+          return `"${fieldValue}"`
         }
       } else {
         // Handle cases where a key has fewer entries
-        return '';
+        return ''
       }
-    });
-    csv += row.join(',') + '\n'; // Add the row to CSV
+    })
+    csv += row.join(',') + '\n' // Add the row to CSV
   }
 
-  return csv;
+  return csv
 }
-
-
-
- 
-
-

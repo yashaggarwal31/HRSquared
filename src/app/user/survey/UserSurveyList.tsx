@@ -5,13 +5,11 @@ import React from 'react'
 export default function UserSurveyList({surveyData}) {
   // console.log('main page', surveyData);
   return (
-    <div className="mb-8 mt-12 flex flex-col gap-12 ">
-      <div className="relative flex flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
-        <div className="relative mx-4 -mt-6 mb-8 rounded-xl bg-gradient-to-tr from-blue-900 to-blue-800 bg-clip-border p-6 text-white shadow-lg shadow-gray-900/20">
-          <h6 className="block font-sans text-base font-semibold leading-relaxed tracking-normal text-white antialiased text-center">
-            List of Active Surveys
-          </h6>
-        </div>
+    
+        
+        
+
+
         <div className=" p-6 px-0 pb-2 pt-0 overflow-x-hidden">
           <table className="w-full min-w-[580px] table-auto ml-2 ">
             <thead className=" text-base text-sky-900">
@@ -67,7 +65,6 @@ export default function UserSurveyList({surveyData}) {
             </tbody>
           </table>
         </div>
-      </div>
-    </div>
+     
   )
 }
