@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Feedback from "./feedback";
 import Pagination from "@/components/tickets/Pagination";
+import Input from "@/components/common/Search-Input";
 // import Loading from "./loading";
 // import { url_get_feedbacks } from "@/app/lib/apiEndPoints";
 
@@ -17,6 +18,7 @@ function FeedbackAdminList({ feedbackData }) {
   // const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [myFeedbacks, setMyFeedbacks] = useState(feedbackData);
+  const [paginateData, setPaginateData] = useState(feedbackData);
   const [currentData, setCurrentData] = useState([]);
 
   let data = paginate(myFeedbacks, currentPage, pageSize);
@@ -26,7 +28,7 @@ function FeedbackAdminList({ feedbackData }) {
   }, []);
 
   useEffect(() => {
-    data = paginate(myFeedbacks, currentPage, pageSize);
+    data = paginate(paginateData, currentPage, pageSize);
     setCurrentData(data);
   }, [currentPage]);
 
@@ -34,30 +36,25 @@ function FeedbackAdminList({ feedbackData }) {
     setCurrentPage(page);
   };
 
-  //   useEffect(() => {
-  //     GetFeedbacks();
-  //   }, []);
+  const search = (value) => {
+    if (value.trim().length === 0) {
+      setPaginateData(myFeedbacks);
+      data = paginate(paginateData, currentPage, pageSize);
+      setCurrentData(data);
+      return;
+    }
 
-  //   async function GetFeedbacks() {
-  //     // const url = "/api/feedbacks/admin/getfeedbacks";
-  //     try {
-  //       await fetch(url_get_feedbacks, {
-  //         method: "GET",
-  //       })
-  //         .then((res) => res.json())
-  //         .then((data) => {
-  //           setData(data.Response.result);
-  //           // console.log(data.Response.result)
-  //           setLoading(false);
-  //         })
-  //         .catch((err) => console.log(err));
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   }
+    const filtered = myFeedbacks.filter((feedback) =>
+      feedback.title.includes(value)
+    );
+    setPaginateData(filtered);
+    data = paginate(paginateData, currentPage, pageSize);
+    setCurrentData(data);
+  };
 
   return (
     <div className=" h-screen">
+      <Input onChangeCallback={search} placeholder="Search by Title" />
       {loading ? (
         <div>Loading...</div>
       ) : (
@@ -66,7 +63,7 @@ function FeedbackAdminList({ feedbackData }) {
             <Feedback key={idx} feedback={feedback} />
           ))}
           <Pagination
-            items={myFeedbacks.length}
+            items={paginateData.length}
             currentPage={currentPage}
             pageSize={pageSize}
             onPageChange={onPageChange}
