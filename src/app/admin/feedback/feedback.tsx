@@ -12,6 +12,7 @@ function Feedback({ feedback }) {
   async function markRead() {
     if (marking) return;
     try {
+      console.log(title, "marking as viewed");
       setMarking(true);
       // console.log("id", ticket_id);
       await markReadFn(id);

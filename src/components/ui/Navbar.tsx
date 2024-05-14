@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 // import  {signOut} from "@/app/auth"
 import { UserButton } from "@clerk/clerk-react";
 import Image from "next/image";
+import { setUserState, getUserState } from "@/app/utils/commonStates";
 
 const Navbar: React.FC = () => {
   const router = useRouter();
@@ -16,7 +17,9 @@ const Navbar: React.FC = () => {
   const [dropdown, setDropdown] = useState(false);
 
   const [isAdmin, setIsAdmin] = useState(true);
-  const [inuser, setAsUser] = useState(true);
+  const [inuser, setAsUser] = useState(() =>
+    getUserState() === "admin" ? false : true
+  );
 
   // let currentUrl = useRef(null);
   // let baseurl = useRef(null);
@@ -39,6 +42,7 @@ const Navbar: React.FC = () => {
   // }, []);
 
   async function handleSubmit() {
+    setUserState(inuser ? "admin" : "user");
     setAsUser(!inuser);
   }
 

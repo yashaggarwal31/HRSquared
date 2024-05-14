@@ -23,11 +23,11 @@ function FeedbackAdminList({ feedbackData }) {
 
   let data = paginate(myFeedbacks, currentPage, pageSize);
   useEffect(() => {
-    data = paginate(myFeedbacks, currentPage, pageSize);
     setCurrentData(data);
   }, []);
 
   useEffect(() => {
+    // console.log("***************************");
     data = paginate(paginateData, currentPage, pageSize);
     setCurrentData(data);
   }, [currentPage]);
@@ -53,8 +53,10 @@ function FeedbackAdminList({ feedbackData }) {
   };
 
   return (
-    <div className=" h-screen">
-      <Input onChangeCallback={search} placeholder="Search by Title" />
+    <div className=" h-screen flex flex-col">
+      <div className="w-4/6 ml-auto mr-auto mt-4 mb-2">
+        <Input onChangeCallback={search} placeholder="Search by Title" />
+      </div>
       {loading ? (
         <div>Loading...</div>
       ) : (
