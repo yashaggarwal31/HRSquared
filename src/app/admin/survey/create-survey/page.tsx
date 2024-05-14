@@ -1,10 +1,11 @@
 /* eslint-disable react/jsx-key */
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SurveyInput } from "@/components/surveys/survey-popover";
 import { FieldTypes } from "@/components/enums/survey-field-types";
 import { url_create_survey } from "@/lib/ApiEndPoints";
 import { FormFields } from "@/components/surveys/FormFields";
+import { getGroups } from "@/lib/surveys";
 // import { Button } from "@/components/ui/button";
 // import {url_create_survey, url_get_survey_responses} from "@/app/lib/apiEndPoints";
 // import { useRouter } from "next/navigation";
@@ -25,6 +26,18 @@ function SurveysCreation() {
   const [surveyTitle, setSurveyTitle] = useState<string>('Test-Survey');
   const [surveyDescription, setSurveyDescription] = useState<string>('Test-Description');
   const [closesAt, setClosesAt ] = useState<String>();
+  const [selectedCategory,setSelectedCategory] = useState<any>();
+  const [categories,setCategories] = useState<any[]>(null)
+
+  useEffect(()=>{
+    async function getCategories(){
+      const group = await getGroups();
+      // console.log('groups are: ',group)
+      setCategories(group);
+    }
+
+    getCategories();
+  },[])
 
 
   const addSurvey = async () => {
@@ -62,7 +75,7 @@ function SurveysCreation() {
   return (
       <div className="bg-slate-300 min-h-screen font-Roboto">
 
-        <div className="flex items-center justify-center gap-2 pt-5">
+        <div className="flex items-center justify-center gap-2 pt-5 mb-10">
         <SurveyInput
           fieldType={FieldTypes.TEXTINPUT}
           formFields={formFields}
@@ -106,10 +119,32 @@ function SurveysCreation() {
           Add Matrix Input
         </SurveyInput>
         </div>
+
+        <div className="flex gap-3 justify-center items-center">
+          <div>
+            <label htmlFor="survey-close-date" className="font-medium text-gray-700">Survey Closes At: </label>
+            <input type="date" name="survey-close-date" id="" className="w-[180px] px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"/>
+          </div>
+
+          {categories && <div>
+
+            <label htmlFor="my-select" className="font-medium text-gray-700">
+              Survey Belongs to:
+            </label>
+            <select
+              id="my-select"
+              className="w-[180px] px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            >
+              {categories.map((item:any)=>{
+                  return <option value={item.id}>{item.groupname}</option>
+                })}
+            </select>
+          </div>}
+        </div>
         
 
         <form action="">
-          <div className="mt-6 flex flex-col items-center justify-center gap-4 bg-slate-300 p-10 ">
+          <div className="flex flex-col items-center justify-center gap-4 bg-slate-300 p-10 ">
             <div className="w-[55%] rounded-lg border-t-4 border-blue-500 bg-white p-3">
               <div className="text-2xl">
                 <input

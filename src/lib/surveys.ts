@@ -380,3 +380,9 @@ export async function jsonToCsv (jsonData) {
 
   return csv
 }
+
+export async function getGroups () {
+  const client = await dbConnect()
+  const groups_data = await client.query('select * from groups')
+  return groups_data.rows
+}
