@@ -21,16 +21,11 @@ function UserSurveySearchFunctionality({surveyData}:{surveyData:any}) {
 
   return (
     <>
-    
-    
       
 
       <div className="flex justify-between relative mx-4 mt-2 mb-8">
-      <Input placeholder={'Search Records'} onChangeCallback={filterItems} />
-          
-          
-          
-        </div>
+        <Input placeholder={'Search Records'} onChangeCallback={filterItems} />    
+      </div>
       
       <UserSurveyList surveyData={filteredResponses}/>
     </>

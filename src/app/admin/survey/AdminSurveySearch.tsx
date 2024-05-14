@@ -3,16 +3,7 @@ import { useState, useEffect } from "react";
 import Input from "@/components/common/Search-Input";
 import Link from "next/link";
 import AdminSurveyList from "./AdminSurveyList";
-import { formatDateString } from "@/lib/FormatDateString";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 
 enum DateSelect {
   "All",
@@ -154,21 +145,6 @@ function AdminSurveySearchFunctionality({ surveyData }: { surveyData: any }) {
           onChangeCallback={filterItems}
           placeholder="Search Records"
         />
-
-        {/* <Select>
-            <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Sort by recent" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectGroup>
-                <SelectItem onChange={(e)=>handleOptionClick(e)} value="All-Time">All Time</SelectItem>
-                <SelectItem value="One-day">Today</SelectItem>
-                <SelectItem value="One-week">Last one week</SelectItem>
-                <SelectItem value="One-month">Last one month</SelectItem>
-                <SelectItem value="One-year">Last one year</SelectItem>
-                </SelectGroup>
-            </SelectContent>
-        </Select> */}
 
         <div className="flex justify-center items-center gap-2">
           <label htmlFor="my-select" className="font-medium text-gray-700">
