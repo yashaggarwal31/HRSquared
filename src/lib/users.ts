@@ -120,3 +120,22 @@ export async function getUsersFormData() {
     categories: categories.rows,
   };
 }
+
+export async function createUser(userData) {
+  const client = await dbConnect()
+ 
+    const query = {
+      text: 'insert into users (username, email, password, isactive, clerk_id) values ($1, $2, $3, $4, $5)',
+      values: [
+        userData.username,
+        userData.email,
+        userData.password,
+        userData.isactive,
+        userData.clerk_id
+      ]
+    }
+    const result = await client.query(query)
+    // client.end()
+    return result.rows;
+  
+}
