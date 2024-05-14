@@ -26,7 +26,7 @@ function UserSurveySearchFunctionality({surveyData}:{surveyData:any}) {
       
 
       <div className="flex justify-between relative mx-4 mt-2 mb-8">
-      <Input onChangeCallback={filterItems} />
+      <Input placeholder={'Search Records'} onChangeCallback={filterItems} />
           
           
           

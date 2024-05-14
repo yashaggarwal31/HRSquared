@@ -152,7 +152,7 @@ function AdminSurveySearchFunctionality({ surveyData }: { surveyData: any }) {
       <div className="flex justify-between items-center relative mx-4 mt-2 mb-8">
         <Input
           onChangeCallback={filterItems}
-          placeholder="Search by User Name"
+          placeholder="Search Records"
         />
 
         {/* <Select>

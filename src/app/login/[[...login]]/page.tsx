@@ -1,5 +1,5 @@
 import { SignedIn, SignedOut, SignIn } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+// import { redirect } from "next/navigation";
 import { setUserState } from "@/app/utils/commonStates";
 
 export default function Page() {

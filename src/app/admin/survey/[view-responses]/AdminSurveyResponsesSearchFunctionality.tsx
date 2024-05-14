@@ -34,7 +34,7 @@ function SearchFunctionality({
       <div className="flex justify-between relative mx-4 mt-2 mb-8">
         <Input
           onChangeCallback={filterItems}
-          placeholder="Search by User Name"
+          placeholder="Search Records"
         />
 
         <Link
