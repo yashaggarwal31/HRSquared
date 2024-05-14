@@ -97,3 +97,25 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #666;
 }
+
+
+.react-datepicker {
+  @apply bg-white border rounded-lg shadow-lg p-2;
+}
+.react-datepicker__header {
+  @apply bg-gray-100 border-b;
+}
+.react-datepicker__current-month,
+.react-datepicker__day-name {
+  @apply text-sm font-medium;
+}
+.react-datepicker__day {
+  @apply text-sm hover:bg-blue-100 rounded-full w-8 h-8 flex items-center justify-center;
+}
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  @apply bg-blue-500 text-white;
+}
+.react-datepicker__day--today {
+  @apply font-bold;
+}

@@ -113,6 +113,7 @@ export type Database = {
           id?: number
           survey_fields?: Json | null
           title?: string | null
+          category?: number | null
         }
         Update: {
           closes_at?: string | null
