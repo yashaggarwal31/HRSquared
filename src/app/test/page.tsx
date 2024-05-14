@@ -1,6 +1,12 @@
 import { createUser } from "@/lib/users";
 import { auth, currentUser } from "@clerk/nextjs/server";
 
+export async function getCurrentUser(){
+  const user = await currentUser()
+  console.log('this is user: ', user)
+  return user;
+}
+
 export default async function Page() {
 
   // Get the userId from auth() -- if null, the user is not signed in

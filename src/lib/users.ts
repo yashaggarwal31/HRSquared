@@ -139,3 +139,42 @@ export async function createUser(userData) {
     return result.rows;
   
 }
+
+export async function checkUserExistence(userId){
+  const client = await dbConnect()
+ 
+    const query = {
+      text: 'select clerk_id from users where clerk_id=$1',
+      values: [
+        userId
+      ]
+    }
+    const result = await client.query(query)
+    if(result.rows.length==0) return false;
+    else {console.log('user already exists'); return true};
+}
+
+async function createUserInDB(user){
+  if(!user) return;
+  const userObj = {
+    username:`${user.firstName} ${user.lastName}`,
+    email:`${user.emailAddresses[0].emailAddress}`,
+    password:'clerk',
+    isactive:true,
+    clerk_id:user.id
+  }
+  console.log(userObj)
+  createUser(userObj)
+}
+
+export async function userCreationFlow(user){
+  if(!user){
+    console.log('user does not exist')
+  }
+  const userExists = await checkUserExistence(user.id);
+  if(!userExists){
+    createUserInDB(user)
+    return 'creating user'
+    
+  }
+}
