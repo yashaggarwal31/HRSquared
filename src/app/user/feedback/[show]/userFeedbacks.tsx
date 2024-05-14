@@ -20,7 +20,7 @@ export function UserFeedbacks({ feedbacks }) {
 
   useEffect(() => {
     let data = paginate(myFeedbacks, currentPage, pageSize);
-    data = paginate(myFeedbacks, currentPage, pageSize);
+    // data = paginate(myFeedbacks, currentPage, pageSize);
     setCurrentData(data);
   }, []);
 

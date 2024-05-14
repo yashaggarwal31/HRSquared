@@ -19,17 +19,17 @@ function FeedbackAdminList({ feedbackData }) {
   const [loading, setLoading] = useState(false);
   const [myFeedbacks, setMyFeedbacks] = useState(feedbackData);
   const [paginateData, setPaginateData] = useState(feedbackData);
-  const [currentData, setCurrentData] = useState([]);
+  const [currentData, setCurrentData] = useState(feedbackData);
 
-  let data = paginate(myFeedbacks, currentPage, pageSize);
+  // let data = paginate(myFeedbacks, currentPage, pageSize);
   useEffect(() => {
+    let data = paginate(myFeedbacks, currentPage, pageSize);
     setCurrentData(data);
   }, []);
 
   useEffect(() => {
     // console.log("***************************");
-    data = paginate(paginateData, currentPage, pageSize);
-    setCurrentData(data);
+    setCurrentData(() => paginate(paginateData, currentPage, pageSize));
   }, [currentPage]);
 
   const onPageChange = (page: any) => {
@@ -38,18 +38,16 @@ function FeedbackAdminList({ feedbackData }) {
 
   const search = (value) => {
     if (value.trim().length === 0) {
-      setPaginateData(myFeedbacks);
-      data = paginate(paginateData, currentPage, pageSize);
-      setCurrentData(data);
+      setCurrentData(() => paginate(myFeedbacks, currentPage, pageSize));
       return;
     }
 
     const filtered = myFeedbacks.filter((feedback) =>
       feedback.title.includes(value)
     );
+
     setPaginateData(filtered);
-    data = paginate(paginateData, currentPage, pageSize);
-    setCurrentData(data);
+    setCurrentData(() => paginate(paginateData, currentPage, pageSize));
   };
 
   return (

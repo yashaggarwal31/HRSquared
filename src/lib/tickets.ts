@@ -2,6 +2,7 @@
 import { notFound } from "next/navigation";
 import { dbConnect } from "./renderDB";
 import { Database } from "@/types/database.types";
+import { sendEmail } from "./email";
 
 type ticketInsert = Database["public"]["Tables"]["Ticket"]["Insert"];
 
@@ -98,6 +99,32 @@ export async function AssignUser(ticket_id: number, user_id: number) {
   };
   try {
     await client.query(query);
+    const query_2 = {
+      text: "select email from Users where id = $1",
+      values: [user_id],
+    };
+    const email_db = await client.query(query_2);
+    const ticket_db = await client.query({
+      text: "select title, description from tickets where id=$1",
+      values: [ticket_id],
+    });
+    if (email_db.rowCount > 0) {
+      const email = email_db.rows[0].email;
+      const title = ticket_db.rows[0].title;
+      const desc = ticket_db.rows[0].description;
+      console.log(email);
+      const options = {
+        to: email,
+        subject: "Update: New Ticket Assigned",
+        message: `
+      <h3>A new ticket has been assigned, please check your HrSquared Account!</h3>
+      <h4>Title: ${title}</h4>
+      <p>Description: ${desc}</p>
+      `,
+      };
+      console.log(options, "**********");
+      await sendEmail(options);
+    }
     return true;
   } catch (ex) {
     return false;
@@ -113,6 +140,35 @@ export async function updateStatus(ticket_id: number, status: number) {
 
   try {
     await client.query(query);
+
+    const ticket_db = await client.query({
+      text: "select title, description, createdby from tickets where id=$1",
+      values: [ticket_id],
+    });
+    const user_id = ticket_db.rows[0].createdby;
+    const user_db = await client.query({
+      text: "select username, email from users where id=$1",
+      values: [user_id],
+    });
+    const email = user_db.rows[0].email;
+    const title = ticket_db.rows[0].title;
+    const desc = ticket_db.rows[0].description;
+    const status_db = await client.query({
+      text: "select name from ticketstatus where id=$1",
+      values: [status],
+    });
+    const options = {
+      to: email,
+      subject: `Update: Ticket #${ticket_id} Status Updated`,
+      message: `
+    <h3>Your ticket #${ticket_id} status has been updated</h3>
+    <h4>Title: ${title}</h4>
+    <p>Description: ${desc}</p>
+    <p>Current status: ${status_db.rows[0].name}</p>
+    `,
+    };
+    console.log(options, "**********");
+    await sendEmail(options);
     return true;
   } catch (ex) {
     return false;
