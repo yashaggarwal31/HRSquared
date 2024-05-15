@@ -7,9 +7,11 @@ import { url_create_survey } from "@/lib/ApiEndPoints";
 import { FormFields } from "@/components/surveys/FormFields";
 import { getGroups } from "@/lib/surveys";
 
+
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
+import Image from "next/image";
 
 // import { Button } from "@/components/ui/button";
 // import {url_create_survey, url_get_survey_responses} from "@/app/lib/apiEndPoints";
@@ -195,6 +197,11 @@ function SurveysCreation() {
 
         <form action="">
           <div className="flex flex-col items-center justify-center gap-4 bg-slate-300 p-10 ">
+
+          <div className="w-[55%] ">
+                <Image width='100' height={100} className="w-[100%] h-[15rem] rounded-lg" src={'https://res.cloudinary.com/dyeeocktp/image/upload/v1715711217/bannerIcon_nch5v7-cropped_nhtxye.svg'} alt='A Survey Banner yash ... '/>
+          </div>
+
             <div className="w-[55%] rounded-lg border-t-4 border-blue-500 bg-white p-3">
               <div className="text-2xl">
                 <input

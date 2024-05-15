@@ -1,15 +1,13 @@
-import { formatDateString } from '@/lib/FormatDateString'
+import { formatDateTimeString } from '@/lib/FormatDateTimeString'
+import { Divide } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
 export default function UserSurveyList({surveyData}) {
   // console.log('main page', surveyData);
+  
+
   return (
-    
-        
-        
-
-
         <div className=" p-6 px-0 pb-2 pt-0 overflow-x-hidden">
           <table className="w-full min-w-[580px] table-auto ml-2 ">
             <thead className=" text-base text-sky-900">
@@ -24,9 +22,14 @@ export default function UserSurveyList({surveyData}) {
                     Survey Description
                   </p>
                 </th>
+                <th className="border-blue-gray-50 border-b px-5 py-3 text-left">
+                  <p className="text-blue-gray-400 block font-sans  font-bold uppercase antialiased">
+                    Belongs To
+                  </p>
+                </th>
                 <th className="border-blue-gray-50 border-b px-5 py-3 text-center">
                   <p className="text-blue-gray-400 block font-sans  font-bold uppercase antialiased">
-                    Created On
+                    Closes On
                   </p>
                 </th>
                 <th></th>
@@ -45,10 +48,15 @@ export default function UserSurveyList({surveyData}) {
                       {survey.survey_title.split('%!@')[1]}
                     </p>
                   </td>
+                  <td className="border-blue-gray-50 border-b px-5 py-3 text-left">
+                    <p className="text-blue-gray-900 block font-sans text-sm font-semibold leading-normal antialiased">
+                      {survey.category?survey.category:'Public'}
+                    </p>
+                  </td>
                   
                   <td className="border-blue-gray-50 border-b px-5 py-3 text-center">
                     <p className="text-blue-gray-900 block font-sans text-sm font-semibold leading-normal antialiased">
-                      {formatDateString(survey.created_at)}
+                      {formatDateTimeString(survey.closes_at)}
                     </p>
                   </td>
                   <td className="border-blue-gray-50 border-b px-5 py-3 text-center">
@@ -64,6 +72,7 @@ export default function UserSurveyList({surveyData}) {
               ))}
             </tbody>
           </table>
+          
         </div>
      
   )

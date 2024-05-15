@@ -43,6 +43,36 @@ export async function getRecentSurveys () {
   }
 }
 
+export async function getUserSurveys (userID) {
+  const client = await dbConnect()
+
+  const query = {
+    text: `
+    SELECT s.id AS survey_id, 
+      s.title AS survey_title,
+      s.createdat AS created_at,
+      s.closes_at as closes_at,
+      gr.groupname as category,
+      u.username AS creator_name
+      FROM surveys s
+      LEFT JOIN "groups" gr ON gr.id = s.category
+      JOIN "userrole_mapping" urm on urm.group_id = s.category
+      LEFT JOIN "users" u on u.clerk_id = $1
+      GROUP BY s.id, s.title, s.createdat,gr.groupname, u.username
+      ORDER BY s.id DESC;
+      `,
+    values: [1]
+  }
+
+  const data = await client.query(query)
+
+  if (data.rowCount > 0) {
+    return data.rows
+  } else {
+    notFound()
+  }
+}
+
 export async function AddSurvey (survey: SurveyInsert) {
   const client = await dbConnect()
   try {

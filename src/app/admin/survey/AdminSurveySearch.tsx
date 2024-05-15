@@ -16,7 +16,7 @@ enum DateSelect {
 function AdminSurveySearchFunctionality({ surveyData }: { surveyData: any }) {
   const [filteredResponses, setFilteredResponses] = useState([]);
   const [dropwdownValue, setDropdownValue] = useState<any>(0);
-  const [filterISOString, setFilterISOString] = useState<any>();
+  const [filterDate, setFilterDate] = useState<any>();
   const [searchQuery, setSearchQuery] = useState("");
   const [dateFilteredRecords, setDateFilteredRecords] = useState([]);
 
@@ -55,8 +55,8 @@ function AdminSurveySearchFunctionality({ surveyData }: { surveyData: any }) {
           currentDate.getFullYear() - 100,
           currentDate.getMonth(),
           currentDate.getDate()
-        ).toISOString();
-        setFilterISOString(filterDate);
+        );
+        setFilterDate(filterDate);
         console.log("all");
         break;
       case DateSelect.Today:
@@ -64,32 +64,32 @@ function AdminSurveySearchFunctionality({ surveyData }: { surveyData: any }) {
           currentDate.getFullYear(),
           currentDate.getMonth(),
           currentDate.getDate() - 1
-        ).toISOString();
-        setFilterISOString(filterDate);
+        );
+        setFilterDate(filterDate);
         break;
       case DateSelect.OneWeek:
         filterDate = new Date(
           currentDate.getFullYear(),
           currentDate.getMonth(),
           currentDate.getDate() - 7
-        ).toISOString();
-        setFilterISOString(filterDate);
+        );
+        setFilterDate(filterDate);
         break;
       case DateSelect.OneMonth:
         filterDate = new Date(
           currentDate.getFullYear(),
           currentDate.getMonth() - 1,
           currentDate.getDate()
-        ).toISOString();
-        setFilterISOString(filterDate);
+        );
+        setFilterDate(filterDate);
         break;
       case DateSelect.OneYear:
         filterDate = new Date(
           currentDate.getFullYear() - 1,
           currentDate.getMonth(),
           currentDate.getDate()
-        ).toISOString();
-        setFilterISOString(filterDate);
+        );
+        setFilterDate(filterDate);
         break;
       default:
         console.log("The default case for dropdown was called");
@@ -99,13 +99,13 @@ function AdminSurveySearchFunctionality({ surveyData }: { surveyData: any }) {
 
   useEffect(() => {
     filterByDate();
-  }, [filterISOString]);
+  }, [filterDate]);
 
   const filterByDate = () => {
     const filteredItems = surveyData.filter((response) => {
-      const surveyDate = new Date(response.created_at).toISOString();
+      const surveyDate = new Date(response.created_at);
 
-      return filterISOString ? filterISOString < surveyDate : true;
+      return filterDate ? filterDate < surveyDate : true;
     });
     setDateFilteredRecords(filteredItems);
   };
