@@ -1,9 +1,12 @@
 import { formatDateTimeString } from '@/lib/FormatDateTimeString'
+import { Divide } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
 export default function UserSurveyList({surveyData}) {
   // console.log('main page', surveyData);
+  
+
   return (
         <div className=" p-6 px-0 pb-2 pt-0 overflow-x-hidden">
           <table className="w-full min-w-[580px] table-auto ml-2 ">
@@ -47,7 +50,7 @@ export default function UserSurveyList({surveyData}) {
                   </td>
                   <td className="border-blue-gray-50 border-b px-5 py-3 text-left">
                     <p className="text-blue-gray-900 block font-sans text-sm font-semibold leading-normal antialiased">
-                      {survey.category}
+                      {survey.category?survey.category:'Public'}
                     </p>
                   </td>
                   
@@ -69,6 +72,7 @@ export default function UserSurveyList({surveyData}) {
               ))}
             </tbody>
           </table>
+          
         </div>
      
   )

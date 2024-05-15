@@ -1,11 +1,16 @@
 import React, { Suspense } from 'react'
 import UserSurveyList from './UserSurveyList'
-import { getRecentSurveys } from '@/lib/surveys';
+import { getUserSurveys } from '@/lib/surveys';
 import UserSurveySearchFunctionality from './UserSurveySearch';
+import { auth } from '@clerk/nextjs/server';
 
 async function UserSurveys(){
 
-    const surveyData = await getRecentSurveys();
+  const {userId} = auth();
+
+    const surveyData = await getUserSurveys(userId);
+
+    
 
     // console.log('users page, survey data: ',surveyData)
 

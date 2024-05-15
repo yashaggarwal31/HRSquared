@@ -63,7 +63,7 @@ export default function AdminSurveyList({surveyData}:{surveyData:any}) {
                   </td>
                   <td className="border-blue-gray-50 border-b px-5 py-3 text-left">
                     <p className="text-blue-gray-900 block font-sans text-sm font-semibold leading-normal antialiased">
-                      {survey.category}
+                      {survey.category?survey.category:'Public'}
                     </p>
                   </td>
                   <td className="border-blue-gray-50 border-b px-5 py-3 text-center">

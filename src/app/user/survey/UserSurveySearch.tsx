@@ -11,6 +11,7 @@ function UserSurveySearchFunctionality({surveyData}:{surveyData:any}) {
   useEffect(()=>{setFilteredResponses(surveyData);},[])
 
   const filterItems = (searchTerm) => { 
+    if(surveyData.length==0) return;
     
     const filteredItems = surveyData.filter((response) =>
     (response.survey_title.split('%!@')[0].toLowerCase().includes(searchTerm.toLowerCase()) || response.survey_title.split('%!@')[1].toLowerCase().includes(searchTerm.toLowerCase()))
