@@ -119,6 +119,21 @@ export async function updateStatus(ticket_id: number, status: number) {
   }
 }
 
+export async function deligateTicket(ticket_id: number) {
+  const client = await dbConnect();
+  const query = {
+    text: "update tickets set status = 1, assignedto=null where id = $1 RETURNING id",
+    values: [ticket_id],
+  };
+
+  try {
+    await client.query(query);
+    return true;
+  } catch (ex) {
+    return false;
+  }
+}
+
 export async function getUserTickets(id: number) {
   const client = await dbConnect();
 
