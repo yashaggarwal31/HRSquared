@@ -36,11 +36,7 @@ export async function getRecentSurveys () {
   // client.end()
   // console.log(data)
 
-  if (data.rowCount > 0) {
-    return data.rows
-  } else {
-    notFound()
-  }
+  return data.rows
 }
 
 export async function getUserSurveys (userID) {
@@ -66,11 +62,7 @@ export async function getUserSurveys (userID) {
 
   const data = await client.query(query)
 
-  if (data.rowCount > 0) {
-    return data.rows
-  } else {
-    notFound()
-  }
+  return data.rows
 }
 
 export async function AddSurvey (survey: SurveyInsert) {

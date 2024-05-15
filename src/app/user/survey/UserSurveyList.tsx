@@ -72,6 +72,9 @@ export default function UserSurveyList({surveyData}) {
               ))}
             </tbody>
           </table>
+
+          {surveyData.length === 0 && <div className='flex justify-center items-center mt-5 my-4'>No Surveys to show</div>}
+
           
         </div>
      
