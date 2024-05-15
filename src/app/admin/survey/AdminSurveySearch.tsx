@@ -3,16 +3,7 @@ import { useState, useEffect } from "react";
 import Input from "@/components/common/Search-Input";
 import Link from "next/link";
 import AdminSurveyList from "./AdminSurveyList";
-import { formatDateString } from "@/lib/FormatDateString";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 
 enum DateSelect {
   "All",
@@ -25,7 +16,7 @@ enum DateSelect {
 function AdminSurveySearchFunctionality({ surveyData }: { surveyData: any }) {
   const [filteredResponses, setFilteredResponses] = useState([]);
   const [dropwdownValue, setDropdownValue] = useState<any>(0);
-  const [filterISOString, setFilterISOString] = useState<any>();
+  const [filterDate, setFilterDate] = useState<any>();
   const [searchQuery, setSearchQuery] = useState("");
   const [dateFilteredRecords, setDateFilteredRecords] = useState([]);
 
@@ -64,8 +55,8 @@ function AdminSurveySearchFunctionality({ surveyData }: { surveyData: any }) {
           currentDate.getFullYear() - 100,
           currentDate.getMonth(),
           currentDate.getDate()
-        ).toISOString();
-        setFilterISOString(filterDate);
+        );
+        setFilterDate(filterDate);
         console.log("all");
         break;
       case DateSelect.Today:
@@ -73,32 +64,32 @@ function AdminSurveySearchFunctionality({ surveyData }: { surveyData: any }) {
           currentDate.getFullYear(),
           currentDate.getMonth(),
           currentDate.getDate() - 1
-        ).toISOString();
-        setFilterISOString(filterDate);
+        );
+        setFilterDate(filterDate);
         break;
       case DateSelect.OneWeek:
         filterDate = new Date(
           currentDate.getFullYear(),
           currentDate.getMonth(),
           currentDate.getDate() - 7
-        ).toISOString();
-        setFilterISOString(filterDate);
+        );
+        setFilterDate(filterDate);
         break;
       case DateSelect.OneMonth:
         filterDate = new Date(
           currentDate.getFullYear(),
           currentDate.getMonth() - 1,
           currentDate.getDate()
-        ).toISOString();
-        setFilterISOString(filterDate);
+        );
+        setFilterDate(filterDate);
         break;
       case DateSelect.OneYear:
         filterDate = new Date(
           currentDate.getFullYear() - 1,
           currentDate.getMonth(),
           currentDate.getDate()
-        ).toISOString();
-        setFilterISOString(filterDate);
+        );
+        setFilterDate(filterDate);
         break;
       default:
         console.log("The default case for dropdown was called");
@@ -108,13 +99,13 @@ function AdminSurveySearchFunctionality({ surveyData }: { surveyData: any }) {
 
   useEffect(() => {
     filterByDate();
-  }, [filterISOString]);
+  }, [filterDate]);
 
   const filterByDate = () => {
     const filteredItems = surveyData.filter((response) => {
-      const surveyDate = new Date(response.created_at).toISOString();
+      const surveyDate = new Date(response.created_at);
 
-      return filterISOString ? filterISOString < surveyDate : true;
+      return filterDate ? filterDate < surveyDate : true;
     });
     setDateFilteredRecords(filteredItems);
   };
@@ -154,21 +145,6 @@ function AdminSurveySearchFunctionality({ surveyData }: { surveyData: any }) {
           onChangeCallback={filterItems}
           placeholder="Search Records"
         />
-
-        {/* <Select>
-            <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Sort by recent" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectGroup>
-                <SelectItem onChange={(e)=>handleOptionClick(e)} value="All-Time">All Time</SelectItem>
-                <SelectItem value="One-day">Today</SelectItem>
-                <SelectItem value="One-week">Last one week</SelectItem>
-                <SelectItem value="One-month">Last one month</SelectItem>
-                <SelectItem value="One-year">Last one year</SelectItem>
-                </SelectGroup>
-            </SelectContent>
-        </Select> */}
 
         <div className="flex justify-center items-center gap-2">
           <label htmlFor="my-select" className="font-medium text-gray-700">

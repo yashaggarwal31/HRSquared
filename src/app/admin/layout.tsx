@@ -1,5 +1,5 @@
+import AuthHelper from "@/components/common/auth-helper"
 import Navbar from "@/components/ui/Navbar"
-
 
 export const metadata = {
   title: 'Next.js',
@@ -16,6 +16,7 @@ export default function RootLayout({
       <body>
       <Navbar />
         {children}
+        <AuthHelper/>
       </body>
     </html>
   )

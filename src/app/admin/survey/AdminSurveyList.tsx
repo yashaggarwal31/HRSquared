@@ -1,6 +1,6 @@
 
 import Link from 'next/link';
-import { formatDateString } from '@/lib/FormatDateString'
+import { formatDateTimeString } from '@/lib/FormatDateTimeString'
 import React from 'react'
 
 export default function AdminSurveyList({surveyData}:{surveyData:any}) {
@@ -20,6 +20,11 @@ export default function AdminSurveyList({surveyData}:{surveyData:any}) {
                     Survey Description
                   </p>
                 </th>
+                <th className="border-blue-gray-50 border-b px-5 py-3 text-left">
+                  <p className="text-blue-gray-400 block font-sans  font-bold uppercase antialiased">
+                    Belongs To
+                  </p>
+                </th>
                 <th className="border-blue-gray-50 border-b px-5 py-3 text-center">
                   <p className="text-blue-gray-400 block font-sans  font-bold uppercase antialiased">
                     Created By
@@ -28,6 +33,11 @@ export default function AdminSurveyList({surveyData}:{surveyData:any}) {
                 <th className="border-blue-gray-50 border-b px-5 py-3 text-center">
                   <p className="text-blue-gray-400 block font-sans  font-bold uppercase antialiased">
                     Created On
+                  </p>
+                </th>
+                <th className="border-blue-gray-50 border-b px-5 py-3 text-center">
+                  <p className="text-blue-gray-400 block font-sans  font-bold uppercase antialiased">
+                    Closes On
                   </p>
                 </th>
                 {/* <th className="border-blue-gray-50 border-b px-5 py-3 text-center">
@@ -47,8 +57,13 @@ export default function AdminSurveyList({surveyData}:{surveyData:any}) {
                     </p>
                   </td>
                   <td className="border-blue-gray-50 border-b px-5 py-3 text-left">
-                    <p className="text-blue-gray-900 block font-sans text-sm font-semibold leading-normal antialiased">
+                    <p className="text-blue-gray-900 whitespace-nowrap overflow-hidden text-ellipsis block font-sans text-sm font-semibold leading-normal antialiased w-[8rem]">
                       {survey.survey_title.split('%!@')[1]}
+                    </p>
+                  </td>
+                  <td className="border-blue-gray-50 border-b px-5 py-3 text-left">
+                    <p className="text-blue-gray-900 block font-sans text-sm font-semibold leading-normal antialiased">
+                      {survey.category?survey.category:'Public'}
                     </p>
                   </td>
                   <td className="border-blue-gray-50 border-b px-5 py-3 text-center">
@@ -58,7 +73,12 @@ export default function AdminSurveyList({surveyData}:{surveyData:any}) {
                   </td>
                   <td className="border-blue-gray-50 border-b px-5 py-3 text-center">
                     <p className="text-blue-gray-900 block font-sans text-sm font-semibold leading-normal antialiased">
-                      {formatDateString(survey.created_at)}
+                      {formatDateTimeString(survey.created_at)}
+                    </p>
+                  </td>
+                  <td className="border-blue-gray-50 border-b px-5 py-3 text-center">
+                    <p className="text-blue-gray-900 block font-sans text-sm font-semibold leading-normal antialiased">
+                      {formatDateTimeString(survey.closes_at)}
                     </p>
                   </td>
                   <td className="border-blue-gray-50 border-b px-5 py-3 text-center">

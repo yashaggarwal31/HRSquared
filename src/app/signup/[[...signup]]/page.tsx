@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, SignIn } from "@clerk/nextjs";
+import { SignUp } from "@clerk/nextjs";
 // import { redirect } from "next/navigation";
 import { setUserState } from "@/app/utils/commonStates";
 
@@ -23,10 +23,9 @@ export default function Page() {
         </div>
 
         <div className="flex items-center justify-center grow">
-          <SignIn
+          <SignUp
             fallbackRedirectUrl="/user/ticket"
-            signUpFallbackRedirectUrl="/user/ticket"
-            path="/login"
+            path="/signup"
           />
         </div>
       </div>

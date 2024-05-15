@@ -1,8 +1,9 @@
 import React, { Suspense } from 'react'
-import AdminSurveyResponseList from './AdminSurveyResponseList'
+// import AdminSurveyResponseList from './AdminSurveyResponseList'
 import { GetSurveyResponses, getSurveyById } from '@/lib/surveys';
-import Link from 'next/link';
+// import Link from 'next/link';
 import SearchFunctionality from './AdminSurveyResponsesSearchFunctionality';
+
 // import DownloadResponses from '../download-responses/[download]/page';
 
 

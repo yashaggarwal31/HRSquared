@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import { getUserTickets } from "@/lib/tickets";
 import UserTicketSearch from "./UserTicketSearch";
 
+
 async function UserTickets() {
   const ticketData = await getUserTickets(1);
 

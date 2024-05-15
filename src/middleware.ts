@@ -4,7 +4,10 @@ const isProtectedRoute = createRouteMatcher(['/user(.*)', '/admin(.*)'])
 
 // const isLoginRoute = createRouteMatcher(['/signin'])
 
+
+
 export default clerkMiddleware((auth, req) => {
+  
   if (isProtectedRoute(req)) auth().protect()
 
   // if (isLoginRoute(req)) {

@@ -16,16 +16,19 @@ export async function getRecentSurveys () {
 
   const query = {
     text: `
-        SELECT s.id AS survey_id, 
-        s.title AS survey_title,
-        s.createdat AS created_at,
-        u.username AS creator_name,
-        COUNT(sr.id) AS total_responses
-        FROM surveys s
-        LEFT JOIN surveyresponses sr ON s.id = sr.survey_id
-        LEFT JOIN users u ON s.createdby = u.id
-        GROUP BY s.id, s.title, s.createdat, u.username
-        ORDER BY s.id DESC;
+      SELECT s.id AS survey_id, 
+      s.title AS survey_title,
+      s.createdat AS created_at,
+      s.closes_at as closes_at,
+      c.groupname as category,
+      u.username AS creator_name,
+      COUNT(sr.id) AS total_responses
+      FROM surveys s
+      LEFT JOIN surveyresponses sr ON s.id = sr.survey_id
+      LEFT JOIN users u ON s.createdby = u.id
+      LEFT JOIN "groups" c ON c.id = s.category
+      GROUP BY s.id, s.title, s.createdat,c.groupname, u.username
+      ORDER BY s.id DESC;
         `
   }
 
@@ -33,11 +36,33 @@ export async function getRecentSurveys () {
   // client.end()
   // console.log(data)
 
-  if (data.rowCount > 0) {
-    return data.rows
-  } else {
-    notFound()
+  return data.rows
+}
+
+export async function getUserSurveys (userID) {
+  const client = await dbConnect()
+
+  const query = {
+    text: `
+    SELECT s.id AS survey_id, 
+      s.title AS survey_title,
+      s.createdat AS created_at,
+      s.closes_at as closes_at,
+      gr.groupname as category,
+      u.username AS creator_name
+      FROM surveys s
+      LEFT JOIN "groups" gr ON gr.id = s.category
+      JOIN "userrole_mapping" urm on urm.group_id = s.category
+      LEFT JOIN "users" u on u.clerk_id = $1
+      GROUP BY s.id, s.title, s.createdat,gr.groupname, u.username
+      ORDER BY s.id DESC;
+      `,
+    values: [1]
   }
+
+  const data = await client.query(query)
+
+  return data.rows
 }
 
 export async function AddSurvey (survey: SurveyInsert) {
@@ -45,12 +70,13 @@ export async function AddSurvey (survey: SurveyInsert) {
   try {
     const surveyFieldsJSON = JSON.stringify(survey.survey_fields)
     const query = {
-      text: 'insert into surveys (title, surveyfields, createdby, closes_at) values ($1, $2, $3, $4)',
+      text: 'insert into surveys (title, surveyfields, createdby, closes_at, category) values ($1, $2, $3, $4, $5)',
       values: [
         survey.title,
         surveyFieldsJSON,
         survey.created_by,
-        survey.closes_at
+        survey.closes_at,
+        survey.category
       ]
     }
     const result = await client.query(query)
@@ -379,4 +405,10 @@ export async function jsonToCsv (jsonData) {
   }
 
   return csv
+}
+
+export async function getGroups () {
+  const client = await dbConnect()
+  const groups_data = await client.query('select * from groups')
+  return groups_data.rows
 }

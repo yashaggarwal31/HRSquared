@@ -1,10 +1,18 @@
 /* eslint-disable react/jsx-key */
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SurveyInput } from "@/components/surveys/survey-popover";
 import { FieldTypes } from "@/components/enums/survey-field-types";
 import { url_create_survey } from "@/lib/ApiEndPoints";
 import { FormFields } from "@/components/surveys/FormFields";
+import { getGroups } from "@/lib/surveys";
+
+
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
+import Image from "next/image";
+
 // import { Button } from "@/components/ui/button";
 // import {url_create_survey, url_get_survey_responses} from "@/app/lib/apiEndPoints";
 // import { useRouter } from "next/navigation";
@@ -18,13 +26,54 @@ import { FormFields } from "@/components/surveys/FormFields";
 
 
 
+
 function SurveysCreation() {
   // const router = useRouter();
 
   const [formFields, setFormFields] = useState<FormFields[]>([]);
   const [surveyTitle, setSurveyTitle] = useState<string>('Test-Survey');
   const [surveyDescription, setSurveyDescription] = useState<string>('Test-Description');
-  const [closesAt, setClosesAt ] = useState<String>();
+  const [closesAt, setClosesAt ] = useState<any>();
+  const [selectedDate, setSelectedDate] = useState<any>(new Date());
+  const [selectedCategory,setSelectedCategory] = useState<any>(null);
+  const [categories,setCategories] = useState<any[]>(null)
+
+
+  useEffect(()=>{
+    async function getCategories(){
+      const group = await getGroups();
+      // console.log('groups are: ',group)
+      setCategories(group);
+    }
+
+    getCategories();
+  },[])
+
+  const handleCategorySelection = (event) => {
+    const selection = event.target.value;
+    setSelectedCategory(selection);
+    console.log("Selection Value", selection);
+  };
+
+  // const handleDateSelection=(selectedDate: Date)=>{
+  //   const selection = selectedDate;
+  //   let selectedISO = new Date(selection).toISOString();
+  //   // let nowDate = new Date().toISOString();
+
+  //   // let test = currentDate.getFullYear() + '-' + (currentDate.getMonth() + 1) + '-' + currentDate.getDate();
+  //   setClosesAt(selectedISO);
+  //   console.log("Selected Date", selectedISO);
+  //   // console.log('Now Date: ', nowDate)
+  //   // console.log("Selected Date", test);
+  // }
+
+  useEffect(()=>{
+    setClosesAt(selectedDate.toISOString());
+    // console.log('new selectred date:',);
+  },[selectedDate])
+
+  // useEffect(()=>{console.log('closes at:: ',closesAt)},[closesAt])
+
 
 
   const addSurvey = async () => {
@@ -32,17 +81,22 @@ function SurveysCreation() {
     const submitbtn = document.getElementById('survey-creation');
     submitbtn.textContent = 'Creating...'
     
-    let currentDate = new Date();
+    // let currentDate = new Date();
+    
+    
     // Add one month to the current date
-    let futureDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, currentDate.getDate());
+    // let futureDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, currentDate.getDate());
     // Create an ISO string for the future date
-    let futureISOString = futureDate.toISOString();
+    // let futureISOString = futureDate.toISOString();
     const body = {
       'title': surveyTitle.concat('%!@').concat(surveyDescription),
       'survey_fields': formFields,
-      'closes_at': futureISOString,
+      'closes_at': closesAt,
       'created_by': 1,
+      'category': selectedCategory,
     };
+
+    console.log(body)
 
     const response = await fetch(url_create_survey,{
       method: 'POST',
@@ -62,7 +116,7 @@ function SurveysCreation() {
   return (
       <div className="bg-slate-300 min-h-screen font-Roboto">
 
-        <div className="flex items-center justify-center gap-2 pt-5">
+        <div className="flex items-center justify-center gap-2 pt-5 mb-10">
         <SurveyInput
           fieldType={FieldTypes.TEXTINPUT}
           formFields={formFields}
@@ -106,10 +160,48 @@ function SurveysCreation() {
           Add Matrix Input
         </SurveyInput>
         </div>
+
+        <div className="flex gap-3 justify-center items-center">
+          <div>
+            <label htmlFor="survey-close-date" className="font-medium text-gray-700">Survey Closes On: </label>
+            {/* <input onChange={(event)=>handleDateSelection(event)} type="date" name="survey-close-date" min={`${Date.now()}`} id="" className="w-[180px] px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"/> */}
+            <DatePicker
+              selected={selectedDate}
+              onChange={(date)=>setSelectedDate(date)}
+              minDate= {new Date()}
+              showTimeSelect
+              dateFormat="Pp"
+              placeholder={'Survey Closing Date'}
+              className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+            />
+            
+          </div>
+          
+
+          {categories && <div>
+
+            <label htmlFor="my-select" className="font-medium text-gray-700">Survey Belongs To: </label>
+            <select
+              id="my-select"
+              className="w-[180px] px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              onChange={(event)=>handleCategorySelection(event)}
+            >
+              <option value="">Public</option>
+              {categories.map((item:any)=>{
+                  return <option value={item.id}>{item.groupname}</option>
+                })}
+            </select>
+          </div>}
+        </div>
         
 
         <form action="">
-          <div className="mt-6 flex flex-col items-center justify-center gap-4 bg-slate-300 p-10 ">
+          <div className="flex flex-col items-center justify-center gap-4 bg-slate-300 p-10 ">
+
+          <div className="w-[55%] ">
+                <Image width='100' height={100} className="w-[100%] h-[15rem] rounded-lg" src={'https://res.cloudinary.com/dyeeocktp/image/upload/v1715711217/bannerIcon_nch5v7-cropped_nhtxye.svg'} alt='A Survey Banner yash ... '/>
+          </div>
+
             <div className="w-[55%] rounded-lg border-t-4 border-blue-500 bg-white p-3">
               <div className="text-2xl">
                 <input

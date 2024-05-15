@@ -10,64 +10,33 @@ import { useRouter } from "next/navigation";
 import { UserButton } from "@clerk/clerk-react";
 import Image from "next/image";
 import { setUserState, getUserState } from "@/app/utils/commonStates";
+// import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 
 const Navbar: React.FC = () => {
   const router = useRouter();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [dropdown, setDropdown] = useState(false);
+  const path = usePathname();
 
-  const [isAdmin, setIsAdmin] = useState(true);
   const [inuser, setAsUser] = useState(() =>
-    getUserState() === "admin" ? false : true
+    path.includes("admin") ? false : true
   );
 
-  // let currentUrl = useRef(null);
-  // let baseurl = useRef(null);
-
-  // useEffect(() => {
-  //   // currentUrl.current = window.location.href;
-  //   // baseurl.current = window.location.host;
-  //   async function checkadmin() {
-  //     const response = await fetch("/api/checkcookie", {
-  //       method: "GET",
-  //     });
-
-  //     let data = await response.json();
-  //     if (data.role === "admin") {
-  //       setIsAdmin(true);
-  //       setAsUser(false);
-  //     }
-  //   }
-  //   checkadmin();
-  // }, []);
-
-  async function handleSubmit() {
-    setUserState(inuser ? "admin" : "user");
-    setAsUser(!inuser);
-  }
-
-  console.log(isAdmin, inuser);
-  // function routeacc() {
-  //   if (!isAdmin) {
-  //     if (currentUrl.current.includes(baseurl.current + "/dashboard")) {
-  //       router.push("/user/tickets");
-  //     }
-  //     if (currentUrl.current.includes(baseurl.current + "/tickets")) {
-  //       router.push("/user/tickets");
-  //     }
-  //     if (currentUrl.current.includes(baseurl.current + "/feedbacks")) {
-  //       router.push("/user/feedbacks");
-  //     }
-  //     if (currentUrl.current.includes(baseurl.current + "/surveys")) {
-  //       router.push("/user/surveys");
-  //     }
-  //   }
-  // }
-
-  // console.log("out admin", isAdmin, "in user", inuser);
-
-  function printHello() {
-    console.log("hello");
+  function handleAdminCLick() {
+    if (path.includes("user")) {
+      if (path.includes("feedback")) {
+        router.push("/admin/feedback");
+      } else {
+        const newPath = path.replace("user", "admin");
+        router.push(newPath);
+      }
+    } else {
+      if (path.includes("dashboard") || path.includes("manage-users")) {
+        router.push("/user/ticket");
+      } else {
+        const newPath = path.replace("admin", "user");
+        router.push(newPath);
+      }
+    }
   }
 
   return (
@@ -75,84 +44,6 @@ const Navbar: React.FC = () => {
       <nav className="bg-sky-950">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
-            <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-              <button
-                type="button"
-                className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-                aria-controls="mobile-menu"
-                aria-expanded={isMenuOpen}
-              >
-                <span
-                  className="absolute -inset-0.5"
-                  onClick={printHello}
-                ></span>
-                <span className="sr-only">Open main menu</span>
-                <svg
-                  className={`${isMenuOpen ? "hidden" : "block"} h-6 w-6`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                </svg>
-                <svg
-                  className={`${isMenuOpen ? "block" : "hidden"} h-6 w-6`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-              {dropdown && (
-                <div
-                  id="dropdown"
-                  className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
-                >
-                  <ul
-                    className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                    aria-labelledby="dropdownDefaultButton"
-                  >
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Dashboard
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Settings
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Earnings
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Sign out
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
               <div className="flex flex-shrink-0 items-center">
                 <Image
@@ -182,7 +73,7 @@ const Navbar: React.FC = () => {
 
                       <Link
                         href="/user/survey"
-                        className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                        className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer"
                       >
                         Surveys
                       </Link>
@@ -191,7 +82,7 @@ const Navbar: React.FC = () => {
                     <>
                       <Link
                         href="/admin/dashboard"
-                        className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                        className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer"
                       >
                         DashBoard
                       </Link>
@@ -225,95 +116,16 @@ const Navbar: React.FC = () => {
                 </div>
               </div>
             </div>
-
-            {isAdmin ? (
-              <button
-                className="rounded-md bg-gray-700 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-gray-950 hover:text-white"
-                onClick={handleSubmit}
-              >
-                {inuser ? <>USER</> : <>ADMIN</>}
-              </button>
-            ) : (
-              <></>
-            )}
-
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <div className="relative ml-3">
-                <div>
-                  <button
-                    type="button"
-                    className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                    id="user-menu-button"
-                    aria-expanded="false"
-                    aria-haspopup="true"
-                  >
-                    {/* <span className="absolute -inset-1.5"></span> */}
-                    {/* <span className="sr-only">Open user menu</span> */}
-
-                    {/* <img
-                  className="h-8 w-8 rounded-full"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  alt=""
-                /> */}
-                  </button>
-                </div>
-                <div
-                  className={`absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${
-                    isMenuOpen ? "block" : "hidden"
-                  }`}
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-labelledby="user-menu-button"
-                  tabIndex={-1}
-                >
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700"
-                    role="menuitem"
-                    tabIndex={-1}
-                    id="user-menu-item-0"
-                  >
-                    Your Profile
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700"
-                    role="menuitem"
-                    tabIndex={-1}
-                    id="user-menu-item-1"
-                  >
-                    Settings
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700"
-                    role="menuitem"
-                    tabIndex={-1}
-                    id="user-menu-item-2"
-                  >
-                    Sign out
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* <form action={async () => {
-          
-          await signOut({redirectTo:'/login'});
-        }}>
-          <button className="ml-4 rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-red-700 hover:text-white">
-          Sign Out
-          </button>
-        </form> */}
+            <button
+              className="rounded-md min-w-20 bg-gray-700 px-3 py-2 mx-10 text-sm font-medium text-gray-200 hover:bg-gray-950 hover:text-white"
+              onClick={handleAdminCLick}
+            >
+              SWITCH TO {(inuser && <>ADMIN</>) || <>USER</>}
+            </button>
 
             <UserButton />
           </div>
         </div>
-
-        <div
-          className={`${isMenuOpen ? "block" : "hidden"} sm:hidden`}
-          id="mobile-menu"
-        ></div>
       </nav>
     </>
   );

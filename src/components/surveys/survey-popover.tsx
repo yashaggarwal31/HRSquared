@@ -178,6 +178,14 @@ export function SurveyInput({
                   Add Option
                 </button>
 
+                <button
+                  onClick={() =>
+                    setMultipleInput([])
+                  }
+                >
+                  Clear
+                </button>
+
                 <ul>
                   {multipleInput.map((item) => {
                     return <li>{item}</li>;
@@ -225,6 +233,14 @@ export function SurveyInput({
                   }
                 >
                   Add Option
+                </button>
+
+                <button
+                  onClick={() =>
+                    setMultipleInput([])
+                  }
+                >
+                  Clear
                 </button>
 
                 <ul>
@@ -319,6 +335,17 @@ export function SurveyInput({
                   }
                 >
                   Add Column
+                </button>
+
+                <button
+                  onClick={() =>
+                    {
+                      setMatrixColumnInput([]);
+                      setMatrixRowInput([]);
+                    }
+                  }
+                >
+                  Clear
                 </button>
 
                 <ul>
