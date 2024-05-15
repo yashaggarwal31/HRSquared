@@ -19,6 +19,7 @@ const paginate = (items: any, pageNumber: any, pageSize: any) => {
 };
 
 export default function AdminTicketList({ surveyData }) {
+  console.log("SURVEY DATA", surveyData);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 11;
   const [allFilteredData, setAllFilteredData] = useState([{}]);
@@ -29,6 +30,12 @@ export default function AdminTicketList({ surveyData }) {
   const [detailsModal, setDetailsModal] = useState<any>(null);
   const [assignTicket, setAssignTicket] = useState<any>(null);
   const [allUsersArr, setAllUsersArr] = useState<any>([]);
+
+  useEffect(() => {
+    setMyTickets(surveyData);
+    setCurrentPage(1);
+    setFilterApplied("");
+  }, [surveyData]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -103,55 +110,20 @@ export default function AdminTicketList({ surveyData }) {
     );
   }
 
-  let data = paginate(myTickets, currentPage, pageSize);
+  // let data = paginate(myTickets, currentPage, pageSize);
   useEffect(() => {
-    data = paginate(myTickets, currentPage, pageSize);
+    let data = paginate(surveyData, currentPage, pageSize);
     setCurrentData(data);
-  }, []);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const body_params = {
-  //       options: {
-  //         status: 0,
-  //         sub_category: 0,
-  //         group: 0,
-  //         priority: 0,
-  //         closed_by: 0,
-  //       },
-  //     };
-  //     try {
-  //       setLoading(true);
-  //       const response = await fetch("/api/tickets/admin/getalltickets", {
-  //         method: "GET",
-  //         headers: {
-  //           Accept: "application/json",
-  //         },
-  //         // body: JSON.stringify(body_params),
-  //       });
-  //       if (response) {
-  //         const ticketDataRes = await response.json();
-  //         const ticketData = ticketDataRes.Response.result;
-  //         setMyTickets(ticketData);
-  //         data = paginate(ticketData, currentPage, pageSize);
-  //         setCurrentData(data);
-  //       }
-  //     } catch (error) {
-  //       //console.log(error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
+  }, [surveyData]);
 
   useEffect(() => {
+    let data = [];
     if (filterApplied == "") {
-      data = paginate(myTickets, currentPage, pageSize);
+      data = paginate(surveyData, currentPage, pageSize);
     } else {
       data = paginate(allFilteredData, currentPage, pageSize);
     }
+    console.log("next page", data);
     setCurrentData(data);
   }, [currentPage, filterApplied]);
 
@@ -187,18 +159,18 @@ export default function AdminTicketList({ surveyData }) {
     };
   };
 
-  async function updateStatusById(id) {
-    const markAsClosed = document.getElementById("markAsClosed");
+  async function updateStatusById(mark, id, state) {
+    const markAsClosed = document.getElementById(mark);
     if (markAsClosed) markAsClosed.innerHTML = "Marking...";
 
     // console.log(id);
     try {
-      const res = await updateStatus(id, 4);
+      const res = await updateStatus(id, state);
       // console.log("update", res);
       setDetailsModal(null);
       location.reload();
     } catch (error) {
-      //console.log(error);
+      console.log(error);
     }
   }
 
@@ -228,7 +200,9 @@ export default function AdminTicketList({ surveyData }) {
                         className={`${
                           detailsModal.status == "Open"
                             ? "bg-red-500"
-                            : "bg-green-500 "
+                            : detailsModal.status == "Resolved"
+                            ? "bg-green-500 "
+                            : "bg-yellow-500 "
                         }  rounded-full px-2 py-1 text-sm text-white`}
                       >
                         {detailsModal.status}
@@ -245,21 +219,55 @@ export default function AdminTicketList({ surveyData }) {
                       </div>
 
                       {detailsModal.status == "Open" ? (
-                        <div className="flex justify-center">
+                        <div className="flex justify-center gap-4">
                           <button
                             id="markAsClosed"
                             className="mt-2 rounded-md bg-black px-4 py-2 text-center text-white"
                             onClick={() =>
-                              updateStatusById(detailsModal.ticket_id)
+                              updateStatusById(
+                                "markAsClosed",
+                                detailsModal.ticket_id,
+                                4
+                              )
                             }
                           >
-                            Mark as closed
+                            Mark Resolved
+                          </button>
+
+                          <button
+                            id="markAsAddressed"
+                            className="mt-2 rounded-md bg-black px-4 py-2 text-center text-white"
+                            onClick={() =>
+                              updateStatusById(
+                                "markAsAddressed",
+                                detailsModal.ticket_id,
+                                5
+                              )
+                            }
+                          >
+                            Mark being addressed
                           </button>
                         </div>
-                      ) : (
+                      ) : detailsModal.status == "Resolved" ? (
                         <div className="bg-gray text-sm text-zinc-400">
                           {"Closed at : "}
                           {new Date(detailsModal.closedat).toLocaleString()}
+                        </div>
+                      ) : (
+                        <div className="flex justify-center gap-4">
+                          <button
+                            id="markAsClosed"
+                            className="mt-2 rounded-md bg-black px-4 py-2 text-center text-white"
+                            onClick={() =>
+                              updateStatusById(
+                                "markAsClosed",
+                                detailsModal.ticket_id,
+                                4
+                              )
+                            }
+                          >
+                            Mark Resolved
+                          </button>
                         </div>
                       )}
                     </div>
@@ -311,13 +319,13 @@ export default function AdminTicketList({ surveyData }) {
               <div className="mx-2 my-1 mt-2 text-xl">Filters</div>
               <div
                 className={`${
-                  filterApplied == "Closed"
+                  filterApplied == "Resolved"
                     ? "border-sky-500 text-sky-500"
                     : "border-gray-300 text-gray-400"
                 } m-2  inline-block cursor-pointer rounded-lg border-2 px-4 py-2`}
-                onClick={() => statusFilter("Closed")}
+                onClick={() => statusFilter("Resolved")}
               >
-                Closed
+                Resolved
               </div>
               <div
                 className={`${
@@ -332,17 +340,14 @@ export default function AdminTicketList({ surveyData }) {
             </div>
 
             <div className="w-[82%]">
-              {/* <div className="px-2 py-6">
-            <TicketGeneratorButton />
-          </div> */}
-
               <table className="w-[100%]">
                 <thead>
                   <tr className=" m-10 bg-gray-200/50">
+                    <th className="px-10 py-3 text-left">Creator</th>
                     <th className="px-10 py-3 text-left">Assigned To</th>
                     <th className="px-10 py-3 text-left">Title</th>
                     <th className="px-10 py-3 text-left">Status</th>
-                    <th className="px-10 py-3 text-left">Created at</th>
+                    <th className="px-10 py-3 text-left">Created on</th>
                     <th className="px-10 py-3 text-left">Details</th>
                   </tr>
                 </thead>
@@ -355,6 +360,9 @@ export default function AdminTicketList({ surveyData }) {
                       // className="items-left flex  border-b border-sky-500  bg-slate-50 py-4"
                     >
                       <td className="border-b border-sky-500 px-10 py-3">
+                        {ticket.createdby}
+                      </td>
+                      <td className="border-b border-sky-500 px-10 py-3">
                         {ticket.assignedto || <AssignButton ticket={ticket} />}
                       </td>
                       <td className="border-b border-sky-500 px-10 py-3">
@@ -364,15 +372,17 @@ export default function AdminTicketList({ surveyData }) {
                         <span
                           className={`${
                             ticket.status == "Open"
-                              ? "bg-red-500"
-                              : "bg-green-500 "
-                          }  rounded-full px-2 py-1 text-sm text-white`}
+                              ? "text-[#f03e3e] bg-[#f03e3e1a]"
+                              : ticket.status == "Resolved"
+                              ? "text-[#14ae6d] bg-[#e7f5f0]"
+                              : "text-[#D68D00] bg-[#D68D001A] "
+                          }  rounded-full px-2 py-1 text-sm `}
                         >
                           {ticket.status}
                         </span>
                       </td>
                       <td className="border-b border-sky-500 px-10 py-3">
-                        {new Date(ticket.createdat).toLocaleString()}
+                        {formatDateString(ticket.createdat)}
                       </td>
                       <td
                         className="border-b border-sky-500"

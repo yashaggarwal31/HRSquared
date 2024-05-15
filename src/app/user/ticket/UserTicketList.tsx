@@ -23,58 +23,39 @@ export default function UserTicketList({ ticketData }) {
   const [loading, setLoading] = useState(false);
   const [detailsModal, setDetailsModal] = useState<any>(null);
 
-  let data = paginate(myTickets, currentPage, pageSize);
   useEffect(() => {
-    data = paginate(myTickets, currentPage, pageSize);
-    setCurrentData(data);
-  }, []);
+    setMyTickets(ticketData);
+    setCurrentPage(1);
+    setFilterApplied("");
+  }, [ticketData]);
+
+  // let data = paginate(myTickets, currentPage, pageSize);
   // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const body_params = {
-  //       options: {
-  //         status: 0,
-  //         sub_category: 0,
-  //         group: 0,
-  //         priority: 0,
-  //         closed_by: 0,
-  //       },
-  //     };
-  //     try {
-  //       setLoading(true);
-  //       const response = await fetch("/api/tickets/getusertickets", {
-  //         method: "GET",
-  //         headers: {
-  //           Accept: "application/json",
-  //         },
-  //         // body: JSON.stringify(body_params),
-  //       });
-  //       if (response) {
-  //         const ticketDataRes = await response.json();
-
-  //         //console.log("ticket ->", ticketDataRes);
-  //         //console.log(ticketDataRes.Response.result);
-
-  //         const ticketData = ticketDataRes.Response.result;
-  //         setMyTickets(ticketData);
-  //         data = paginate(ticketData, currentPage, pageSize);
-  //         setCurrentData(data);
-  //       }
-  //     } catch (error) {
-  //       //console.log(error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
+  //   data = paginate(myTickets, currentPage, pageSize);
+  //   setCurrentData(data);
   // }, []);
 
+  // useEffect(() => {
+  //   if (filterApplied == "") {
+  //     data = paginate(myTickets, currentPage, pageSize);
+  //   } else {
+  //     data = paginate(allFilteredData, currentPage, pageSize);
+  //   }
+  //   setCurrentData(data);
+  // }, [currentPage, filterApplied]);
   useEffect(() => {
+    let data = paginate(ticketData, currentPage, pageSize);
+    setCurrentData(data);
+  }, [ticketData]);
+
+  useEffect(() => {
+    let data = [];
     if (filterApplied == "") {
-      data = paginate(myTickets, currentPage, pageSize);
+      data = paginate(ticketData, currentPage, pageSize);
     } else {
       data = paginate(allFilteredData, currentPage, pageSize);
     }
+    console.log("next page", data);
     setCurrentData(data);
   }, [currentPage, filterApplied]);
 
@@ -134,7 +115,9 @@ export default function UserTicketList({ ticketData }) {
                         className={`${
                           detailsModal.status == "Open"
                             ? "bg-red-500"
-                            : "bg-green-500 "
+                            : detailsModal.status == "Resolved"
+                            ? "bg-green-500 "
+                            : "bg-yellow-500 "
                         }  rounded-full px-2 py-1 text-sm text-white`}
                       >
                         {detailsModal.status}
@@ -147,23 +130,23 @@ export default function UserTicketList({ ticketData }) {
                     <div className=" px-7 py-5">
                       <div className="bg-gray text-sm text-zinc-400">
                         {"Opened at : "}
-                        {new Date(detailsModal.createdat).toLocaleString()}
+                        {formatDateString(detailsModal.createdat)}
                       </div>
 
                       {detailsModal.status == "Open" ? (
                         <div className="flex justify-center">
                           {/* <button
-                            id="markAsClosed"
-                            className="mt-2 rounded-md bg-black px-4 py-2 text-center text-white"
-                            // onClick={() => updateStatusById(detailsModal.id)}
-                          >
-                            Mark as closed
-                          </button> */}
+                           id="markAsClosed"
+                           className="mt-2 rounded-md bg-black px-4 py-2 text-center text-white"
+                           // onClick={() => updateStatusById(detailsModal.id)}
+                         >
+                           Mark as closed
+                         </button> */}
                         </div>
                       ) : (
                         <div className="bg-gray text-sm text-zinc-400">
                           {"Closed at : "}
-                          {new Date(detailsModal.closedat).toLocaleString()}
+                          {formatDateString(detailsModal.closedat)}
                         </div>
                       )}
                     </div>
@@ -178,13 +161,13 @@ export default function UserTicketList({ ticketData }) {
               <div className="mx-2 my-1 mt-2 text-xl">Filters</div>
               <div
                 className={`${
-                  filterApplied == "Closed"
+                  filterApplied == "Resolved"
                     ? "border-sky-500 text-sky-500"
                     : "border-gray-300 text-gray-400"
                 } m-2  inline-block cursor-pointer rounded-lg border-2 px-4 py-2`}
-                onClick={() => statusFilter("Closed")}
+                onClick={() => statusFilter("Resolved")}
               >
-                Closed
+                Resolved
               </div>
               <div
                 className={`${
@@ -239,9 +222,11 @@ export default function UserTicketList({ ticketData }) {
                         <span
                           className={`${
                             ticket.status == "Open"
-                              ? "bg-red-500"
-                              : "bg-green-500 "
-                          }  rounded-full px-2 py-1 text-sm text-white`}
+                              ? "text-[#f03e3e] bg-[#f03e3e1a]"
+                              : ticket.status == "Resolved"
+                              ? "text-[#14ae6d] bg-[#e7f5f0]"
+                              : "text-[#D68D00] bg-[#D68D001A] "
+                          }  rounded-full px-2 py-1 text-sm `}
                         >
                           {ticket.status}
                         </span>

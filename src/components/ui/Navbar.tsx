@@ -23,8 +23,12 @@ const Navbar: React.FC = () => {
 
   function handleAdminCLick() {
     if (path.includes("user")) {
-      const newPath = path.replace("user", "admin");
-      router.push(newPath);
+      if (path.includes("feedback")) {
+        router.push("/admin/feedback");
+      } else {
+        const newPath = path.replace("user", "admin");
+        router.push(newPath);
+      }
     } else {
       if (path.includes("dashboard") || path.includes("manage-users")) {
         router.push("/user/ticket");
@@ -113,10 +117,10 @@ const Navbar: React.FC = () => {
               </div>
             </div>
             <button
-              className="rounded-md min-w-20 bg-gray-700 px-3 py-2 mx-4 text-sm font-medium text-gray-200 hover:bg-gray-950 hover:text-white"
+              className="rounded-md min-w-20 bg-gray-700 px-3 py-2 mx-10 text-sm font-medium text-gray-200 hover:bg-gray-950 hover:text-white"
               onClick={handleAdminCLick}
             >
-              {(inuser && <>ADMIN</>) || <>USER</>}
+              SWITCH TO {(inuser && <>ADMIN</>) || <>USER</>}
             </button>
 
             <UserButton />

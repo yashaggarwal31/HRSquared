@@ -9,6 +9,7 @@ import Link from "next/link";
 import TicketGeneratorButton from "@/components/tickets/TicketGeneratorButton";
 import Pagination from "@/components/tickets/Pagination";
 import { formatDateString } from "@/lib/FormatDateString";
+import { updateStatus, deligateTicket } from "@/lib/tickets";
 
 const paginate = (items: any, pageNumber: any, pageSize: any) => {
   const startIndex = (pageNumber - 1) * pageSize;
@@ -17,6 +18,7 @@ const paginate = (items: any, pageNumber: any, pageSize: any) => {
 };
 
 function Tickets({ ticketData }) {
+  console.log("date ? ", ticketData);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8;
   const [allFilteredData, setAllFilteredData] = useState([{}]);
@@ -27,46 +29,6 @@ function Tickets({ ticketData }) {
   const [detailsModal, setDetailsModal] = useState<any>(null);
 
   let data = paginate(myTickets, currentPage, pageSize);
-  //   useEffect(() => {
-  //     const fetchData = async () => {
-  //       const body_params = {
-  //         options: {
-  //           status: 0,
-  //           sub_category: 0,
-  //           group: 0,
-  //           priority: 0,
-  //           closed_by: 0,
-  //         },
-  //       };
-  //       try {
-  //         setLoading(true);
-  //         const response = await fetch("/api/tickets/getassignedtickets", {
-  //           method: "GET",
-  //           headers: {
-  //             Accept: "application/json",
-  //           },
-  //           // body: JSON.stringify(body_params),
-  //         });
-  //         if (response) {
-  //           const ticketDataRes = await response.json();
-
-  //           console.log("ticket ->", ticketDataRes);
-  //           console.log(ticketDataRes.Response.result);
-
-  //           const ticketData = ticketDataRes.Response.result;
-  //           setMyTickets(ticketData);
-  //           data = paginate(ticketData, currentPage, pageSize);
-  //           setCurrentData(data);
-  //         }
-  //       } catch (error) {
-  //         console.log(error);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     fetchData();
-  //   }, []);
 
   useEffect(() => {
     if (filterApplied == "") {
@@ -108,11 +70,39 @@ function Tickets({ ticketData }) {
     };
   };
 
+  async function updateStatusById(mark, id, state) {
+    const markAsClosed = document.getElementById(mark);
+    if (markAsClosed) markAsClosed.innerHTML = "Marking...";
+
+    // console.log(id);
+    try {
+      const res = await updateStatus(id, state);
+      // console.log("update", res);
+      setDetailsModal(null);
+      location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function deligateTicketUtil(id) {
+    try {
+      const res = deligateTicket(id);
+      console.log(res);
+      setDetailsModal(null);
+      location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div>
       {loading ? (
-        // <Loading size={75} />
-        <div>Loading...</div>
+        <div className="fixed top-0 left-0 w-screen h-screen z-[99999999999999] flex flex-col items-center justify-center bg-black/40">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>{" "}
+          <h3>Fetching Tickets ...</h3>{" "}
+        </div>
       ) : (
         <div>
           {detailsModal ? (
@@ -131,8 +121,10 @@ function Tickets({ ticketData }) {
                         className={`${
                           detailsModal.status == "Open"
                             ? "bg-red-500"
-                            : "bg-green-500 "
-                        }  rounded-full px-2 py-1 text-sm text-white`}
+                            : detailsModal.status == "Resolved"
+                            ? "bg-green-500 "
+                            : "bg-yellow-500 "
+                        }  rounded-full px-2 py-1 text-sm`}
                       >
                         {detailsModal.status}
                       </div>
@@ -148,19 +140,75 @@ function Tickets({ ticketData }) {
                       </div>
 
                       {detailsModal.status == "Open" ? (
-                        <div className="flex justify-center">
-                          {/* <button
+                        <div className="flex justify-center gap-4">
+                          <button
                             id="markAsClosed"
                             className="mt-2 rounded-md bg-black px-4 py-2 text-center text-white"
-                            // onClick={() => updateStatusById(detailsModal.id)}
+                            onClick={() =>
+                              updateStatusById(
+                                "markAsClosed",
+                                detailsModal.ticket_id,
+                                4
+                              )
+                            }
                           >
-                            Mark as closed
-                          </button> */}
+                            Mark Resolved
+                          </button>
+
+                          <button
+                            id="markAsAddressed"
+                            className="mt-2 rounded-md bg-black px-4 py-2 text-center text-white"
+                            onClick={() =>
+                              updateStatusById(
+                                "markAsAddressed",
+                                detailsModal.ticket_id,
+                                5
+                              )
+                            }
+                          >
+                            Mark being addressed
+                          </button>
+
+                          <button
+                            id="deligate"
+                            className="mt-2 rounded-md bg-black px-4 py-2 text-center text-white"
+                            onClick={() =>
+                              deligateTicketUtil(detailsModal.ticket_id)
+                            }
+                          >
+                            deligate
+                          </button>
                         </div>
-                      ) : (
+                      ) : detailsModal.status == "Resolved" ? (
                         <div className="bg-gray text-sm text-zinc-400">
                           {"Closed at : "}
                           {formatDateString(detailsModal.closedat)}
+                        </div>
+                      ) : (
+                        <div className="flex justify-center gap-4">
+                          <button
+                            id="markAsClosed"
+                            className="mt-2 rounded-md bg-black px-4 py-2 text-center text-white"
+                            onClick={() =>
+                              updateStatusById(
+                                "markAsClosed",
+                                detailsModal.ticket_id,
+                                4
+                              )
+                            }
+                          >
+                            Mark Resolved
+                          </button>
+
+                          <button
+                            id="deligate"
+                            className="mt-2 rounded-md bg-black px-4 py-2 text-center text-white"
+                            onClick={() =>
+                              deligateTicketUtil(detailsModal.ticket_id)
+                            }
+                          >
+                            deligate
+                          </button>
                         </div>
                       )}
                     </div>
@@ -174,13 +222,13 @@ function Tickets({ ticketData }) {
                 <div className="mx-2 my-1 mt-2 text-xl">Filters</div>
                 <div
                   className={`${
-                    filterApplied == "Closed"
+                    filterApplied == "Resolved"
                       ? "border-sky-500 text-sky-500"
                       : "border-gray-300 text-gray-400"
                   } m-2  inline-block cursor-pointer rounded-lg border-2 px-4 py-2`}
-                  onClick={() => statusFilter("Closed")}
+                  onClick={() => statusFilter("Resolved")}
                 >
-                  Closed
+                  Resolved
                 </div>
                 <div
                   className={`${
@@ -223,9 +271,11 @@ function Tickets({ ticketData }) {
                           <span
                             className={`${
                               ticket.status == "Open"
-                                ? "bg-red-500"
-                                : "bg-green-500 "
-                            }  rounded-full px-2 py-1 text-sm text-white`}
+                                ? "text-[#f03e3e] bg-[#f03e3e1a]"
+                                : ticket.status == "Resolved"
+                                ? "text-[#14ae6d] bg-[#e7f5f0]"
+                                : "text-[#D68D00] bg-[#D68D001A] "
+                            }  rounded-full px-2 py-1 text-sm `}
                           >
                             {ticket.status}
                           </span>
