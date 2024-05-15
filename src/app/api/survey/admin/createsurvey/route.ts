@@ -1,19 +1,25 @@
 import { NextResponse } from 'next/server'
 import { Json } from '@/types/database.types'
 import { AddSurvey } from '@/lib/surveys'
+import { getUserIdFromClerkId } from '@/lib/users'
 
 // export const dynamic = 'force-dynamic'
 
 interface Survey {
   title: string
   survey_fields: Json
-  created_by: number
+  created_by: string
   closes_at: string
+  survey_img: string
 }
 
 export async function POST (req: Request) {
+  let creatorID
+
   console.log('hello')
   const request: Survey = await req.json()
+
+  creatorID = request.created_by
 
   if (!request.title || typeof request.title !== 'string') {
     return NextResponse.json(
@@ -23,13 +29,7 @@ export async function POST (req: Request) {
   }
 
   if (typeof request.created_by !== 'number' || isNaN(request.created_by)) {
-    return NextResponse.json(
-      {
-        status: 400,
-        statusText: 'created_by is not defined or is not a number'
-      },
-      { status: 400 }
-    )
+    creatorID = await getUserIdFromClerkId(request.created_by)
   }
 
   if (!request.closes_at || typeof request.closes_at !== 'string') {
@@ -45,7 +45,7 @@ export async function POST (req: Request) {
   // request.created_by = user_id
   // console.log(request);
 
-  const result = await AddSurvey(request)
+  const result = await AddSurvey(request, creatorID)
   console.log(result)
   return NextResponse.json({ Response: result })
 }

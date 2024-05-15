@@ -109,11 +109,12 @@ export type Database = {
         Insert: {
           closes_at?: string | null
           created_at?: string | null
-          created_by?: number | null
+          created_by?: string | null
           id?: number
           survey_fields?: Json | null
           title?: string | null
           category?: number | null
+          survey_img?: string | null
         }
         Update: {
           closes_at?: string | null
