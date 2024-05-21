@@ -2,10 +2,26 @@
 import React, { Suspense} from 'react'
 import FormFiller from './FormFiller';
 import { getSurveyById } from '@/lib/surveys';
+import { auth } from '@clerk/nextjs/server';
+import { checkUserPermissionForSurvey } from '@/lib/users';
 
 let surveyID;
 
-async function SurveyForm({surveyID}){
+async function SurveyForm({surveyID,userId}){
+
+  console.log(surveyID)
+  console.log('space')
+  console.log(userId)
+
+  const permission = await checkUserPermissionForSurvey(surveyID, userId);
+
+  if(!permission){
+    console.log('does not have permission')
+    return <div>You dont seem to have the permission to fill this survey</div>
+  }
+  else{
+    console.log('has permission')
+  }
 
     const surveyData = await getSurveyById(surveyID);
     const formFields = surveyData[0].surveyfields;
@@ -21,6 +37,7 @@ async function SurveyForm({surveyID}){
 export default function FillSurveyPage({params}) {
 
     let surveyID = params['fill-survey'];
+    let {userId} = auth();
 
     // const [dataFetched,setDataFetched] = useState(false);
     // const [surveyFields,setSurveyFields] = useState([]);
@@ -71,7 +88,7 @@ export default function FillSurveyPage({params}) {
   return <>
     <Suspense fallback={<div className="fixed top-0 left-0 w-screen h-screen z-[99999999999999] flex flex-col items-center justify-center bg-black/40">
     <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div> <h3>Fetching Survey ...</h3> </div>}>
-        <SurveyForm surveyID={surveyID}/>
+        <SurveyForm surveyID={surveyID} userId={userId}/>
     </Suspense>
   </>
 }

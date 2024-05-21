@@ -12,6 +12,7 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 import Image from "next/image";
+import { useUser } from "@clerk/clerk-react";
 
 // import { Button } from "@/components/ui/button";
 // import {url_create_survey, url_get_survey_responses} from "@/app/lib/apiEndPoints";
@@ -28,6 +29,8 @@ import Image from "next/image";
 
 
 function SurveysCreation() {
+  const {user} = useUser();
+  // const [userId, setUserId] = useState('1');
   // const router = useRouter();
 
   const [formFields, setFormFields] = useState<FormFields[]>([]);
@@ -48,6 +51,11 @@ function SurveysCreation() {
 
     getCategories();
   },[])
+
+
+  // useEffect(()=>{
+  //   console.log(userId)
+  // },[userId])
 
   const handleCategorySelection = (event) => {
     const selection = event.target.value;
@@ -78,8 +86,11 @@ function SurveysCreation() {
 
   const addSurvey = async () => {
 
+    console.log('userid is: ',user.id)
+
     const submitbtn = document.getElementById('survey-creation');
     submitbtn.textContent = 'Creating...'
+    
     
     // let currentDate = new Date();
     
@@ -92,8 +103,9 @@ function SurveysCreation() {
       'title': surveyTitle.concat('%!@').concat(surveyDescription),
       'survey_fields': formFields,
       'closes_at': closesAt,
-      'created_by': 1,
+      'created_by': user?user.id:'1',
       'category': selectedCategory,
+      'survey_img':'https://res.cloudinary.com/dyeeocktp/image/upload/v1715711217/bannerIcon_nch5v7-cropped_nhtxye.svg'
     };
 
     console.log(body)

@@ -131,7 +131,7 @@ export function SurveyInput({
                   className="col-span-2 h-8"
                   onChange={(e) => {
                     setLabelValue(e.target.value);
-                    console.log(e.target.value);
+                    //console.log(e.target.value);
                   }}
                 />
               </div>
@@ -155,7 +155,7 @@ export function SurveyInput({
                   className="col-span-2 h-8"
                   onChange={(e) => {
                     setLabelValue(e.target.value);
-                    console.log(e.target.value);
+                    //console.log(e.target.value);
                   }}
                 />
 
@@ -167,7 +167,7 @@ export function SurveyInput({
                   className="col-span-2 h-8"
                   onChange={(e) => {
                     setInputValue(e.target.value);
-                    console.log(e.target.value);
+                    //console.log(e.target.value);
                   }}
                 />
                 <button
@@ -212,7 +212,7 @@ export function SurveyInput({
                   className="col-span-2 h-8"
                   onChange={(e) => {
                     setLabelValue(e.target.value);
-                    console.log(e.target.value);
+                    //console.log(e.target.value);
                   }}
                 />
 
@@ -224,7 +224,7 @@ export function SurveyInput({
                   className="col-span-2 h-8"
                   onChange={(e) => {
                     setInputValue(e.target.value);
-                    console.log(e.target.value);
+                    //console.log(e.target.value);
                   }}
                 />
                 <button
@@ -269,7 +269,7 @@ export function SurveyInput({
                   className="col-span-2 h-8"
                   onChange={(e) => {
                     setLabelValue(e.target.value);
-                    console.log(e.target.value);
+                    // console.log(e.target.value);
                   }}
                 />
               </div>
@@ -290,7 +290,7 @@ export function SurveyInput({
                   className="col-span-2 h-8"
                   onChange={(e) => {
                     setLabelValue(e.target.value);
-                    console.log(e.target.value);
+                    // console.log(e.target.value);
                   }}
                 />
 
@@ -302,7 +302,7 @@ export function SurveyInput({
                   className="col-span-2 h-8"
                   onChange={(e) => {
                     setInputValue(e.target.value);
-                    console.log(e.target.value);
+                    //console.log(e.target.value);
                   }}
                 />
 
@@ -314,7 +314,7 @@ export function SurveyInput({
                   className="col-span-2 h-8"
                   onChange={(e) => {
                     setInputValueSecond(e.target.value);
-                    console.log(e.target.value);
+                    //console.log(e.target.value);
                   }}
                 />
 
@@ -377,7 +377,7 @@ export function SurveyInput({
                   className="col-span-2 h-8"
                   onChange={(e) => {
                     setLabelValue(e.target.value);
-                    console.log(e.target.value);
+                    //console.log(e.target.value);
                   }}
                 />
               </div>

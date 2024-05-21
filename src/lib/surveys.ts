@@ -65,21 +65,25 @@ export async function getUserSurveys (userID) {
   return data.rows
 }
 
-export async function AddSurvey (survey: SurveyInsert) {
+export async function AddSurvey (survey: SurveyInsert, creatorID: number) {
   const client = await dbConnect()
   try {
+    console.log(survey)
     const surveyFieldsJSON = JSON.stringify(survey.survey_fields)
     const query = {
-      text: 'insert into surveys (title, surveyfields, createdby, closes_at, category) values ($1, $2, $3, $4, $5)',
+      text: 'insert into surveys (title, surveyfields, createdby, closes_at, category,survey_img) values ($1, $2, $3, $4, $5, $6)',
       values: [
         survey.title,
         surveyFieldsJSON,
-        survey.created_by,
+        creatorID,
         survey.closes_at,
-        survey.category
+        survey.category,
+        survey.survey_img
       ]
     }
+    console.log(query)
     const result = await client.query(query)
+    console.log(result)
     // client.end()
     return {
       status: 200,
