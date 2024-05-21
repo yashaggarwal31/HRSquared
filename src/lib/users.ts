@@ -192,3 +192,26 @@ export async function getUserIdFromClerkId (clerkId) {
 
   return result.rows[0].id
 }
+
+export async function checkUserPermissionForSurvey (surveyID, userID) {
+  if (userID == null) return notFound()
+  const client = await dbConnect()
+  const user_id = await getUserIdFromClerkId(userID)
+  console.log('permission actual user id: ', user_id)
+  const query = {
+    text: `select urm.id 
+    from userrole_mapping urm
+    join surveys s on s.category = urm.group_id
+    where urm.user_id = $1  and s.id = $2
+    `,
+    values: [user_id, surveyID]
+  }
+
+  const result = await client.query(query)
+  console.log('***************this is result', result)
+  if (result.rowCount > 0) {
+    return true
+  } else {
+    return false
+  }
+}
