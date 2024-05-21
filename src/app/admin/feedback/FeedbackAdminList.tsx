@@ -13,6 +13,7 @@ const paginate = (items: any, pageNumber: any, pageSize: any) => {
 };
 
 function FeedbackAdminList({ feedbackData }) {
+  console.log("feed", feedbackData);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
   // const [data, setData] = useState([]);
@@ -37,15 +38,18 @@ function FeedbackAdminList({ feedbackData }) {
   };
 
   const search = (value) => {
+    console.log("->", value);
     if (value.trim().length === 0) {
       setCurrentData(() => paginate(myFeedbacks, currentPage, pageSize));
       return;
     }
 
     const filtered = myFeedbacks.filter((feedback) =>
-      feedback.title.includes(value)
+      feedback.title.toLowerCase().includes(value.toLowerCase())
     );
 
+    console.log("fil", filtered);
+    console.log("->", value);
     setPaginateData(filtered);
     setCurrentData(() => paginate(paginateData, currentPage, pageSize));
   };

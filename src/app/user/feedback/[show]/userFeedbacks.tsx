@@ -40,8 +40,10 @@ export function UserFeedbacks({ feedbacks }) {
     }
 
     const filtered = myFeedbacks.filter((feedback) =>
-      feedback.title.includes(value)
+      feedback.title.toLowerCase().includes(value.toLowerCase())
     );
+
+    console.log("arr ->", filtered);
     setPaginateData(filtered);
     setCurrentData(() => paginate(paginateData, currentPage, pageSize));
   };
