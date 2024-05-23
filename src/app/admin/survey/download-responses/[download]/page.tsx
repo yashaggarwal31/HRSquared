@@ -6,9 +6,7 @@ let surveyID;
 let title;
 let description;
 
-
-
-export async function ResponseDownloader(){
+ async function ResponseDownloader(){
 
     console.log(surveyID)
     const surveyData = await getSurveyById(surveyID);

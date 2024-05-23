@@ -8,6 +8,8 @@ import { FormFields } from "@/components/surveys/FormFields";
 import { getGroups } from "@/lib/surveys";
 
 
+
+
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -125,6 +127,7 @@ function SurveysCreation() {
     submitbtn.textContent = 'Created'
 
     router.push('/admin/survey');
+    router.refresh();
     
   }
   
