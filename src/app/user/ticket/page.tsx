@@ -1,9 +1,11 @@
 import React, { Suspense } from "react";
 import { getUserTickets } from "@/lib/tickets";
 import UserTicketSearch from "./UserTicketSearch";
-
+import { useUser } from "@clerk/clerk-react";
 
 async function UserTickets() {
+  const { user } = useUser();
+  console.log("UUUUSSSSSEEEERRR", user);
   const ticketData = await getUserTickets(1);
 
   // console.log("users page, ticket data: ", ticketData);
