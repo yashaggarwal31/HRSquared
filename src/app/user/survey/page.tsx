@@ -9,9 +9,6 @@ async function UserSurveys(){
   const {userId} = auth();
 
     const surveyData = await getUserSurveys(userId);
-
-    
-
     // console.log('users page, survey data: ',surveyData)
 
     return <UserSurveySearchFunctionality surveyData={surveyData}/>

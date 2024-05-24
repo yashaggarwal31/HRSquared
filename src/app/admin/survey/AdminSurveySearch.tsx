@@ -126,7 +126,7 @@ function AdminSurveySearchFunctionality({ surveyData }: { surveyData: any }) {
         response.creator_name
           .trim()
           .toLowerCase()
-          .includes(searchTerm.toLowerCase()); 
+          .includes(searchTerm.toLowerCase())
 
       return searchBool;
     });

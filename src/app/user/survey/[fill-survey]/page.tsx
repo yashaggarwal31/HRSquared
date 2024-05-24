@@ -17,7 +17,19 @@ async function SurveyForm({surveyID,userId}){
 
   if(!permission){
     console.log('does not have permission')
-    return <div>You dont seem to have the permission to fill this survey</div>
+    return (
+      <>
+      <section className="bg-white dark:bg-gray-900">
+        <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-6 lg:py-16">
+          <div className="mx-auto max-w-screen-sm text-center">
+            <h1 className="dark:text-primary-500 mb-4 text-7xl font-extrabold tracking-tight text-blue-600 lg:text-9xl">403</h1>
+            <p className="mb-4 text-3xl font-bold tracking-tight text-gray-900 md:text-4xl dark:text-white">Access Denied</p>
+            <p className="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">Sorry, you dont seem to have permission to view this survey</p>
+          </div>
+        </div>
+      </section>
+      </>
+    )
   }
   else{
     console.log('has permission')
