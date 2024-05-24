@@ -3,7 +3,7 @@ import React, { Suspense } from 'react'
 import { GetSurveyResponses, getSurveyById } from '@/lib/surveys';
 // import Link from 'next/link';
 import SearchFunctionality from './AdminSurveyResponsesSearchFunctionality';
-
+import { revalidatePath } from 'next/cache'
 // import DownloadResponses from '../download-responses/[download]/page';
 
 
@@ -24,9 +24,11 @@ async function AdminSurveyResponses({surveyID}:{surveyID:number}){
 }
 
 export default function AdminSurveyPage({params}:{params:any}) {
-  
+
+  revalidatePath('admin/survey/[slug]');
 
   const surveyID = params['view-responses'];
+
   return (
     <div className="mb-8 mt-12 flex flex-col gap-12 ">
       <div className="relative flex flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">

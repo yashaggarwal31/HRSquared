@@ -25,13 +25,18 @@ const Navbar: React.FC = () => {
     if (path.includes("user")) {
       if (path.includes("feedback")) {
         router.push("/admin/feedback");
-      } else {
+      } else if(path.includes("survey")) {
+        router.push("/admin/survey");
+      }
+      else{
         const newPath = path.replace("user", "admin");
         router.push(newPath);
       }
-    } else {
+    } else if(path.includes("admin")) {
       if (path.includes("dashboard") || path.includes("manage-users")) {
         router.push("/user/ticket");
+      }else if(path.includes("survey")) {
+        router.push("/user/survey");
       } else {
         const newPath = path.replace("admin", "user");
         router.push(newPath);

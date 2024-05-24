@@ -26,9 +26,10 @@ async function SurveyForm({surveyID,userId}){
     const surveyData = await getSurveyById(surveyID);
     const formFields = surveyData[0].surveyfields;
     const title = surveyData[0].title;
+    const survey_img = surveyData[0].survey_img;
 
     return <>
-    <FormFiller surveyFields={formFields} title={title} surveyID={surveyID}/>
+    <FormFiller surveyFields={formFields} title={title} survey_img={survey_img} surveyID={surveyID}/>
     </>
 
 }

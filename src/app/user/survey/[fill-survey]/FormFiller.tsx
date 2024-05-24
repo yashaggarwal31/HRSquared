@@ -3,9 +3,12 @@ import React, { useEffect, useState } from 'react'
 import { FieldTypes } from "@/components/enums/survey-field-types";
 import { FormFields } from '@/components/surveys/FormFields'
 import { url_fill_survey } from '@/lib/ApiEndPoints';
+import { useUser } from '@clerk/nextjs';
+import Image from 'next/image';
 // import { addUserResponse } from '@/lib/surveys';
 
-export default function FormFiller({ surveyFields, title, surveyID }) {
+export default function FormFiller({ surveyFields, title, survey_img, surveyID }) {
+  const { user } = useUser();
 
   const arr = title.split('%!@')
   title = arr[0];
@@ -132,6 +135,7 @@ export default function FormFiller({ surveyFields, title, surveyID }) {
     const formDataJSON = JSON.stringify(formDataArray);
 
     const surveyResponse = {
+      user_id: user.id,
       survey_id: parseInt(surveyID),
       response_data: formDataJSON
     }
@@ -182,6 +186,10 @@ export default function FormFiller({ surveyFields, title, surveyID }) {
         {/* {surveyFields.map((item)=>{
               console.log(item)
             })} */}
+
+        {survey_img && <div className="w-[55%] ">
+          <Image width='100' height={100} className="w-[100%] h-[15rem] rounded-lg" src={survey_img} alt='A Survey Banner yash ... '/>
+        </div>}
 
         <div className="w-[55%] rounded-lg border-t-4 border-blue-500 bg-white p-3 ">
           <div className="text-2xl flex  items-center ">

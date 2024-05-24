@@ -8,11 +8,14 @@ import { FormFields } from "@/components/surveys/FormFields";
 import { getGroups } from "@/lib/surveys";
 
 
+
+
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 import Image from "next/image";
 import { useUser } from "@clerk/clerk-react";
+import { useRouter } from "next/navigation";
 
 // import { Button } from "@/components/ui/button";
 // import {url_create_survey, url_get_survey_responses} from "@/app/lib/apiEndPoints";
@@ -30,6 +33,7 @@ import { useUser } from "@clerk/clerk-react";
 
 function SurveysCreation() {
   const {user} = useUser();
+  const router = useRouter();
   // const [userId, setUserId] = useState('1');
   // const router = useRouter();
 
@@ -121,6 +125,9 @@ function SurveysCreation() {
     console.log('Survey Creation Resposne: ',response)
 
     submitbtn.textContent = 'Created'
+
+    router.push('/admin/survey');
+    router.refresh();
     
   }
   
@@ -164,13 +171,13 @@ function SurveysCreation() {
         >
           Add Date Picker
         </SurveyInput>
-        <SurveyInput
+        {/* <SurveyInput
           fieldType={FieldTypes.MATRIX}
           formFields={formFields}
           setFormFields={setFormFields}
         >
           Add Matrix Input
-        </SurveyInput>
+        </SurveyInput> */}
         </div>
 
         <div className="flex gap-3 justify-center items-center">

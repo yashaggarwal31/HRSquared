@@ -6,6 +6,8 @@ import { dbConnect } from './renderDB'
 import { Database } from '@/types/database.types'
 import { JSDOM } from 'jsdom'
 import { object } from 'zod'
+import { getUserIdFromClerkId } from './users'
+
 
 type SurveyInsert = Database['public']['Tables']['Survey']['Insert']
 type SurveyResponseInsert =
@@ -42,22 +44,33 @@ export async function getRecentSurveys () {
 export async function getUserSurveys (userID) {
   const client = await dbConnect()
 
+  const userId = await getUserIdFromClerkId(userID)
+
   const query = {
     text: `
-    SELECT s.id AS survey_id, 
-      s.title AS survey_title,
-      s.createdat AS created_at,
-      s.closes_at as closes_at,
-      gr.groupname as category,
-      u.username AS creator_name
-      FROM surveys s
-      LEFT JOIN "groups" gr ON gr.id = s.category
-      JOIN "userrole_mapping" urm on urm.group_id = s.category
-      LEFT JOIN "users" u on u.clerk_id = $1
-      GROUP BY s.id, s.title, s.createdat,gr.groupname, u.username
-      ORDER BY s.id DESC;
+    SELECT
+    s.id AS survey_id,
+    s.title AS survey_title,
+    s.createdat AS created_at,
+    s.closes_at AS closes_at,
+    gr.groupname AS category,
+    u.username AS creator_name
+    FROM
+        surveys s
+    LEFT JOIN
+        "userrole_mapping" urm ON urm.group_id = s.category
+    LEFT JOIN
+        "users" u ON u.id = urm.user_id
+    LEFT JOIN
+        "groups" gr ON gr.id = s.category
+    WHERE
+        (u.id = $1 OR s.category IS NULL)
+    GROUP BY
+        s.id, s.title, s.createdat, s.closes_at, gr.groupname, u.username
+    ORDER BY
+        s.id DESC;
       `,
-    values: [1]
+    values: [userId]
   }
 
   const data = await client.query(query)
@@ -179,10 +192,11 @@ export async function getSurveyById (id: number) {
 
 export async function addUserResponse (response: SurveyResponseInsert) {
   const client = await dbConnect()
+  const user_id = await getUserIdFromClerkId(response.user_id)
   const responseFieldsJSON = JSON.stringify(response.response_data)
   const query = {
     text: 'insert into surveyresponses (user_id, survey_id, response_data) values ($1, $2, $3)',
-    values: [response.user_id, response.survey_id, responseFieldsJSON]
+    values: [user_id, response.survey_id, responseFieldsJSON]
   }
 
   try {
@@ -250,7 +264,7 @@ export async function responsesToJson (
   // console.log('this is SurveyResponse\n ******* ',surveyResponseData );
 
   let jsonData = JsonWithLabelSeqArr[1]
-  let formlabels = JsonWithLabelSeqArr[0]
+  let formLabels = JsonWithLabelSeqArr[0]
   // let labelArray = JsonWithLabelSeqArr[0];
 
   let responseIterator = 0
@@ -362,11 +376,17 @@ export async function responsesToJson (
         }
 
         // making sure all inputs are there
-        // for(let labels in formlabels){
+        // for(let labels in formLabels){
         //   jsonData[labels][responseIterator]
         // }
       }
     }
+
+    formLabels.forEach(label => {
+      if (!jsonData[label][responseIterator]) {
+        jsonData[label][responseIterator] = 'n/a';
+      }
+    });
 
     responseIterator++
   }
@@ -382,12 +402,11 @@ export async function jsonToCsv (jsonData) {
   const headers = Object.keys(jsonData)
   let csv = headers.join(',') + '\n' // CSV header
 
-  // Find the maximum number of rows in the data
+  // Finding the maximum number of rows from data
   const maxRows = Math.max(
     ...Object.values(jsonData).map((arr: any) => arr.length)
   )
 
-  // Build the CSV content
   for (let i = 0; i < maxRows; i++) {
     const row = headers.map(header => {
       const values = jsonData[header]
@@ -402,7 +421,7 @@ export async function jsonToCsv (jsonData) {
         }
       } else {
         // Handle cases where a key has fewer entries
-        return ''
+        return '"n/a"';
       }
     })
     csv += row.join(',') + '\n' // Add the row to CSV
