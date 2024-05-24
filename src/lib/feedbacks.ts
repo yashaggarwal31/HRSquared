@@ -2,19 +2,22 @@
 import { notFound } from "next/navigation";
 import { dbConnect } from "./renderDB";
 import { Database } from "@/types/database.types";
+import { getUserIdFromClerkId } from "./users";
 
 // type ticketInsert = Database["public"]["Tables"]["Ticket"]["Insert"];
 type FeedbackInsert = Database["public"]["Tables"]["Feedback"]["Insert"];
 
 export async function addFeedback(Feedback: FeedbackInsert) {
-  console.log("hello");
+  console.log("hello add feedback");
   console.log(Feedback);
+
+  const id = await getUserIdFromClerkId(Feedback.userId);
   const client = await dbConnect();
   try {
     // console.log(Feedback)
     const query = {
-      text: "insert into feedbacks (title, description, createdby) values ($1, $2, $3)",
-      values: [Feedback.title, Feedback.description, Feedback.created_by],
+      text: "insert into feedbacks (title, description, createdby, isanon) values ($1, $2, $3, $4)",
+      values: [Feedback.title, Feedback.description, id, Feedback.anonymous],
     };
     const result = await client.query(query);
     // client.end();
@@ -79,8 +82,11 @@ export async function MarkViewed(id: number) {
   }
 }
 
-export async function GetUserFeedbacks(id: number, notViewed?: boolean) {
+export async function GetUserFeedbacks(userId, notViewed?: boolean) {
   const client = await dbConnect();
+
+  const id = await getUserIdFromClerkId(userId);
+
   try {
     let query_text;
     if (notViewed) {
@@ -108,11 +114,11 @@ export async function GetUserFeedbacks(id: number, notViewed?: boolean) {
     };
     query_text = `${query_text} ORDER BY createdat DESC`;
     const result = await client.query(query);
-    if (result.rowCount > 0) {
-      return result.rows;
-    } else {
-      notFound();
-    }
+    // if (result.rowCount > 0) {
+    return result.rows;
+    // } else {
+    //   notFound();
+    // }
   } catch (error) {
     console.log("**************************");
     console.log(error);

@@ -1,12 +1,18 @@
 import React, { Suspense } from "react";
 import { getUserTickets } from "@/lib/tickets";
 import UserTicketSearch from "./UserTicketSearch";
-import { useUser } from "@clerk/clerk-react";
+import { auth } from "@clerk/nextjs/server";
 
 async function UserTickets() {
-  const { user } = useUser();
-  console.log("UUUUSSSSSEEEERRR", user);
-  const ticketData = await getUserTickets(1);
+  const { userId } = auth();
+  console.log("UUUUSSSSSEEEERRR", userId);
+
+  // if (!user) {
+  //   console.log("no user");
+  // } else {
+  //   console.log("ig", user.id);
+  // }
+  const ticketData = await getUserTickets(userId);
 
   // console.log("users page, ticket data: ", ticketData);
 

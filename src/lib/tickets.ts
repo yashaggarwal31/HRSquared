@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { dbConnect } from "./renderDB";
 import { Database } from "@/types/database.types";
 import { sendEmail } from "./email";
+import { getUserIdFromClerkId } from "./users";
 
 type ticketInsert = Database["public"]["Tables"]["Ticket"]["Insert"];
 
@@ -54,8 +55,11 @@ export async function addTicket(body: string) {
       priority: number;
       title: string;
       description: string;
-      created_by: number;
+      created_by: string;
     } = JSON.parse(body);
+
+    const userId = await getUserIdFromClerkId(ticket.created_by);
+    console.log("userId while posting ticket", userId);
     const UserRoleRow = await getRowByCategory(ticket.sub_category_id);
     const Ticket = {
       sub_category_id: ticket.sub_category_id,
@@ -63,7 +67,7 @@ export async function addTicket(body: string) {
       title: ticket.title,
       description: ticket.description,
       status_id: 1,
-      created_by: ticket.created_by,
+      created_by: userId,
       assigned_to: UserRoleRow.data
         ? UserRoleRow.data.length != 0
           ? UserRoleRow.data[0].user_id
@@ -78,7 +82,7 @@ export async function addTicket(body: string) {
         Ticket.sub_category_id,
         Ticket.priority,
         Ticket.status_id,
-        Ticket.created_by,
+        userId,
         Ticket.assigned_to,
       ],
     };
@@ -190,8 +194,11 @@ export async function deligateTicket(ticket_id: number) {
   }
 }
 
-export async function getUserTickets(id: number) {
+export async function getUserTickets(userID) {
   const client = await dbConnect();
+
+  const id = await getUserIdFromClerkId(userID);
+  console.log("ID", id);
 
   const query = {
     text: `${get_ticket} where users_createdby.id=$1 order by tickets.createdat desc;`,
@@ -199,14 +206,16 @@ export async function getUserTickets(id: number) {
   };
 
   const data = await client.query(query);
+  // console.log("data", data);
+  return data.rows;
   // client.end()
   // console.log(data);
 
-  if (data.rowCount > 0) {
-    return data.rows;
-  } else {
-    notFound();
-  }
+  // if (data.rowCount > 0) {
+  //   return data.rows;
+  // } else {
+  //   notFound();
+  // }
 }
 
 export async function getAllTickets() {
@@ -217,33 +226,37 @@ export async function getAllTickets() {
   };
 
   const data = await client.query(query);
+  return data.rows;
   // client.end()
   // console.log(data);
 
-  if (data.rowCount > 0) {
-    return data.rows;
-  } else {
-    notFound();
-  }
+  // if (data.rowCount > 0) {
+  //   return data.rows;
+  // } else {
+  //   notFound();
+  // }
 }
 
-export async function getAssignedTickets(id: number) {
+export async function getAssignedTickets(id) {
   const client = await dbConnect();
+
+  const userId = await getUserIdFromClerkId(id);
 
   const query = {
     text: `${get_ticket} where users_assignedto.id=$1;`,
-    values: [id],
+    values: [userId],
   };
 
   const data = await client.query(query);
+  return data.rows;
   // client.end()
   // console.log(data);
 
-  if (data.rowCount > 0) {
-    return data.rows;
-  } else {
-    notFound();
-  }
+  // if (data.rowCount > 0) {
+  //   return data.rows;
+  // } else {
+  //   notFound();
+  // }
 }
 
 export async function getTicketFormData() {

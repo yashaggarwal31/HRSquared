@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { addTicket, getTicketFormData } from "@/lib/tickets";
+import { useUser } from "@clerk/nextjs";
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -19,6 +20,7 @@ const MovieTicketForm = () => {
 
   const [subCategoryLocal, setSubCategoryLocal] = useState(new Map());
   const [categoryNametoId, setCategoryNametoId] = useState(new Map());
+  const { user } = useUser();
 
   useEffect(() => {
     async function getFormData() {
@@ -147,7 +149,7 @@ const MovieTicketForm = () => {
       priority: parseInt(formData.ticketPriority),
       title: formData.ticketSubject,
       description: formData.ticketDescription,
-      created_by: 1,
+      created_by: user?.id,
     };
 
     console.log("->", postTicketData);

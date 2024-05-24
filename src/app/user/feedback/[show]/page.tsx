@@ -1,9 +1,13 @@
 import { Suspense } from "react";
 import { UserFeedbacks } from "./userFeedbacks";
 import { GetUserFeedbacks } from "@/lib/feedbacks";
+import { auth } from "@clerk/nextjs/server";
 
-async function ShowUserFeedbacks({ userID }: { userID: number }) {
-  const feedbacks = await GetUserFeedbacks(userID);
+async function ShowUserFeedbacks() {
+  const { userId } = auth();
+
+  console.log("feedback id", userId);
+  const feedbacks = await GetUserFeedbacks(userId);
   return <UserFeedbacks feedbacks={feedbacks} />;
 }
 
@@ -18,7 +22,7 @@ export default function ShowUserFeedbacksPage({ params }: { params: any }) {
           </div>
         }
       >
-        <ShowUserFeedbacks userID={params["show"]} />
+        <ShowUserFeedbacks />
       </Suspense>
     </div>
   );

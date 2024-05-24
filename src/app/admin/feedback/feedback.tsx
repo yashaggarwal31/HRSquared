@@ -7,7 +7,7 @@ import { markReadFn } from "./markAsRead";
 function Feedback({ feedback }) {
   const [viewed, setViewed] = useState(feedback.viewed);
   const [marking, setMarking] = useState(false);
-  const { id, title, description, createdby, createdat } = feedback;
+  const { id, title, description, createdby, createdat, isanon } = feedback;
 
   async function markRead() {
     if (marking) return;
@@ -38,7 +38,7 @@ function Feedback({ feedback }) {
       <div className="mb-2 flex items-center justify-between">
         <h3 className="text-lg font-semibold">{title}</h3>
         <p className="text-m rounded-lg bg-slate-200 px-2 py-1 text-black shadow-md">
-          {createdby ? createdby : "Anonymous"}
+          {!isanon ? createdby : "Anonymous"}
         </p>
       </div>
       <p className="mb-2 text-base">{description}</p>
