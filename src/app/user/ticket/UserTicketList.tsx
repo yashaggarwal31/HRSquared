@@ -179,6 +179,16 @@ export default function UserTicketList({ ticketData }) {
               >
                 Open
               </div>
+              <div
+                className={`${
+                  filterApplied == "Addressing"
+                    ? "border-sky-500 text-sky-500"
+                    : "border-gray-300 text-gray-400"
+                } inline-block  cursor-pointer rounded-lg border-2 px-4 py-2 `}
+                onClick={() => statusFilter("Addressing")}
+              >
+                Addressing
+              </div>
             </div>
 
             <div className="w-[82%]">

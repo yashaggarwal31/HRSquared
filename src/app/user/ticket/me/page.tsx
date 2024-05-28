@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import UserAssignedTickets from "./UserAssignedTickets";
 import { getAssignedTickets } from "@/lib/tickets";
 import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 
 async function UserTickets() {
   const { userId } = auth();
@@ -14,6 +15,8 @@ async function UserTickets() {
 }
 
 export default function TicketPage() {
+  // revalidatePath("user/ticket/me");
+  console.log("revalidate", "user/ticket/me");
   return (
     <div>
       <Suspense

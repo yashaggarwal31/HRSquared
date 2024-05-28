@@ -5,7 +5,6 @@ import { addTicket, getTicketFormData } from "@/lib/tickets";
 import { useUser } from "@clerk/nextjs";
 
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 const MovieTicketForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({

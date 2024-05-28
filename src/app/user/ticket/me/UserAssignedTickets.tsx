@@ -10,6 +10,7 @@ import TicketGeneratorButton from "@/components/tickets/TicketGeneratorButton";
 import Pagination from "@/components/tickets/Pagination";
 import { formatDateString } from "@/lib/FormatDateString";
 import { updateStatus, deligateTicket } from "@/lib/tickets";
+// import { useRouter } from "next/navigation";
 
 const paginate = (items: any, pageNumber: any, pageSize: any) => {
   const startIndex = (pageNumber - 1) * pageSize;
@@ -50,10 +51,16 @@ function Tickets({ ticketData }) {
       return;
     }
 
+    console.log("fikter", str);
+
     setFilterApplied(str);
+
     const filteredData = myTickets.filter((single: any) => {
+      console.log(single.status, " == ", str);
       return single.status == str;
     });
+
+    console.log("filterd data", filteredData);
 
     setAllFilteredData(filteredData);
     setCurrentPage(1);
@@ -239,6 +246,16 @@ function Tickets({ ticketData }) {
                   onClick={() => statusFilter("Open")}
                 >
                   Open
+                </div>
+                <div
+                  className={`${
+                    filterApplied == "Addressing"
+                      ? "border-sky-500 text-sky-500"
+                      : "border-gray-300 text-gray-400"
+                  } inline-block  cursor-pointer rounded-lg border-2 px-4 py-2 `}
+                  onClick={() => statusFilter("Addressing")}
+                >
+                  Addressing
                 </div>
               </div>
 
