@@ -157,9 +157,9 @@ export async function checkUserExistence (userId) {
 async function createUserInDB (user) {
   if (!user) return
   const userObj = {
-    username: `${user.firstName} ${user.lastName}`,
-    email: `${user.emailAddresses[0].emailAddress}`,
-    password: 'clerk',
+    username: `${user.name}`,
+    email: `${user.email}`,
+    password: 'google',
     isactive: true,
     clerk_id: user.id
   }
@@ -198,10 +198,13 @@ export async function checkUserPermissionForSurvey (surveyID, userID) {
   const client = await dbConnect()
   const user_id = await getUserIdFromClerkId(userID)
   console.log('permission actual user id: ', user_id)
-  const nullCheck = await client.query({text:`select category from surveys where id=$1`,values:[surveyID]})
+  const nullCheck = await client.query({
+    text: `select category from surveys where id=$1`,
+    values: [surveyID]
+  })
 
-  if(nullCheck.rows[0]?.category==null) return true;
-  
+  if (nullCheck.rows[0]?.category == null) return true
+
   const query = {
     text: `select urm.id 
     from userrole_mapping urm

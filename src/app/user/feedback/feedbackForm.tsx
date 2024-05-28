@@ -4,10 +4,12 @@ import React, { use, useState } from "react";
 import { addFeedback } from "@/lib/feedbacks";
 import Link from "next/link";
 import SideNavbar from "./sideNavbar";
-import { useUser } from "@clerk/nextjs";
+// import { useUser } from "@clerk/nextjs";
 // import { handleSubmit } from "./page";
 
-function Feedbacks() {
+function Feedbacks({userId}) {
+
+  console.log('userId in feedback', userId)
   const [title, setTitle] = useState("");
   const [feedback, setFeedback] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -16,7 +18,8 @@ function Feedbacks() {
   const [ack, setAck] = useState("");
   const [ackClass, setAckClass] = useState("text-red-700 font-semibold pt-1");
   const [sending, setSending] = useState(false);
-  const { user } = useUser();
+  // const { user } = useUser();
+  
 
   const handleSubmitUtil = async () => {
     console.log("hello dheeraj");
@@ -39,7 +42,7 @@ function Feedbacks() {
       title: title,
       description: feedback,
       anonymous: isAnonymous,
-      userId: user.id,
+      userId: userId,
     };
     setSending(true);
     // const url = "/api/feedbacks/addfeedback";

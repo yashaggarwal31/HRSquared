@@ -1,33 +1,39 @@
 import React from 'react'
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { getServerSession } from 'next-auth';
+import { config } from '@/auth.config';
 import { userCreationFlow } from "@/lib/users";
 
 
-export default function AuthHelper() {
-    const { userId } = auth();
+export default async function AuthHelper() {
+
+    console.log('auth helper is called')
+
+  const session = await getServerSession(config);
+  if(!session) return;
+  
+  const user = session.user;
+
 
   async function checkDBforUser(){
-    const user = await currentUser();
-    // const userObj = {
-    //   username:`${user.firstName} ${user.lastName}`,
-    //   email:`${user.emailAddresses[0].emailAddress}`,
-    //   password:'clerk',
-    //   isactive:true,
-    //   clerk_id:user.id
-    // }
-    // console.log()
-    // console.log('user id: ', user)
+    const userObj = {
+      username:`${user.name}`,
+      email:`${user.email}`,
+      password:'google',
+      isactive:true,
+      clerk_id:user.id
+    }
+    console.log()
+    console.log('user id: ', user)
     userCreationFlow(user);
 
   }
   
-  if(userId){
+
     //check if user exist in db
     //else create user in db
     
     checkDBforUser()
-  }
-
+  
   return (
     <></>
   )

@@ -2,14 +2,32 @@ import React, { Suspense } from 'react'
 import UserSurveyList from './UserSurveyList'
 import { getUserSurveys } from '@/lib/surveys';
 import UserSurveySearchFunctionality from './UserSurveySearch';
-import { auth } from '@clerk/nextjs/server';
+// import { auth } from '@clerk/nextjs/server';
+import { getServerSession } from "next-auth";
+import { config } from "@/auth.config";
+
+async function getGoogleUserId(){
+  const session = await getServerSession(config);
+  if(!session) return null;
+  const user_id = session.user.token.sub
+  console.log(user_id)
+
+  return user_id;
+}
 
 async function UserSurveys(){
 
-  const {userId} = auth();
+  // const session = await getServerSession();
+  // console.log(session,"sss")
+
+  const userId = await getGoogleUserId();
+
+  // const userID = session.user.id;
 
     const surveyData = await getUserSurveys(userId);
     // console.log('users page, survey data: ',surveyData)
+
+    
 
     return <UserSurveySearchFunctionality surveyData={surveyData}/>
 }

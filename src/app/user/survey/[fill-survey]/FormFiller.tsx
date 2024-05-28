@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react'
 import { FieldTypes } from "@/components/enums/survey-field-types";
 import { FormFields } from '@/components/surveys/FormFields'
 import { url_fill_survey } from '@/lib/ApiEndPoints';
-import { useUser } from '@clerk/nextjs';
+// import { useUser } from '@clerk/nextjs';
 import Image from 'next/image';
 // import { addUserResponse } from '@/lib/surveys';
 
-export default function FormFiller({ surveyFields, title, survey_img, surveyID }) {
-  const { user } = useUser();
+export default function FormFiller({ surveyFields, title, survey_img, surveyID, userId }) {
+  // const { user } = useUser();
 
   const arr = title.split('%!@')
   title = arr[0];
@@ -135,7 +135,7 @@ export default function FormFiller({ surveyFields, title, survey_img, surveyID }
     const formDataJSON = JSON.stringify(formDataArray);
 
     const surveyResponse = {
-      user_id: user.id,
+      user_id: userId,
       survey_id: parseInt(surveyID),
       response_data: formDataJSON
     }

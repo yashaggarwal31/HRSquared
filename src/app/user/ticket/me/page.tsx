@@ -1,10 +1,22 @@
 import React, { Suspense } from "react";
 import UserAssignedTickets from "./UserAssignedTickets";
 import { getAssignedTickets } from "@/lib/tickets";
-import { auth } from "@clerk/nextjs/server";
+// import { auth } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth";
+import { config } from "@/auth.config";
+
+async function getGoogleUserId(){
+  const session = await getServerSession(config);
+  if(!session) return null;
+  const user_id = session.user.token.sub
+  console.log(user_id)
+
+  return user_id;
+}
 
 async function UserTickets() {
-  const { userId } = auth();
+  // const { userId } = auth();
+  const userId = await getGoogleUserId();
   console.log("UUUUSSSSSEEEERRR", userId);
   const ticketData = await getAssignedTickets(userId);
 

@@ -1,10 +1,21 @@
 import { Suspense } from "react";
 import { UserFeedbacks } from "./userFeedbacks";
 import { GetUserFeedbacks } from "@/lib/feedbacks";
-import { auth } from "@clerk/nextjs/server";
+// import { auth } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth";
+import { config } from "@/auth.config";
+
+async function getGoogleUserId(){
+  const session = await getServerSession(config);
+  if(!session) return null;
+  const user_id = session.user.token.sub
+  console.log(user_id)
+
+  return user_id;
+}
 
 async function ShowUserFeedbacks() {
-  const { userId } = auth();
+  const userId = await getGoogleUserId();
 
   console.log("feedback id", userId);
   const feedbacks = await GetUserFeedbacks(userId);

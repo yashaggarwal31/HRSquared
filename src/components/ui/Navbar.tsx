@@ -1,17 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import { SessionProvider } from 'next-auth/react'
+
+
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 // import TicketGeneratorButton from "./TicketGeneratorButton";
 import { Button } from "./button";
 import { useRouter } from "next/navigation";
 // import  {signOut} from "@/app/auth"
-import { UserButton } from "@clerk/clerk-react";
+// import { UserButton } from "@clerk/clerk-react";
 import Image from "next/image";
 import { setUserState, getUserState } from "@/app/utils/commonStates";
 // import { useRouter } from "next/router";
 import { usePathname } from "next/navigation";
+import ProfileIcon from "./NavbarProfileIcon";
 
 const Navbar: React.FC = () => {
   const router = useRouter();
@@ -128,7 +132,11 @@ const Navbar: React.FC = () => {
               SWITCH TO {(inuser && <>ADMIN</>) || <>USER</>}
             </button>
 
-            <UserButton />
+            {/*<UserButton />*/}
+            <SessionProvider>
+            <ProfileIcon/>
+            </SessionProvider>
+            
           </div>
         </div>
       </nav>

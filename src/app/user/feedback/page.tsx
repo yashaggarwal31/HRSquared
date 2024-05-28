@@ -2,6 +2,17 @@ import React, { Suspense, use, useState } from "react";
 // import { url_add_feedback } from "@/app/lib/apiEndPoints";
 import { addFeedback } from "@/lib/feedbacks";
 import Feedbacks from "./feedbackForm";
+import { getServerSession } from "next-auth";
+import { config } from "@/auth.config";
+
+async function getGoogleUserId(){
+  const session = await getServerSession(config);
+  if(!session) return null;
+  const user_id = session.user.token.sub
+  console.log(user_id)
+
+  return user_id;
+}
 
 // export const handleSubmit = async (feedbackDto) => {
 //   console.log("hello dheeraj");
@@ -47,7 +58,8 @@ import Feedbacks from "./feedbackForm";
 //   // }
 // };
 
-export default function page() {
+export default async function page() {
+  const userId = await getGoogleUserId();
   return (
     <Suspense
       fallback={
@@ -56,7 +68,7 @@ export default function page() {
         </div>
       }
     >
-      <Feedbacks />
+      <Feedbacks userId={userId}/>
     </Suspense>
   );
 }

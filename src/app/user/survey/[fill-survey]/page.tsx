@@ -2,12 +2,23 @@
 import React, { Suspense} from 'react'
 import FormFiller from './FormFiller';
 import { getSurveyById } from '@/lib/surveys';
-import { auth } from '@clerk/nextjs/server';
 import { checkUserPermissionForSurvey } from '@/lib/users';
+import { getServerSession } from "next-auth";
+import { config } from "@/auth.config";
+
+async function getGoogleUserId(){
+  const session = await getServerSession(config);
+  if(!session) return null;
+  const user_id = session.user.token.sub
+  console.log(user_id)
+
+  return user_id;
+}
 
 let surveyID;
 
-async function SurveyForm({surveyID,userId}){
+async function SurveyForm({surveyID}){
+  const userId = await getGoogleUserId();
 
   console.log(surveyID)
   console.log('space')
@@ -41,7 +52,7 @@ async function SurveyForm({surveyID,userId}){
     const survey_img = surveyData[0].survey_img;
 
     return <>
-    <FormFiller surveyFields={formFields} title={title} survey_img={survey_img} surveyID={surveyID}/>
+    <FormFiller surveyFields={formFields} title={title} survey_img={survey_img} surveyID={surveyID} userId={userId}/>
     </>
 
 }
@@ -50,7 +61,8 @@ async function SurveyForm({surveyID,userId}){
 export default function FillSurveyPage({params}) {
 
     let surveyID = params['fill-survey'];
-    let {userId} = auth();
+    
+    
 
     // const [dataFetched,setDataFetched] = useState(false);
     // const [surveyFields,setSurveyFields] = useState([]);
@@ -101,7 +113,7 @@ export default function FillSurveyPage({params}) {
   return <>
     <Suspense fallback={<div className="fixed top-0 left-0 w-screen h-screen z-[99999999999999] flex flex-col items-center justify-center bg-black/40">
     <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div> <h3>Fetching Survey ...</h3> </div>}>
-        <SurveyForm surveyID={surveyID} userId={userId}/>
+        <SurveyForm surveyID={surveyID}/>
     </Suspense>
   </>
 }

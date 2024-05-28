@@ -14,8 +14,8 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 import Image from "next/image";
-import { useUser } from "@clerk/clerk-react";
 import { useRouter } from "next/navigation";
+import { getSession } from "next-auth/react";
 
 // import { Button } from "@/components/ui/button";
 // import {url_create_survey, url_get_survey_responses} from "@/app/lib/apiEndPoints";
@@ -31,8 +31,22 @@ import { useRouter } from "next/navigation";
 
 
 
-function SurveysCreation() {
-  const {user} = useUser();
+ function SurveysCreation() {
+  // const {user} = useUser();
+
+  const [user,setUser] = useState(null);
+
+  useEffect(()=>{
+    async function getUser(){
+      const session = await getSession()
+      console.log('client side session: ', session)
+      setUser(session.user)
+    }
+    getUser();
+  },[])
+  
+  
+  // const user = session.user
   const router = useRouter();
   // const [userId, setUserId] = useState('1');
   // const router = useRouter();

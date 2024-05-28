@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { addTicket, getTicketFormData } from "@/lib/tickets";
-import { useUser } from "@clerk/nextjs";
+// import { useUser } from "@clerk/nextjs";
+
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { getSession } from "next-auth/react";
 const MovieTicketForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -20,7 +22,18 @@ const MovieTicketForm = () => {
 
   const [subCategoryLocal, setSubCategoryLocal] = useState(new Map());
   const [categoryNametoId, setCategoryNametoId] = useState(new Map());
-  const { user } = useUser();
+  // const { user } = useUser();
+
+  const [user,setUser] = useState(null);
+
+  useEffect(()=>{
+    async function getUser(){
+      const session = await getSession()
+      console.log('client side session: ', session)
+      setUser(session.user)
+    }
+    getUser();
+  },[])
 
   useEffect(() => {
     async function getFormData() {
