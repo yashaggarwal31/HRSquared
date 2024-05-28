@@ -1,1 +1,1 @@
-{"version":1,"functions":{"/api/survey/fillsurvey":{},"/user/feedback":{},"/api/survey/admin/createsurvey":{}}}
+{"version":1,"functions":{"/api/survey/admin/createsurvey":{},"/api/survey/fillsurvey":{},"/user/feedback":{}}}
